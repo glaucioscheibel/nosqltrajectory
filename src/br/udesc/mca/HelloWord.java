@@ -1,4 +1,4 @@
-package br.udesc.mda;
+package br.udesc.mca;
 
 public class HelloWord {
 

@@ -3,5 +3,12 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-math3-3.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-api-9.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-main-9.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-metadata-9.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-opengis-9.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-referencing-9.3.jar"/>
+	<classpathentry kind="lib" path="lib/jts-1.13.jar"/>
+	<classpathentry kind="lib" path="lib/mongo-java-driver-2.12.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

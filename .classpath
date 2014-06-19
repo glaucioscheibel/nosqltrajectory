@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="lib/jts-1.13.jar"/>
 	<classpathentry kind="lib" path="lib/mongo-java-driver-2.12.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/tuscany-sca-api-2.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

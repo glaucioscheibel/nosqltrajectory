@@ -1,4 +1,4 @@
-package br.udesc.mca.geolife;
+package br.udesc.mca.geolife.mongodb;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -84,6 +84,17 @@
 			<artifactId>postgresql</artifactId>
 			<version>9.3-1102-jdbc41</version>
 		</dependency>
+		<dependency>
+			<groupId>org.postgis</groupId>
+			<artifactId>postgis-jdbc</artifactId>
+			<version>1.3.3</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
@@ -95,6 +106,11 @@
 			<id>opengeo</id>
 			<name>OpenGeo Maven Repository</name>
 			<url>http://repo.opengeo.org</url>
+		</repository>
+		<repository>
+			<id>sonatype-postgis-releases</id>
+			<name>Sonatype Postgis Releases Repo</name>
+			<url>http://oss.sonatype.org/content/repositories/postgis-releases</url>
 		</repository>
 	</repositories>
 </project>

@@ -65,7 +65,11 @@ public class GeolifePostgresqlModel {
                 ps.setDouble(2, days);
                 PGpoint p = new PGpoint(dlat, dlng);
                 ps.setObject(3, p);
-                ps.executeUpdate();
+                try {
+                    ps.executeUpdate();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             }
             br.close();
             fr.close();

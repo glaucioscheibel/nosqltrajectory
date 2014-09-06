@@ -30,7 +30,7 @@ public class GeolifePostgresqlKMLExport {
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             PGpoint point = (PGpoint) rs.getObject(1);
-            lc.add(new Coordinate(point.x, point.y));
+            lc.add(new Coordinate(point.y, point.x));
         }
         rs.close();
         ps.close();

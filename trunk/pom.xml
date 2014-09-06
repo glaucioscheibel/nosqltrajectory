@@ -93,6 +93,10 @@
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>postgresql</artifactId>
+					<groupId>postgresql</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 	</dependencies>

@@ -177,10 +177,11 @@ public class DynamicTimeWarping {
 	 *            ignored
 	 */
 	public static void main(String[] args) {
-		float[] n2 = { 1.5f, 3.9f, 4.1f, 3.3f };
-		float[] n1 = { 2.1f, 2.45f, 3.673f, 4.32f, 2.05f, 1.93f, 5.67f, 6.01f };
-		// float[] n1 = { 1, 1, 2, 3, 3, 4, 4 };
-		// float[] n2 = { 1, 2, 3, 3, 4, 5 };
+		// float[] n2 = { 1.5f, 3.9f, 4.1f, 3.3f };
+		// float[] n1 = { 2.1f, 2.45f, 3.673f, 4.32f, 2.05f, 1.93f, 5.67f, 6.01f
+		// };
+		float[] n1 = { 1 };
+		float[] n2 = { 2 };
 
 		DynamicTimeWarping dtw = new DynamicTimeWarping(n1, n2);
 		System.out.println(dtw);

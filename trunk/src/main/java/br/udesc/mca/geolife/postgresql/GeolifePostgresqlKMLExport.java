@@ -14,22 +14,21 @@ import de.micromata.opengis.kml.v_2_2_0.MultiGeometry;
 import de.micromata.opengis.kml.v_2_2_0.Placemark;
 
 public class GeolifePostgresqlKMLExport {
-    public static void main(String[] args) throws Exception {
+    
+    public void export(int userId, long[] trajIds, File kmlFile) throws Exception {
         Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/trajectories", "postgres", "admin");
         PreparedStatement ps = con.prepareStatement("Select longitude, latitude from geolife where userid=? and trajid=?");
-        int userid = 0;
-        long[] trajids = {20081023025304L, 20081026134407L};
         Kml kml = new Kml();
 
         Placemark p = kml.createAndSetPlacemark();
         p.setDescription("Trajectories");
         MultiGeometry mg = p.createAndSetMultiGeometry();
 
-        for (long trajid : trajids) {
+        for (long trajId : trajIds) {
             LineString ls = mg.createAndAddLineString();
             List<Coordinate> lc = ls.createAndSetCoordinates();
-            ps.setInt(1, userid);
-            ps.setLong(2, trajid);
+            ps.setInt(1, userId);
+            ps.setLong(2, trajId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 lc.add(new Coordinate(rs.getDouble(1), rs.getDouble(2)));
@@ -38,6 +37,14 @@ public class GeolifePostgresqlKMLExport {
         }
         ps.close();
         con.close();
-        kml.marshal(new File("teste.kml"));
+        kml.marshal(kmlFile);
+    }
+    
+    public static void main(String[] args) throws Exception {
+        int userId = 0;
+        long[] trajIds = {20081023025304L, 20081026134407L};
+        File kmlFile = new File("teste.kml"); 
+        GeolifePostgresqlKMLExport exp = new GeolifePostgresqlKMLExport();
+        exp.export(userId, trajIds, kmlFile);
     }
 }

@@ -166,8 +166,8 @@ public class DynamicTimeWarping2 {
 	}
 
 	public static void main(String[] args) {
-		float[] n1 = { 1 };
-		float[] n2 = { 2 };
+		float[] n1 = { 1, 2, 3, 4 };
+		float[] n2 = { 4, 5, 6 };
 		// float[] n1 = { 1, 1, 2, 3, 3, 4, 4 };
 		// float[] n2 = { 1, 2, 3, 3, 4, 5 };
 

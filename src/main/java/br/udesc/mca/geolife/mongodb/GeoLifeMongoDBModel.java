@@ -34,6 +34,7 @@ public class GeoLifeMongoDBModel {
 		Iterator<File> ifs = FileUtils.iterateFiles(data, ext, true);
 		while (ifs.hasNext()) {
 			File f = ifs.next();
+			String dir = f.getParentFile().getParentFile().getName();
 			String name = f.getName();
 			System.out.println(name);
 			name = name.substring(0, f.getName().indexOf('.'));
@@ -77,6 +78,8 @@ public class GeoLifeMongoDBModel {
 				}
 				traj.add(point);
 			}
+			dbo.put("user", Integer.valueOf(dir));
+			dbo.put("trajId", Double.valueOf(name));
 			dbo.put("points", traj);
 			dbc.insert(dbo);
 			br.close();

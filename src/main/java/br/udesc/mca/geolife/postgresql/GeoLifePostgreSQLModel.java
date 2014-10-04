@@ -19,7 +19,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 
-public class GeolifePostgresqlModel {
+public class GeoLifePostgreSQLModel {
     private static Map<Integer, List<TranspMode>> transModes;
 
 	public static void main(String[] args) throws Exception {

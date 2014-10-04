@@ -14,7 +14,7 @@ import de.micromata.opengis.kml.v_2_2_0.LineString;
 import de.micromata.opengis.kml.v_2_2_0.MultiGeometry;
 import de.micromata.opengis.kml.v_2_2_0.Placemark;
 
-public class GeolifePostgresqlKMLExport {
+public class GeoLifePostgreSQLKMLExport {
     
     public void export(int userId, Long[] trajIds, File kmlFile) throws Exception {
         Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/trajectories", "postgres", "admin");
@@ -60,7 +60,7 @@ public class GeolifePostgresqlKMLExport {
         int userId = 128;
         //Long[] trajIds = {20081023025304L, 20081026134407L};
         File kmlFile = new File("teste.kml"); 
-        GeolifePostgresqlKMLExport exp = new GeolifePostgresqlKMLExport();
+        GeoLifePostgreSQLKMLExport exp = new GeoLifePostgreSQLKMLExport();
         exp.exportByUser(userId, kmlFile);
     }
 }

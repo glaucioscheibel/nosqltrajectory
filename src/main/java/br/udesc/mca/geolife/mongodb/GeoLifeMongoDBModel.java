@@ -79,7 +79,7 @@ public class GeoLifeMongoDBModel {
 				traj.add(point);
 			}
 			dbo.put("user", Integer.valueOf(dir));
-			dbo.put("trajId", Double.valueOf(name));
+			dbo.put("trajId", Long.valueOf(name));
 			dbo.put("points", traj);
 			dbc.insert(dbo);
 			br.close();

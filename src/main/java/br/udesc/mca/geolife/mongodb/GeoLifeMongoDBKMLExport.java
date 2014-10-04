@@ -36,7 +36,6 @@ public class GeoLifeMongoDBKMLExport {
         Placemark p = kml.createAndSetPlacemark();
         p.setDescription("Trajectories");
         MultiGeometry mg = p.createAndSetMultiGeometry();
-        
         DBCursor dbc = trajCol.find(ref);
         while (dbc.hasNext()) {
             DBObject to = dbc.next();
@@ -52,12 +51,35 @@ public class GeoLifeMongoDBKMLExport {
         mc.close();
         kml.marshal(kmlFile);
     }
+    
+    public void export(int userId, File kmlFile) throws Exception {
+        List<Long> ll = new ArrayList<>();
+        MongoClient mc = new MongoClient();
+        DB db = mc.getDB("geolife");
+        DBCollection trajCol = db.getCollection("trajectories");
+        DBObject ref1 = new BasicDBObject();
+        ref1.put("user", userId);
+        DBObject ref2 = new BasicDBObject();
+        ref2.put("trajId", 1L);
+        ref2.put("_id", 0);
+        DBCursor dbc = trajCol.find(ref1, ref2);
+        while (dbc.hasNext()) {
+            DBObject to = dbc.next();
+            ll.add((Long) to.get("trajId"));
+        }
+        dbc.close();
+        mc.close();
+        System.out.println(ll);
+        if (!ll.isEmpty()) {
+            this.export(userId, ll, kmlFile);
+        }
+    }
 
     public static void main(String[] args) throws Exception {
         GeoLifeMongoDBKMLExport exp = new GeoLifeMongoDBKMLExport();
-        List<Long> ll = new ArrayList<>();
-        ll.add(20081023025304L);
-        ll.add(20081026134407L);
-        exp.export(0, ll, new File("teste.kml"));
+        //List<Long> ll = new ArrayList<>();
+        //ll.add(20081023025304L);
+        //ll.add(20081026134407L);
+        exp.export(128, new File("teste.kml"));
     }
 }

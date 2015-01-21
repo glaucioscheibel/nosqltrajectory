@@ -14,7 +14,7 @@ import br.udesc.mca.sec1.projeto.dao.graph.GraphPersistence;
 import br.udesc.mca.sec1.projeto.dao.graph.Neo4jPersistence;
 import br.udesc.mca.sec1.projeto.dao.keyvalue.KeyValuePersistence;
 import br.udesc.mca.sec1.projeto.dao.keyvalue.RedisPersistence;
-import br.udesc.mca.sec1.projeto.dao.relational.MySQLPersistence;
+import br.udesc.mca.sec1.projeto.dao.relational.PostgreSQLPersistence;
 import br.udesc.mca.sec1.projeto.dao.relational.RelationalPersistence;
 import br.udesc.mca.sec1.projeto.model.Customer;
 
@@ -44,7 +44,7 @@ public class PersistenceAbstractFactoryTest {
         PersistenceDAO<Customer> dao = PersistenceAbstractFactory.getPersistenceDAO(PersistenceModel.RELATIONAL);
         assertNotNull(dao);
         assertTrue(dao instanceof RelationalPersistence);
-        assertEquals(MySQLPersistence.class, dao.getClass());
+        assertEquals(PostgreSQLPersistence.class, dao.getClass());
     }
 
     @Test

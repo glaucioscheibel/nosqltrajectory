@@ -27,7 +27,7 @@ public class RedisPersistence extends KeyValuePersistence {
 
     private RedisPersistence() {
         this.log.info("Connecting Redis database");
-        this.db = new Jedis("10.1.1.5");
+        this.db = new Jedis("127.0.0.1");
         this.db.connect();
     }
 

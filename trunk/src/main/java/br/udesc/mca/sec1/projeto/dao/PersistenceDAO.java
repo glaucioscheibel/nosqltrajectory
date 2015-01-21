@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class PersistenceDAO<E> {
+    protected static final String DBNAME = "trajectories";
+
     protected static Properties persistenceImpl;
 
     protected Logger log;

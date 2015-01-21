@@ -32,7 +32,7 @@ public class MongoPersistence extends DocumentPersistence {
     private MongoPersistence() {
         try {
             this.mongo = new MongoClient();
-            this.db = this.mongo.getDB("mda");
+            this.db = this.mongo.getDB(DBNAME);
         } catch (UnknownHostException e) {
             this.log.error(e.getMessage(), e);
         }

@@ -12,22 +12,22 @@ import java.util.List;
 import br.udesc.mca.sec1.projeto.model.Customer;
 import br.udesc.mca.sec1.projeto.model.CustomerData;
 
-public class MySQLPersistence extends RelationalPersistence {
-    private static MySQLPersistence instance;
+public class PostgreSQLPersistence extends RelationalPersistence {
+    private static PostgreSQLPersistence instance;
 
     private Connection db;
 
-    public static MySQLPersistence getInstance() {
+    public static PostgreSQLPersistence getInstance() {
         if (instance == null) {
-            instance = new MySQLPersistence();
+            instance = new PostgreSQLPersistence();
         }
         return instance;
     }
 
-    public MySQLPersistence() {
+    public PostgreSQLPersistence() {
         try {
             // TODO: Substituir por um pool de conexoes
-            this.db = DriverManager.getConnection("jdbc:mysql://127.0.0.1/sec1", "root", "root");
+            this.db = DriverManager.getConnection("jdbc:postgresql://127.0.0.1/" + DBNAME, "postgres", "senha");
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -56,7 +56,7 @@ public class MySQLPersistence extends RelationalPersistence {
             ps.executeUpdate();
             List<CustomerData> lcd = c.getCustomerData();
             if (lcd != null && !lcd.isEmpty()) {
-                ps = this.db.prepareStatement("insert into customerdata(id, `key`, value) values(?, ?, ?)");
+                ps = this.db.prepareStatement("insert into customerdata(id, key, value) values(?, ?, ?)");
                 for (CustomerData cd : lcd) {
                     ps.clearParameters();
                     ps.setInt(1, c.getId());

@@ -10,6 +10,8 @@ public class TrajectoryVersion implements Serializable {
     private TrajectoryType type;
     private Date modified;
     private List<TrajectoryPoint> points;
+    private TrajectoryData data;
+    private List<TrajectoryProcessHistory> history;
 
     public TrajectoryType getType() {
         return this.type;
@@ -36,5 +38,24 @@ public class TrajectoryVersion implements Serializable {
             this.points = new ArrayList<>();
         }
         this.points.add(point);
+    }
+
+    public TrajectoryData getData() {
+        return this.data;
+    }
+
+    public void setData(TrajectoryData data) {
+        this.data = data;
+    }
+
+    public List<TrajectoryProcessHistory> getHistory() {
+        return this.history;
+    }
+
+    public void addHistory(TrajectoryProcessHistory history) {
+        if (this.history == null) {
+            this.history = new ArrayList<>();
+        }
+        this.history.add(history);
     }
 }

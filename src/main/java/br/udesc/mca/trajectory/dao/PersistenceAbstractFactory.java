@@ -1,15 +1,15 @@
-package br.udesc.mca.sec1.projeto.dao;
+package br.udesc.mca.trajectory.dao;
 
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import br.udesc.mca.sec1.projeto.dao.column.ColumnPersistence;
-import br.udesc.mca.sec1.projeto.dao.document.DocumentPersistence;
-import br.udesc.mca.sec1.projeto.dao.graph.GraphPersistence;
-import br.udesc.mca.sec1.projeto.dao.keyvalue.KeyValuePersistence;
-import br.udesc.mca.sec1.projeto.dao.relational.RelationalPersistence;
+import br.udesc.mca.trajectory.dao.column.ColumnPersistence;
+import br.udesc.mca.trajectory.dao.document.DocumentPersistence;
+import br.udesc.mca.trajectory.dao.graph.GraphPersistence;
+import br.udesc.mca.trajectory.dao.keyvalue.KeyValuePersistence;
+import br.udesc.mca.trajectory.dao.relational.RelationalPersistence;
 
 public final class PersistenceAbstractFactory {
     private static boolean[] dbs;

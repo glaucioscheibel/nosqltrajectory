@@ -6,17 +6,20 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import br.udesc.mca.sec1.projeto.dao.column.CassandraPersistence;
-import br.udesc.mca.sec1.projeto.dao.column.ColumnPersistence;
-import br.udesc.mca.sec1.projeto.dao.document.DocumentPersistence;
-import br.udesc.mca.sec1.projeto.dao.document.MongoPersistence;
-import br.udesc.mca.sec1.projeto.dao.graph.GraphPersistence;
-import br.udesc.mca.sec1.projeto.dao.graph.Neo4jPersistence;
-import br.udesc.mca.sec1.projeto.dao.keyvalue.KeyValuePersistence;
-import br.udesc.mca.sec1.projeto.dao.keyvalue.RedisPersistence;
-import br.udesc.mca.sec1.projeto.dao.relational.PostgreSQLPersistence;
-import br.udesc.mca.sec1.projeto.dao.relational.RelationalPersistence;
 import br.udesc.mca.sec1.projeto.model.Customer;
+import br.udesc.mca.trajectory.dao.PersistenceAbstractFactory;
+import br.udesc.mca.trajectory.dao.PersistenceDAO;
+import br.udesc.mca.trajectory.dao.PersistenceModel;
+import br.udesc.mca.trajectory.dao.column.CassandraPersistence;
+import br.udesc.mca.trajectory.dao.column.ColumnPersistence;
+import br.udesc.mca.trajectory.dao.document.DocumentPersistence;
+import br.udesc.mca.trajectory.dao.document.MongoPersistence;
+import br.udesc.mca.trajectory.dao.graph.GraphPersistence;
+import br.udesc.mca.trajectory.dao.graph.Neo4jPersistence;
+import br.udesc.mca.trajectory.dao.keyvalue.KeyValuePersistence;
+import br.udesc.mca.trajectory.dao.keyvalue.RedisPersistence;
+import br.udesc.mca.trajectory.dao.relational.PostgreSQLPersistence;
+import br.udesc.mca.trajectory.dao.relational.RelationalPersistence;
 
 public class PersistenceAbstractFactoryTest {
 

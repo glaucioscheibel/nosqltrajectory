@@ -1,4 +1,4 @@
-package br.udesc.mca.sec1.projeto.dao.column;
+package br.udesc.mca.trajectory.dao.column;
 
 import java.util.ArrayList;
 import java.util.List;

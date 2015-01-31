@@ -1,4 +1,4 @@
-package br.udesc.mca.sec1.projeto.dao.document;
+package br.udesc.mca.trajectory.dao.document;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;

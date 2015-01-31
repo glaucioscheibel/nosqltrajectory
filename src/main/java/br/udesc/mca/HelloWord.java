@@ -12,6 +12,7 @@ public class HelloWord {
         try {
             PythonInterpreter py = new PythonInterpreter();
             py.exec("print \"From Python: Crazy Maths\"");
+            py.close();
         }catch (Exception e){
             e.printStackTrace();
         }

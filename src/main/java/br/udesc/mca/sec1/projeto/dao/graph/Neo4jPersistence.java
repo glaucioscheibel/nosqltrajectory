@@ -61,7 +61,6 @@ public class Neo4jPersistence extends GraphPersistence {
             }
         }
         t.success();
-        t.finish();
         return c;
     }
 
@@ -117,7 +116,6 @@ public class Neo4jPersistence extends GraphPersistence {
             }
             n.delete();
             t.success();
-            t.finish();
         }
     }
 

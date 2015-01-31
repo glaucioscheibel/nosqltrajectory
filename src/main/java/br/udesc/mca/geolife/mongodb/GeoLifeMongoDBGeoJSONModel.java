@@ -17,6 +17,7 @@ import com.mongodb.MongoClient;
 
 public class GeoLifeMongoDBGeoJSONModel {
 
+    @SuppressWarnings("unused")
     public static void main(String[] args) throws Exception {
         MongoClient mc = new MongoClient();
         DB db = mc.getDB("geolife");

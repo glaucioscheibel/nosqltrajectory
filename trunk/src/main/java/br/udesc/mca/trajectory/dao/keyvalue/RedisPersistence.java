@@ -1,4 +1,4 @@
-package br.udesc.mca.sec1.projeto.dao.keyvalue;
+package br.udesc.mca.trajectory.dao.keyvalue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

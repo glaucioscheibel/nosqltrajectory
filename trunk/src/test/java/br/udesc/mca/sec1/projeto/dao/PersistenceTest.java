@@ -10,6 +10,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import br.udesc.mca.sec1.projeto.model.Customer;
+import br.udesc.mca.trajectory.dao.PersistenceAbstractFactory;
+import br.udesc.mca.trajectory.dao.PersistenceDAO;
+import br.udesc.mca.trajectory.dao.PersistenceModel;
 
 @Ignore
 public abstract class PersistenceTest {

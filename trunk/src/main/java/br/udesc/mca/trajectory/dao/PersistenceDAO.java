@@ -1,4 +1,4 @@
-package br.udesc.mca.sec1.projeto.dao;
+package br.udesc.mca.trajectory.dao;
 
 import java.io.FileReader;
 import java.io.IOException;

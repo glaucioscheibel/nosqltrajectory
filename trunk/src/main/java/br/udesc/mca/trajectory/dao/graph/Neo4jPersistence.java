@@ -1,4 +1,4 @@
-package br.udesc.mca.sec1.projeto.dao.graph;
+package br.udesc.mca.trajectory.dao.graph;
 
 import java.util.ArrayList;
 import java.util.List;

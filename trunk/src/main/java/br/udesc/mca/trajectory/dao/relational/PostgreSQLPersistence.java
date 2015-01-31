@@ -1,4 +1,4 @@
-package br.udesc.mca.sec1.projeto.dao.relational;
+package br.udesc.mca.trajectory.dao.relational;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

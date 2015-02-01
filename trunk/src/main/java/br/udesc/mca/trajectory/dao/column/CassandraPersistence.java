@@ -2,7 +2,6 @@ package br.udesc.mca.trajectory.dao.column;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import br.udesc.mca.trajectory.model.Trajectory;
 
@@ -16,10 +15,10 @@ import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 
 public class CassandraPersistence extends ColumnPersistence {
-    //private static final String KEYSPACE = "dba";
+    // private static final String KEYSPACE = "dba";
     private static final String COLUMN_FAMILY = "dba.customer";
     private static CassandraPersistence instance;
-    //private static int dataid = 1;
+    // private static int dataid = 1;
     private Cluster cluster;
     private Session db;
 
@@ -57,27 +56,20 @@ public class CassandraPersistence extends ColumnPersistence {
 
     @Override
     public Trajectory store(Trajectory c) {
-        /*try {
-            PreparedStatement ps = this.db.prepare("insert into dba.customer(id, name) values(?, ?)");
-            BoundStatement bs = new BoundStatement(ps);
-            bs.setInt(0, c.getId());
-            bs.setString(1, c.getName());
-            this.db.execute(bs);
-            List<CustomerData> lcd = c.getCustomerData();
-            if (lcd != null && !lcd.isEmpty()) {
-                ps = this.db.prepare("insert into dba.customerdata(id, customerid, key, value) values(?, ?, ?, ?)");
-                bs = new BoundStatement(ps);
-                for (CustomerData cd : lcd) {
-                    bs.setInt(0, dataid++);
-                    bs.setInt(1, c.getId());
-                    bs.setString(2, cd.getDataKey());
-                    bs.setString(3, cd.getDataValue());
-                    this.db.execute(bs);
-                }
-            }
-        } catch (Exception e) {
-            this.log.error(e.getMessage(), e);
-        }*/
+        /*
+         * try { PreparedStatement ps =
+         * this.db.prepare("insert into dba.customer(id, name) values(?, ?)");
+         * BoundStatement bs = new BoundStatement(ps); bs.setInt(0, c.getId());
+         * bs.setString(1, c.getName()); this.db.execute(bs); List<CustomerData>
+         * lcd = c.getCustomerData(); if (lcd != null && !lcd.isEmpty()) { ps =
+         * this.db.prepare(
+         * "insert into dba.customerdata(id, customerid, key, value) values(?, ?, ?, ?)"
+         * ); bs = new BoundStatement(ps); for (CustomerData cd : lcd) {
+         * bs.setInt(0, dataid++); bs.setInt(1, c.getId()); bs.setString(2,
+         * cd.getDataKey()); bs.setString(3, cd.getDataValue());
+         * this.db.execute(bs); } } } catch (Exception e) {
+         * this.log.error(e.getMessage(), e); }
+         */
         return null;
     }
 
@@ -86,8 +78,7 @@ public class CassandraPersistence extends ColumnPersistence {
         List<Trajectory> ret = new ArrayList<>();
         try {
             ResultSet rs = this.db.execute("select id, name from dba.customer");
-            for (Row row : rs) {
-            }
+            for (Row row : rs) {}
         } catch (Exception e) {
             this.log.error(e.getMessage(), e);
         }
@@ -95,22 +86,22 @@ public class CassandraPersistence extends ColumnPersistence {
     }
 
     @Override
-    public Trajectory findById(UUID id) {
+    public Trajectory findById(long id) {
         Trajectory ret = null;
         try {
             PreparedStatement ps = this.db.prepare("select id, name from dba.customer where id=?");
             BoundStatement bs = new BoundStatement(ps);
-            //bs.setInt(0, id);
+            // bs.setInt(0, id);
             ResultSet rs = this.db.execute(bs);
             Row row = rs.one();
             if (row != null) {
-                //ret = new Customer(row.getInt(0), row.getString(1));
+                // ret = new Customer(row.getInt(0), row.getString(1));
                 ps = this.db.prepare("select key, value from dba.customerdata where customerid=?");
                 bs = new BoundStatement(ps);
-                //bs.setInt(0, id);
+                // bs.setInt(0, id);
                 rs = this.db.execute(bs);
                 for (Row rd : rs) {
-                    //ret.addCustomerData(rd.getString(0), rd.getString(1));
+                    // ret.addCustomerData(rd.getString(0), rd.getString(1));
                 }
             }
 
@@ -121,11 +112,11 @@ public class CassandraPersistence extends ColumnPersistence {
     }
 
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(long id) {
         try {
             PreparedStatement ps = this.db.prepare("delete from " + COLUMN_FAMILY + " where id=?");
             BoundStatement bs = new BoundStatement(ps);
-            //bs.setInt(0, id);
+            bs.setLong(0, id);
             this.db.execute(bs);
         } catch (Exception e) {
             this.log.error(e.getMessage(), e);

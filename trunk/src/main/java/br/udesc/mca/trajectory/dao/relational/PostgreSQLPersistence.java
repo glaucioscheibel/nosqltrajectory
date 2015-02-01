@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.sql.DataSource;
 
@@ -98,7 +97,7 @@ public class PostgreSQLPersistence extends RelationalPersistence {
     }
 
     @Override
-    public Trajectory findById(UUID id) {
+    public Trajectory findById(long id) {
         this.log.info("findById(" + id + ")");
         Trajectory c = null;
         try {
@@ -131,7 +130,7 @@ public class PostgreSQLPersistence extends RelationalPersistence {
     }
 
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(long id) {
         this.log.info("deleteById(" + id + ")");
         Connection db = null;
         try {

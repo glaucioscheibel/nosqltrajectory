@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +20,9 @@ public abstract class PersistenceDAO<E> {
 
     public abstract List<E> findAll();
 
-    public abstract E findById(UUID id);
+    public abstract E findById(long id);
 
-    public abstract void deleteById(UUID id);
+    public abstract void deleteById(long id);
 
     public abstract void close();
 
@@ -39,7 +38,7 @@ public abstract class PersistenceDAO<E> {
         }
     }
 
-    protected static PersistenceDAO<?> getInstance(PersistenceModel model) {
+    public static PersistenceDAO<?> getInstance(PersistenceModel model) {
         try {
             Class<?> persistenceClass = Class.forName(persistenceImpl.getProperty(model.toString().toLowerCase()));
             Method getInstance = persistenceClass.getMethod("getInstance");

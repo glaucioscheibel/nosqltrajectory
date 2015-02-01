@@ -6,17 +6,20 @@ import java.util.List;
 
 import br.udesc.mca.trajectory.model.Trajectory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.util.JSON;
 
 public class MongoPersistence extends DocumentPersistence {
 
-    private static final String colName = "Trajectorys";
+    private static final String colName = "Trajectories";
     private static MongoPersistence instance;
+    private ObjectMapper om;
     private MongoClient mongo;
     private DB db;
 
@@ -31,6 +34,7 @@ public class MongoPersistence extends DocumentPersistence {
         try {
             this.mongo = new MongoClient();
             this.db = this.mongo.getDB(DBNAME);
+            this.om = new ObjectMapper();
         } catch (UnknownHostException e) {
             this.log.error(e.getMessage(), e);
         }
@@ -41,16 +45,19 @@ public class MongoPersistence extends DocumentPersistence {
         if (this.log.isInfoEnabled()) {
             this.log.info("Storing " + c);
         }
-        /*
-         * DBCollection dbc = this.db.getCollection(colName); DBObject aux =
-         * this._findById(c.getId()); DBObject dbo = new BasicDBObject();
-         * dbo.put("id", c.getId()); dbo.put("name", c.getName()); if
-         * (c.getTrajectoryData() != null && c.getTrajectoryData().size() > 0) {
-         * DBObject data = new BasicDBObject(); for (TrajectoryData cd :
-         * c.getTrajectoryData()) { data.put(cd.getDataKey(),
-         * cd.getDataValue()); } dbo.put("TrajectoryData", data); } if (aux ==
-         * null) { dbc.insert(dbo); } else { dbc.update(aux, dbo); }
-         */
+        try {
+            String json = this.om.writeValueAsString(c);
+            DBCollection dbc = this.db.getCollection(colName);
+            DBObject aux = this._findById(c.getId());
+            DBObject dbo = (DBObject) JSON.parse(json);
+            if (aux == null) {
+                dbc.insert(dbo);
+            } else {
+                dbc.update(aux, dbo);
+            }
+        } catch (Exception e) {
+            this.log.error(e.getMessage(), e);
+        }
         return c;
     }
 
@@ -58,10 +65,14 @@ public class MongoPersistence extends DocumentPersistence {
     public List<Trajectory> findAll() {
         this.log.info("findAll");
         List<Trajectory> ret = new ArrayList<>();
-        DBCollection dbc = this.db.getCollection(colName);
-        DBCursor cursor = dbc.find();
-        for (DBObject dbo : cursor) {
-            ret.add(toTrajectory(dbo));
+        try {
+            DBCollection dbc = this.db.getCollection(colName);
+            DBCursor cursor = dbc.find();
+            for (DBObject dbo : cursor) {
+                ret.add(this.om.readValue(dbo.toString(), Trajectory.class));
+            }
+        } catch (Exception e) {
+            this.log.error(e.getMessage(), e);
         }
         return ret;
     }
@@ -69,7 +80,7 @@ public class MongoPersistence extends DocumentPersistence {
     private DBObject _findById(long id) {
         DBCollection dbc = this.db.getCollection(colName);
         DBObject dbo = new BasicDBObject();
-        dbo.put("id", id);
+        dbo.put("_id", id);
         dbo = dbc.findOne(dbo);
         return dbo;
     }
@@ -80,7 +91,14 @@ public class MongoPersistence extends DocumentPersistence {
             this.log.info("findById(" + id + ")");
         }
         Trajectory ret = null;
-        // ret = toTrajectory(this._findById(id));
+        try {
+            DBObject dbo = this._findById(id);
+            if (dbo != null) {
+                ret = this.om.readValue(dbo.toString(), Trajectory.class);
+            }
+        } catch (Exception e) {
+            this.log.error(e.getMessage(), e);
+        }
         return ret;
     }
 
@@ -91,7 +109,7 @@ public class MongoPersistence extends DocumentPersistence {
         }
         DBCollection dbc = this.db.getCollection(colName);
         DBObject dbo = new BasicDBObject();
-        dbo.put("id", id);
+        dbo.put("_id", id);
         dbc.findAndRemove(dbo);
     }
 
@@ -102,19 +120,5 @@ public class MongoPersistence extends DocumentPersistence {
             this.mongo.close();
             this.mongo = null;
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Trajectory toTrajectory(DBObject dbo) {
-        Trajectory c = null;
-        /*
-         * if (dbo != null) { c = new Trajectory(); c.setId((Integer)
-         * dbo.get("id")); c.setName((String) dbo.get("name")); if
-         * (dbo.containsField("TrajectoryData")) { DBObject data = (DBObject)
-         * dbo.get("TrajectoryData"); Map<String, String> mss = data.toMap();
-         * for (String key : mss.keySet()) { c.addTrajectoryData(key,
-         * mss.get(key)); } } }
-         */
-        return c;
     }
 }

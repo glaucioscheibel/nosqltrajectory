@@ -18,7 +18,7 @@ public class MongoPersistenceTest extends PersistenceTest {
 
     @BeforeClass
     public static void beforeClass() {
-        Trajectory c = new Trajectory();
+        Trajectory c = new Trajectory(1, "teste");
         MongoPersistence mp = MongoPersistence.getInstance();
         mp.store(c);
     }

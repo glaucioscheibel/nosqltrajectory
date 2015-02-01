@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import br.udesc.mca.sec1.projeto.model.Customer;
 import br.udesc.mca.trajectory.dao.PersistenceAbstractFactory;
 import br.udesc.mca.trajectory.dao.PersistenceDAO;
 import br.udesc.mca.trajectory.dao.PersistenceModel;
@@ -20,13 +19,14 @@ import br.udesc.mca.trajectory.dao.keyvalue.KeyValuePersistence;
 import br.udesc.mca.trajectory.dao.keyvalue.RedisPersistence;
 import br.udesc.mca.trajectory.dao.relational.PostgreSQLPersistence;
 import br.udesc.mca.trajectory.dao.relational.RelationalPersistence;
+import br.udesc.mca.trajectory.model.Trajectory;
 
 public class PersistenceAbstractFactoryTest {
 
     @Test
     @SuppressWarnings("unchecked")
     public void documentTest() {
-        PersistenceDAO<Customer> dao = PersistenceAbstractFactory.getPersistenceDAO(PersistenceModel.DOCUMENT);
+        PersistenceDAO<Trajectory> dao = PersistenceAbstractFactory.getPersistenceDAO(PersistenceModel.DOCUMENT);
         assertNotNull(dao);
         assertTrue(dao instanceof DocumentPersistence);
         assertEquals(MongoPersistence.class, dao.getClass());
@@ -35,7 +35,7 @@ public class PersistenceAbstractFactoryTest {
     @Test
     @SuppressWarnings("unchecked")
     public void keyvalueTest() {
-        PersistenceDAO<Customer> dao = PersistenceAbstractFactory.getPersistenceDAO(PersistenceModel.KEY_VALUE);
+        PersistenceDAO<Trajectory> dao = PersistenceAbstractFactory.getPersistenceDAO(PersistenceModel.KEY_VALUE);
         assertNotNull(dao);
         assertTrue(dao instanceof KeyValuePersistence);
         assertEquals(RedisPersistence.class, dao.getClass());
@@ -44,7 +44,7 @@ public class PersistenceAbstractFactoryTest {
     @Test
     @SuppressWarnings("unchecked")
     public void relationalTest() {
-        PersistenceDAO<Customer> dao = PersistenceAbstractFactory.getPersistenceDAO(PersistenceModel.RELATIONAL);
+        PersistenceDAO<Trajectory> dao = PersistenceAbstractFactory.getPersistenceDAO(PersistenceModel.RELATIONAL);
         assertNotNull(dao);
         assertTrue(dao instanceof RelationalPersistence);
         assertEquals(PostgreSQLPersistence.class, dao.getClass());
@@ -53,7 +53,7 @@ public class PersistenceAbstractFactoryTest {
     @Test
     @SuppressWarnings("unchecked")
     public void columnTest() {
-        PersistenceDAO<Customer> dao = PersistenceAbstractFactory.getPersistenceDAO(PersistenceModel.COLUMN_FAMILY);
+        PersistenceDAO<Trajectory> dao = PersistenceAbstractFactory.getPersistenceDAO(PersistenceModel.COLUMN_FAMILY);
         assertNotNull(dao);
         assertTrue(dao instanceof ColumnPersistence);
         assertEquals(CassandraPersistence.class, dao.getClass());
@@ -62,7 +62,7 @@ public class PersistenceAbstractFactoryTest {
     @Test
     @SuppressWarnings("unchecked")
     public void graphTest() {
-        PersistenceDAO<Customer> dao = PersistenceAbstractFactory.getPersistenceDAO(PersistenceModel.GRAPH);
+        PersistenceDAO<Trajectory> dao = PersistenceAbstractFactory.getPersistenceDAO(PersistenceModel.GRAPH);
         assertNotNull(dao);
         assertTrue(dao instanceof GraphPersistence);
         assertEquals(Neo4jPersistence.class, dao.getClass());
@@ -71,6 +71,6 @@ public class PersistenceAbstractFactoryTest {
     @Test(expected=NullPointerException.class)
     @SuppressWarnings({"unchecked", "unused"})
     public void nullTest() {
-        PersistenceDAO<Customer> dao = PersistenceAbstractFactory.getPersistenceDAO(null);
+        PersistenceDAO<Trajectory> dao = PersistenceAbstractFactory.getPersistenceDAO(null);
     }
 }

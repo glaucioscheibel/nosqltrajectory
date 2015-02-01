@@ -9,6 +9,7 @@ import java.util.UUID;
 public class Trajectory implements Serializable {
     private static final long serialVersionUID = 1L;
     private UUID id;
+    private String description;
     private Date lastModified;
     private List<TrajectoryVersion> versions;
 
@@ -16,6 +17,11 @@ public class Trajectory implements Serializable {
 
     public Trajectory(UUID id) {
         this.id = id;
+    }
+    
+    public Trajectory(UUID id, String description) {
+        this.id = id;
+        this.description = description;
     }
 
     public UUID getId() {
@@ -26,6 +32,14 @@ public class Trajectory implements Serializable {
         this.id = id;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Date getLastModified() {
         return this.lastModified;
     }
@@ -33,7 +47,7 @@ public class Trajectory implements Serializable {
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
     }
-    
+
     public List<TrajectoryVersion> getVersions() {
         return this.versions;
     }
@@ -44,7 +58,7 @@ public class Trajectory implements Serializable {
         }
         this.versions.add(version);
     }
-    
+
     public void removeVersion(TrajectoryVersion version) {
         if (this.versions != null) {
             this.versions.remove(version);

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +21,9 @@ public abstract class PersistenceDAO<E> {
 
     public abstract List<E> findAll();
 
-    public abstract E findById(Integer id);
+    public abstract E findById(UUID id);
 
-    public abstract void deleteById(Integer id);
+    public abstract void deleteById(UUID id);
 
     public abstract void close();
 

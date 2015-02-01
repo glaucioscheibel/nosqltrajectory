@@ -2,6 +2,7 @@ package br.udesc.mca.trajectory.dao.graph;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -12,8 +13,7 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
 
-import br.udesc.mca.sec1.projeto.model.Customer;
-import br.udesc.mca.sec1.projeto.model.CustomerData;
+import br.udesc.mca.trajectory.model.Trajectory;
 
 public class Neo4jPersistence extends GraphPersistence {
     private static Neo4jPersistence instance;
@@ -34,8 +34,9 @@ public class Neo4jPersistence extends GraphPersistence {
     }
 
     @Override
-    public Customer store(Customer c) {
-        Customer aux = this.findById(c.getId());
+    public Trajectory store(Trajectory c) {
+        /*
+        Trajectory aux = this.findById(c.getId());
         Transaction t = this.db.beginTx();
         Node n = null;
         Node nd = null;
@@ -43,35 +44,36 @@ public class Neo4jPersistence extends GraphPersistence {
             n = this.dbindex.get("id", c.getId()).getSingle();
         } else {
             n = this.db.createNode();
-            if (c.getCustomerData() != null && !c.getCustomerData().isEmpty()) {
+            if (c.getTrajectoryData() != null && !c.getTrajectoryData().isEmpty()) {
                 nd = this.db.createNode();
-                n.createRelationshipTo(nd, RelationType.CUSTOMER_DATA);
+                n.createRelationshipTo(nd, RelationType.Trajectory_DATA);
             }
         }
         n.setProperty("id", c.getId());
-        n.setProperty("name", c.getName());
+        //n.setProperty("name", c.getName());
         this.dbindex.add(n, "id", c.getId());
-        List<CustomerData> lcd = c.getCustomerData();
+        List<TrajectoryData> lcd = c.getTrajectoryData();
         if (lcd != null && !lcd.isEmpty()) {
             for (String s: nd.getPropertyKeys()) {
                 nd.removeProperty(s);
             }
-            for (CustomerData cd : lcd) {
-                nd.setProperty(cd.getDataKey(), cd.getDataValue());
+            for (TrajectoryData cd : lcd) {
+                //nd.setProperty(cd.getDataKey(), cd.getDataValue());
             }
         }
         t.success();
+        */
         return c;
     }
 
     @Override
-    public List<Customer> findAll() {
-        List<Customer> lc = new ArrayList<>();
+    public List<Trajectory> findAll() {
+        List<Trajectory> lc = new ArrayList<>();
         IndexHits<Node> ihn = this.dbindex.query("id", "*");
         for (Node n : ihn) {
-            Customer c = new Customer();
-            c.setId((Integer) n.getProperty("id"));
-            c.setName((String) n.getProperty("name"));
+            Trajectory c = new Trajectory();
+            //c.setId((Integer) n.getProperty("id"));
+            //c.setName((String) n.getProperty("name"));
             this.addProperties(c, n);
             lc.add(c);
         }
@@ -79,31 +81,31 @@ public class Neo4jPersistence extends GraphPersistence {
     }
 
     @Override
-    public Customer findById(Integer id) {
-        Customer c = null;
+    public Trajectory findById(UUID id) {
+        Trajectory c = null;
         Node n = this.dbindex.get("id", id).getSingle();
         if (n != null) {
-            c = new Customer();
-            c.setId((Integer) n.getProperty("id"));
-            c.setName((String) n.getProperty("name"));
+            c = new Trajectory();
+            //c.setId((Integer) n.getProperty("id"));
+            //c.setName((String) n.getProperty("name"));
             this.addProperties(c, n);
         }
         return c;
     }
 
-    private void addProperties(Customer c, Node n) {
+    private void addProperties(Trajectory c, Node n) {
         Relationship r = n.getSingleRelationship(RelationType.CUSTOMER_DATA, Direction.OUTGOING);
         if (r != null) {
             Node nd = r.getEndNode();
             Iterable<String> is = nd.getPropertyKeys();
             for (String s : is) {
-                c.addCustomerData(s, (String) nd.getProperty(s));
+                //c.addTrajectoryData(s, (String) nd.getProperty(s));
             }
         }
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(UUID id) {
         Node n = this.dbindex.get("id", id).getSingle();
         if (n != null) {
             Transaction t = this.db.beginTx();

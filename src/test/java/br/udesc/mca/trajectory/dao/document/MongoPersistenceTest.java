@@ -1,10 +1,9 @@
-package br.udesc.mca.sec1.projeto.dao.document;
+package br.udesc.mca.trajectory.dao.document;
 
 import org.junit.BeforeClass;
 
-import br.udesc.mca.sec1.projeto.dao.PersistenceTest;
 import br.udesc.mca.trajectory.dao.PersistenceModel;
-import br.udesc.mca.trajectory.dao.document.MongoPersistence;
+import br.udesc.mca.trajectory.dao.PersistenceTest;
 import br.udesc.mca.trajectory.model.Trajectory;
 
 /**

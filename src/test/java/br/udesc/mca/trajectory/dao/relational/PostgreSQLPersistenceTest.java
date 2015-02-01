@@ -1,10 +1,9 @@
-package br.udesc.mca.sec1.projeto.dao.relational;
+package br.udesc.mca.trajectory.dao.relational;
 
 import org.junit.BeforeClass;
 
-import br.udesc.mca.sec1.projeto.dao.PersistenceTest;
 import br.udesc.mca.trajectory.dao.PersistenceModel;
-import br.udesc.mca.trajectory.dao.relational.PostgreSQLPersistence;
+import br.udesc.mca.trajectory.dao.PersistenceTest;
 import br.udesc.mca.trajectory.model.Trajectory;
 
 public class PostgreSQLPersistenceTest extends PersistenceTest {

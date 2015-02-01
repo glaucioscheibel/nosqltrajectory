@@ -8,11 +8,10 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import redis.clients.jedis.Jedis;
-import br.udesc.mca.sec1.projeto.model.Customer;
-
-import com.google.common.primitives.Ints;
+import br.udesc.mca.trajectory.model.Trajectory;
 
 public class RedisPersistence extends KeyValuePersistence {
     private static RedisPersistence instance;
@@ -32,12 +31,12 @@ public class RedisPersistence extends KeyValuePersistence {
     }
 
     @Override
-    public Customer store(Customer c) {
+    public Trajectory store(Trajectory c) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(c);
-            this.db.set(Ints.toByteArray(c.getId()), baos.toByteArray());
+            this.db.set(c.getId().toString().getBytes(), baos.toByteArray());
         } catch (Exception e) {
             this.log.error(e.getMessage(), e);
         }
@@ -45,8 +44,8 @@ public class RedisPersistence extends KeyValuePersistence {
     }
 
     @Override
-    public List<Customer> findAll() {
-        List<Customer> lc = new ArrayList<>();
+    public List<Trajectory> findAll() {
+        List<Trajectory> lc = new ArrayList<>();
         Set<byte[]> sb = this.db.keys("*".getBytes());
         for (byte[] key : sb) {
             byte[] value = this.db.get(key);
@@ -54,7 +53,7 @@ public class RedisPersistence extends KeyValuePersistence {
                 try {
                     ByteArrayInputStream bais = new ByteArrayInputStream(value);
                     ObjectInputStream ois = new ObjectInputStream(bais);
-                    lc.add((Customer) ois.readObject());
+                    lc.add((Trajectory) ois.readObject());
                 } catch (Exception e) {
                     this.log.error(e.getMessage(), e);
                 }
@@ -64,14 +63,14 @@ public class RedisPersistence extends KeyValuePersistence {
     }
 
     @Override
-    public Customer findById(Integer id) {
-        Customer ret = null;
+    public Trajectory findById(UUID id) {
+        Trajectory ret = null;
         try {
-            byte[] value = this.db.get(Ints.toByteArray(id));
+            byte[] value = this.db.get(id.toString().getBytes());
             if (value != null) {
                 ByteArrayInputStream bais = new ByteArrayInputStream(value);
                 ObjectInputStream ois = new ObjectInputStream(bais);
-                ret = (Customer) ois.readObject();
+                ret = (Trajectory) ois.readObject();
             }
         } catch (IOException | ClassNotFoundException e) {
             this.log.error(e.getMessage(), e);
@@ -80,8 +79,8 @@ public class RedisPersistence extends KeyValuePersistence {
     }
 
     @Override
-    public void deleteById(Integer id) {
-        this.db.del(Ints.toByteArray(id));
+    public void deleteById(UUID id) {
+        this.db.del(id.toString().getBytes());
     }
 
     @Override

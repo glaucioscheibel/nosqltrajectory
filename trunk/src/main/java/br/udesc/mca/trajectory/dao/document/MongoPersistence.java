@@ -3,10 +3,9 @@ package br.udesc.mca.trajectory.dao.document;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
-import br.udesc.mca.sec1.projeto.model.Customer;
-import br.udesc.mca.sec1.projeto.model.CustomerData;
+import br.udesc.mca.trajectory.model.Trajectory;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -17,7 +16,7 @@ import com.mongodb.MongoClient;
 
 public class MongoPersistence extends DocumentPersistence {
 
-    private static final String colName = "Customers";
+    private static final String colName = "Trajectorys";
     private static MongoPersistence instance;
     private MongoClient mongo;
     private DB db;
@@ -39,43 +38,45 @@ public class MongoPersistence extends DocumentPersistence {
     }
 
     @Override
-    public Customer store(Customer c) {
+    public Trajectory store(Trajectory c) {
         if (this.log.isInfoEnabled()) {
             this.log.info("Storing " + c);
         }
+        /*
         DBCollection dbc = this.db.getCollection(colName);
         DBObject aux = this._findById(c.getId());
         DBObject dbo = new BasicDBObject();
         dbo.put("id", c.getId());
         dbo.put("name", c.getName());
-        if (c.getCustomerData() != null && c.getCustomerData().size() > 0) {
+        if (c.getTrajectoryData() != null && c.getTrajectoryData().size() > 0) {
             DBObject data = new BasicDBObject();
-            for (CustomerData cd : c.getCustomerData()) {
+            for (TrajectoryData cd : c.getTrajectoryData()) {
                 data.put(cd.getDataKey(), cd.getDataValue());
             }
-            dbo.put("customerData", data);
+            dbo.put("TrajectoryData", data);
         }
         if (aux == null) {
             dbc.insert(dbo);
         } else {
             dbc.update(aux, dbo);
         }
+        */
         return c;
     }
 
     @Override
-    public List<Customer> findAll() {
+    public List<Trajectory> findAll() {
         this.log.info("findAll");
-        List<Customer> ret = new ArrayList<>();
+        List<Trajectory> ret = new ArrayList<>();
         DBCollection dbc = this.db.getCollection(colName);
         DBCursor cursor = dbc.find();
         for (DBObject dbo : cursor) {
-            ret.add(toCustomer(dbo));
+            ret.add(toTrajectory(dbo));
         }
         return ret;
     }
 
-    private DBObject _findById(Integer id) {
+    private DBObject _findById(UUID id) {
         DBCollection dbc = this.db.getCollection(colName);
         DBObject dbo = new BasicDBObject();
         dbo.put("id", id);
@@ -84,17 +85,17 @@ public class MongoPersistence extends DocumentPersistence {
     }
 
     @Override
-    public Customer findById(Integer id) {
+    public Trajectory findById(UUID id) {
         if (this.log.isInfoEnabled()) {
             this.log.info("findById(" + id + ")");
         }
-        Customer ret;
-        ret = toCustomer(this._findById(id));
+        Trajectory ret = null;
+        //ret = toTrajectory(this._findById(id));
         return ret;
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(UUID id) {
         if (this.log.isInfoEnabled()) {
             this.log.info("deleteById(" + id + ")");
         }
@@ -114,20 +115,22 @@ public class MongoPersistence extends DocumentPersistence {
     }
 
     @SuppressWarnings("unchecked")
-    private static Customer toCustomer(DBObject dbo) {
-        Customer c = null;
+    private static Trajectory toTrajectory(DBObject dbo) {
+        Trajectory c = null;
+        /*
         if (dbo != null) {
-            c = new Customer();
+            c = new Trajectory();
             c.setId((Integer) dbo.get("id"));
             c.setName((String) dbo.get("name"));
-            if (dbo.containsField("customerData")) {
-                DBObject data = (DBObject) dbo.get("customerData");
+            if (dbo.containsField("TrajectoryData")) {
+                DBObject data = (DBObject) dbo.get("TrajectoryData");
                 Map<String, String> mss = data.toMap();
                 for (String key : mss.keySet()) {
-                    c.addCustomerData(key, mss.get(key));
+                    c.addTrajectoryData(key, mss.get(key));
                 }
             }
         }
+        */
         return c;
     }
 }

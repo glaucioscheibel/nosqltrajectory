@@ -7,11 +7,20 @@ import java.util.List;
 
 public class TrajectoryVersion implements Serializable {
     private static final long serialVersionUID = 1L;
+    private int version;
     private TrajectoryType type;
     private Date modified;
     private List<TrajectoryPoint> points;
     private TrajectoryData data;
     private List<TrajectoryProcessHistory> history;
+
+    public int getVersion() {
+        return this.version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     public TrajectoryType getType() {
         return this.type;
@@ -32,7 +41,7 @@ public class TrajectoryVersion implements Serializable {
     public List<TrajectoryPoint> getPoints() {
         return this.points;
     }
-    
+
     public void addPoint(TrajectoryPoint point) {
         if (this.points == null) {
             this.points = new ArrayList<>();

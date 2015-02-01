@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -33,7 +32,7 @@ public abstract class PersistenceTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testFindById() {
-        UUID id = new UUID(1, 1);
+        long id = 1L;
         PersistenceDAO<Trajectory> db = PersistenceAbstractFactory.getPersistenceDAO(this.model);
         Trajectory c = db.findById(id);
         assertNotNull(c);
@@ -43,7 +42,7 @@ public abstract class PersistenceTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testUpdate() {
-        UUID id = new UUID(1, 1);
+        long id = 1L;
         PersistenceDAO<Trajectory> db = PersistenceAbstractFactory.getPersistenceDAO(this.model);
         Trajectory c = db.findById(id);
         c.setDescription("Beltrano");
@@ -58,7 +57,7 @@ public abstract class PersistenceTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testDeleteById() {
-        UUID id = new UUID(2, 2);
+        long id = 2L;
         PersistenceDAO<Trajectory> db = PersistenceAbstractFactory.getPersistenceDAO(this.model);
         Trajectory c2 = new Trajectory(id, "Fulana de Tal");
         db.store(c2);

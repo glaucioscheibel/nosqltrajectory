@@ -4,31 +4,30 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class Trajectory implements Serializable {
     private static final long serialVersionUID = 1L;
-    private UUID id;
+    private long id;
     private String description;
     private Date lastModified;
     private List<TrajectoryVersion> versions;
 
     public Trajectory() {}
 
-    public Trajectory(UUID id) {
+    public Trajectory(long id) {
         this.id = id;
     }
-    
-    public Trajectory(UUID id, String description) {
+
+    public Trajectory(long id, String description) {
         this.id = id;
         this.description = description;
     }
 
-    public UUID getId() {
+    public long getId() {
         return this.id;
     }
 
-    public void setId(UUID id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -67,7 +66,10 @@ public class Trajectory implements Serializable {
 
     @Override
     public int hashCode() {
-        return this.id.hashCode();
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (this.id ^ (this.id >>> 32));
+        return result;
     }
 
     @Override
@@ -82,11 +84,7 @@ public class Trajectory implements Serializable {
             return false;
         }
         Trajectory other = (Trajectory) obj;
-        if (this.id == null) {
-            if (other.id != null) {
-                return false;
-            }
-        } else if (!this.id.equals(other.id)) {
+        if (this.id != other.id) {
             return false;
         }
         return true;

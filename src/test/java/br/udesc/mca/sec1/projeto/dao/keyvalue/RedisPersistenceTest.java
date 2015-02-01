@@ -1,5 +1,7 @@
 package br.udesc.mca.sec1.projeto.dao.keyvalue;
 
+import java.util.UUID;
+
 import org.junit.BeforeClass;
 
 import br.udesc.mca.sec1.projeto.dao.PersistenceTest;
@@ -15,7 +17,7 @@ public class RedisPersistenceTest extends PersistenceTest {
 
     @BeforeClass
     public static void beforeClass() {
-        Trajectory c = new Trajectory();
+        Trajectory c = new Trajectory(new UUID(1, 1), "teste");
         RedisPersistence db = RedisPersistence.getInstance();
         db.store(c);
     }

@@ -16,7 +16,6 @@ import br.udesc.mca.trajectory.model.Trajectory;
 
 @Ignore
 public abstract class PersistenceTest {
-
     private PersistenceModel model;
 
     public PersistenceTest(PersistenceModel model) {

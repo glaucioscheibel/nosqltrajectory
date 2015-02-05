@@ -14,7 +14,7 @@ public class PostgreSQLPersistenceTest extends PersistenceTest {
 
     @BeforeClass
     public static void beforeClass() {
-        Trajectory c = new Trajectory();
+        Trajectory c = new Trajectory(1);
         PostgreSQLPersistence pgp = new PostgreSQLPersistence();
         pgp.deleteAll();
         pgp.store(c);

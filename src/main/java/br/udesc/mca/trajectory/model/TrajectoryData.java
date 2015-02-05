@@ -1,46 +1,59 @@
 package br.udesc.mca.trajectory.model;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class TrajectoryData implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Map<String, String> data;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trajectoryid")
+    private TrajectoryVersion trajectoryVersion;
 
-    public TrajectoryData() {
-        this.data = new LinkedHashMap<>();
+    private String key;
+    private String value;
+
+    public TrajectoryData() {}
+
+    public int getId() {
+        return this.id;
     }
 
-    public int size() {
-        return this.data.size();
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public boolean containsKey(Object key) {
-        return this.data.containsKey(key);
+    public TrajectoryVersion getTrajectoryVersion() {
+        return this.trajectoryVersion;
     }
 
-    public String get(Object key) {
-        return this.data.get(key);
+    public void setTrajectoryVersion(TrajectoryVersion trajectoryVersion) {
+        this.trajectoryVersion = trajectoryVersion;
     }
 
-    public String put(String key, String value) {
-        return this.data.put(key, value);
+    public String getKey() {
+        return this.key;
     }
 
-    public String remove(Object key) {
-        return this.data.remove(key);
+    public void setKey(String key) {
+        this.key = key;
     }
 
-    public void clear() {
-        this.data.clear();
+    public String getValue() {
+        return this.value;
     }
 
-    public boolean equals(Object o) {
-        return this.data.equals(o);
-    }
-
-    public int hashCode() {
-        return this.data.hashCode();
+    public void setValue(String value) {
+        this.value = value;
     }
 }

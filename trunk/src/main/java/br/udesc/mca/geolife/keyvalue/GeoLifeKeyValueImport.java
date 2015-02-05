@@ -37,7 +37,7 @@ public class GeoLifeKeyValueImport {
             TrajectoryVersion tv = new TrajectoryVersion();
             tv.setVersion(1);
             tv.setType(TrajectoryType.RAW);
-            tv.setModified(new Date());
+            tv.setLastModified(new Date());
             tr.addVersion(tv);
             FileReader fr = new FileReader(f);
             BufferedReader br = new BufferedReader(fr);

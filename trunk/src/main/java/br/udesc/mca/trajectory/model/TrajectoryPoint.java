@@ -1,15 +1,43 @@
 package br.udesc.mca.trajectory.model;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class TrajectoryPoint implements Serializable {
     private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trajectoryid")
+    private TrajectoryVersion trajectoryVersion;
     private float x;
     private float y;
     private long timestamp;
-    private Map<String, String> data;
+
+    public int getId() {
+        return this.id;
+    }
+
+    public TrajectoryVersion getTrajectoryVersion() {
+        return this.trajectoryVersion;
+    }
+
+    public void setTrajectoryVersion(TrajectoryVersion trajectoryVersion) {
+        this.trajectoryVersion = trajectoryVersion;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public float getX() {
         return this.x;
@@ -33,19 +61,5 @@ public class TrajectoryPoint implements Serializable {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public String get(Object key) {
-        if (this.data != null) {
-            return this.data.get(key);
-        }
-        return null;
-    }
-
-    public void put(String key, String value) {
-        if (this.data == null) {
-            this.data = new HashMap<>();
-        }
-        this.data.put(key, value);
     }
 }

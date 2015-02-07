@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}{{ passo_atual }}{% endblock %}
+
+{% block onload %} onload="executa('{{ passo_atual }}');"{% endblock %}
+{% block passo_atual %}
+    <mark>{{ passo_atual }}</mark> <a>{{ passo_atual_texto }}</a>
+{% endblock %}
+
+{% block content %}
+        </br>
+        <!-- Instruções !-->
+        <div id='instrucao'>
+            <p>Para habilitar a função de desenho do poligono clique com o botão <b>direito</b> do mouse sobre o mapa.
+            Agora com o botão <b>esquerdo</b>, marque os pontos que serão os limites da figura
+            desejada.</p>
+            <p>Para encerrar a seleção, efetue um clique sobre o primeiro ponto marcado, dessa forma
+            fechando a figura.</p>
+        </div>
+        <!-- Botões !-->
+        <ul class='botoes'>
+            <li onclick='apaga_poligono()' type='button' class='botao_simples'>Limpar seleção</li>
+            <li onclick='valida_poligono()' type='button' class='selecao_nao_validada' id='valida_selecao' >Validar seleção</li>
+        </ul>
+{% endblock %}
+{% block barra_inferior %}
+        <!-- passo seguinte !-->
+        <form method="POST" action='/passo2/' class='form_passo_1'>{% csrf_token %}
+            <textarea cols='30' name='coordenadas' id='coordenadas_demarcadas' required></textarea>
+            <input type='submit' id='submit_proximo_passo' class='submit_proximo_passo_desabilitado' value='Continuar'>
+        </form>
+{% endblock %}

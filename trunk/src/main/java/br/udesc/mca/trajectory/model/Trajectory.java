@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -22,7 +23,7 @@ public class Trajectory implements Serializable {
     private String description;
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModified;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectoryVersion> versions;
 
     public Trajectory() {}

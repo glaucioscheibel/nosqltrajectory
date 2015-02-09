@@ -13,12 +13,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class TrajectoryProcessHistory implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trajectoryversionid")
     private TrajectoryVersion trajectoryVersion;

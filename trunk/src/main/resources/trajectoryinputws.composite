@@ -1,0 +1,13 @@
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+           xmlns:tuscany="http://tuscany.apache.org/xmlns/sca/1.1"
+           targetNamespace="http://br.udesc.mca.trajectory.service"
+           name="TrajectoryWS">
+
+    <component name="TrajectoryInput">
+        <implementation.java class="br.udesc.mca.trajectory.service.TrajectoryInputService"/>
+        <service name="Input">
+            <binding.ws />
+        </service>
+    </component>
+
+</composite>

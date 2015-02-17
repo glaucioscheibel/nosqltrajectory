@@ -9,7 +9,7 @@ import java.util.List;
 /**
   A ideia dessa classe é ter metodos abstratos para conversao dos objetos e metodos concretos para a  possivel regra na execucao de um script
  */
-public abstract class ScriptEngine {
+public abstract class ScriptEngine implements AutoCloseable {
 
     public static ScriptEngine initEngine(String engine){
         /*

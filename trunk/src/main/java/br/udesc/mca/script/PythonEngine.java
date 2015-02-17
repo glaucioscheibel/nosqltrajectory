@@ -114,4 +114,9 @@ class PythonEngine extends ScriptEngine {
     public void execute(String s) {
         executionContext.invoke(s, executionContext);
     }
+
+    @Override
+    public void close() throws Exception {
+        py.close();
+    }
 }

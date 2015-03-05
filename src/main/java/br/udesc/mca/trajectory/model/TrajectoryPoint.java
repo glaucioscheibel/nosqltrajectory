@@ -14,56 +14,77 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class TrajectoryPoint implements Serializable {
-    private static final long serialVersionUID = 1L;
-    @Id
-    @JsonIgnore
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trajectoryid")
-    private TrajectoryVersion trajectoryVersion;
-    private float x;
-    private float y;
-    private long timestamp;
 
-    public int getId() {
-        return this.id;
-    }
+	private static final long serialVersionUID = -4325481950110704141L;
 
-    public TrajectoryVersion getTrajectoryVersion() {
-        return this.trajectoryVersion;
-    }
+	@Id
+	@JsonIgnore
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int id;
 
-    public void setTrajectoryVersion(TrajectoryVersion trajectoryVersion) {
-        this.trajectoryVersion = trajectoryVersion;
-    }
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "trajectoryid")
+	private TrajectoryVersion trajectoryVersion;
+	private float lat;
+	private float lng;
+	private float h;
+	private long timestamp;
+	private String transportationMode;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public int getId() {
+		return this.id;
+	}
 
-    public float getX() {
-        return this.x;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setX(float x) {
-        this.x = x;
-    }
+	public TrajectoryVersion getTrajectoryVersion() {
+		return this.trajectoryVersion;
+	}
 
-    public float getY() {
-        return this.y;
-    }
+	public void setTrajectoryVersion(TrajectoryVersion trajectoryVersion) {
+		this.trajectoryVersion = trajectoryVersion;
+	}
 
-    public void setY(float y) {
-        this.y = y;
-    }
+	public float getLat() {
+		return this.lat;
+	}
 
-    public long getTimestamp() {
-        return this.timestamp;
-    }
+	public void setLat(float lat) {
+		this.lat = lat;
+	}
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
+	public float getLng() {
+		return this.lng;
+	}
+
+	public void setLng(float lng) {
+		this.lng = lng;
+	}
+
+	public float getH() {
+		return h;
+	}
+
+	public void setH(float h) {
+		this.h = h;
+	}
+
+	public long getTimestamp() {
+		return this.timestamp;
+	}
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public String getTransportationMode() {
+		return transportationMode;
+	}
+
+	public void setTransportationMode(String transportationMode) {
+		this.transportationMode = transportationMode;
+	}
 }

@@ -65,8 +65,8 @@ public class GeoLifeKeyValueJsonImport {
                 // Field 7: Time as a string.
                 String time = st.nextToken();
                 TrajectoryPoint tp = new TrajectoryPoint();
-                tp.setY(Float.parseFloat(lat));
-                tp.setX(Float.parseFloat(lng));
+                tp.setLat(Float.parseFloat(lat));
+                tp.setLng(Float.parseFloat(lng));
                 tp.setTimestamp(sdf.parse(date + ' ' + time).getTime());
                 tv.addPoint(tp);
             }

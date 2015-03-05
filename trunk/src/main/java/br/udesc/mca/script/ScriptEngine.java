@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
-  A ideia dessa classe Ã© ter metodos abstratos para conversao dos objetos e metodos concretos para a  possivel regra na execucao de um script
+  A ideia dessa classe é ter metodos abstratos para conversao dos objetos e metodos concretos para a  possivel regra na execucao de um script
  */
 public abstract class ScriptEngine implements AutoCloseable {
 
@@ -58,8 +58,8 @@ public abstract class ScriptEngine implements AutoCloseable {
     protected ITrajectory toITrajectory(TrajectoryPoint t){
         ITrajectory i = new ITrajectory();
 
-        i.lat = t.getY();
-        i.lon = t.getX();
+        i.lat = t.getLat();
+        i.lon = t.getLng();
         i.precisao = 0.9f; // TODO: nao deveria ter isso na trajetorioa?
 
         Calendar c = Calendar.getInstance();
@@ -86,8 +86,8 @@ public abstract class ScriptEngine implements AutoCloseable {
     protected TrajectoryPoint fromITrajectory(ITrajectory i){
         TrajectoryPoint t = new TrajectoryPoint();
 
-        t.setY(i.lat);
-        t.setX(i.lon);
+        t.setLat(i.lat);
+        t.setLng(i.lon);
         //i.precisao
 
         Calendar c = Calendar.getInstance();

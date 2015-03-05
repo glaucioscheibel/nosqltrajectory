@@ -18,8 +18,8 @@ public class PythonScripTest {
 
             List<TrajectoryPoint> pl = new ArrayList<>();
             TrajectoryPoint p = new TrajectoryPoint();
-            p.setY(80.0f);
-            p.setX(80.0f);
+            p.setLat(80.0f);
+            p.setLng(80.0f);
             p.setTimestamp(System.currentTimeMillis());
             pl.add(p);
 
@@ -27,7 +27,7 @@ public class PythonScripTest {
 
             rpl = engine.processTrajectoryList(pl);
 
-            assertTrue(rpl.get(0).getY() == 79.0f);
+            assertTrue(rpl.get(0).getLat() == 79.0f);
         } catch (Exception e) {
             e.printStackTrace();
             throw  new RuntimeException(e);

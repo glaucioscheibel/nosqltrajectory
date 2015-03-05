@@ -21,12 +21,15 @@ public class TrajectoryInputService implements TrajectoryInput {
 
     /**
      * Inclui um ponto em uma nova trajetoria e retorna o ID da trajetoria criada
+     * 
+     * @param latitude eixo y
+     * @param longitude eixo x
      */
     @Override
     public long insertSinglePointWithDateTime(float latitude, float longitude, int ano, int mes, int dia, int hora, int min, int seg, String descricao) {
         TrajectoryPoint p1 = new TrajectoryPoint();
-        p1.setX(longitude);
-        p1.setY(latitude);
+        p1.setLng(longitude);
+        p1.setLat(latitude);
 
         Calendar c = Calendar.getInstance();
         Date now = c.getTime();
@@ -88,8 +91,8 @@ public class TrajectoryInputService implements TrajectoryInput {
         }
 
         TrajectoryPoint p = new TrajectoryPoint();
-        p.setX(longitude);
-        p.setY(latitude);
+        p.setLng(longitude);
+        p.setLat(latitude);
         p.setTimestamp(System.currentTimeMillis());
         Date now = new Date();
 

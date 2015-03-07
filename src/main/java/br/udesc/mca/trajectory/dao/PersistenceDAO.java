@@ -24,7 +24,7 @@ public abstract class PersistenceDAO<E> {
 
     public abstract void deleteById(long id);
 
-    public abstract void close();
+    public void close() {};
 
     public void createDB() {}
 

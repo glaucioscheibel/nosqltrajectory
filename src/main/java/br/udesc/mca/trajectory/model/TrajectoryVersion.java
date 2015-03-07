@@ -31,6 +31,9 @@ public class TrajectoryVersion implements Serializable {
     @JoinColumn(name = "trajectoryid")
     private Trajectory trajectory;
     private int version;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userid")
+    private User user;
     private TrajectoryType type;
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModified;

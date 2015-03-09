@@ -65,7 +65,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>2.12.5</version>
+            <version>2.13.0</version>
         </dependency>
         <dependency>
             <groupId>com.datastax.cassandra</groupId>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j</artifactId>
-            <version>2.1.6</version>
+            <version>2.1.7</version>
         </dependency>
         <dependency>
             <groupId>redis.clients</groupId>
@@ -90,22 +90,17 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.3-1102-jdbc41</version>
+            <version>9.4-1201-jdbc41</version>
         </dependency>
         <dependency>
             <groupId>org.python</groupId>
             <artifactId>jython</artifactId>
-            <version>2.7-b3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-dbcp2</artifactId>
-            <version>2.0.1</version>
+            <version>2.7-b4</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.5.0</version>
+            <version>2.5.1</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>

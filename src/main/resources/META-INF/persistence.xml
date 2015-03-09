@@ -5,10 +5,11 @@
     <persistence-unit name="TrajectoryPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>br.udesc.mca.trajectory.model.Trajectory</class>
-        <class>br.udesc.mca.trajectory.model.TrajectoryVersion</class>
         <class>br.udesc.mca.trajectory.model.TrajectoryPoint</class>
-        <class>br.udesc.mca.trajectory.model.TrajectoryVersionData</class>
+        <class>br.udesc.mca.trajectory.model.TrajectoryPointData</class>
         <class>br.udesc.mca.trajectory.model.TrajectoryProcessHistory</class>
+        <class>br.udesc.mca.trajectory.model.TrajectoryVersion</class>
+        <class>br.udesc.mca.trajectory.model.TrajectoryVersionData</class>
         <class>br.udesc.mca.trajectory.model.User</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />

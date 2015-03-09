@@ -3,7 +3,6 @@ package br.udesc.mca.trajectory.model;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,15 +12,15 @@ import javax.persistence.ManyToOne;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class TrajectoryVersionData implements Serializable {
+public class TrajectoryPointData implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
     private int id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trajectoryid")
-    private TrajectoryVersion trajectoryVersion;
+    @ManyToOne
+    @JoinColumn(name = "trajectorypointid")
+    private TrajectoryPoint trajectoryPoint;
     private String key;
     private String value;
 
@@ -31,14 +30,6 @@ public class TrajectoryVersionData implements Serializable {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public TrajectoryVersion getTrajectoryVersion() {
-        return this.trajectoryVersion;
-    }
-
-    public void setTrajectoryVersion(TrajectoryVersion trajectoryVersion) {
-        this.trajectoryVersion = trajectoryVersion;
     }
 
     public String getKey() {
@@ -56,4 +47,31 @@ public class TrajectoryVersionData implements Serializable {
     public void setValue(String value) {
         this.value = value;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.id;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        TrajectoryPointData other = (TrajectoryPointData) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        return true;
+    }
+
 }

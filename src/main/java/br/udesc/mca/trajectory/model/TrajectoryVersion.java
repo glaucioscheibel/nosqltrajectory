@@ -39,7 +39,7 @@ public class TrajectoryVersion implements Serializable {
     private Date lastModified;
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectoryPoint> points;
-    private TrajectoryData data;
+    private TrajectoryVersionData data;
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectoryProcessHistory> history;
 
@@ -102,11 +102,11 @@ public class TrajectoryVersion implements Serializable {
         this.points.add(point);
     }
 
-    public TrajectoryData getData() {
+    public TrajectoryVersionData getData() {
         return this.data;
     }
 
-    public void setData(TrajectoryData data) {
+    public void setData(TrajectoryVersionData data) {
         this.data = data;
     }
 

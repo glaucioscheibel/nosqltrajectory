@@ -11,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class TrajectoryData implements Serializable {
+public class TrajectoryVersionData implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,7 +23,7 @@ public class TrajectoryData implements Serializable {
     private String key;
     private String value;
 
-    public TrajectoryData() {}
+    public TrajectoryVersionData() {}
 
     public int getId() {
         return this.id;

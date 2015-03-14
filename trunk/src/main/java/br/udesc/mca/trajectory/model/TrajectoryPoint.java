@@ -15,76 +15,76 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class TrajectoryPoint implements Serializable {
 
-	private static final long serialVersionUID = -4325481950110704141L;
+    private static final long serialVersionUID = -4325481950110704141L;
 
-	@Id
-	@JsonIgnore
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+    @Id
+    @JsonIgnore
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "trajectoryid")
-	private TrajectoryVersion trajectoryVersion;
-	private float lat;
-	private float lng;
-	private float h;
-	private long timestamp;
-	private String transportationMode;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "segmentid")
+    private TrajectorySegment segment;
+    private float lat;
+    private float lng;
+    private float h;
+    private long timestamp;
+    private String transportationMode;
 
-	public int getId() {
-		return this.id;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public TrajectoryVersion getTrajectoryVersion() {
-		return this.trajectoryVersion;
-	}
+    public TrajectorySegment getSegment() {
+        return this.segment;
+    }
 
-	public void setTrajectoryVersion(TrajectoryVersion trajectoryVersion) {
-		this.trajectoryVersion = trajectoryVersion;
-	}
+    public void setSegment(TrajectorySegment segment) {
+        this.segment = segment;
+    }
 
-	public float getLat() {
-		return this.lat;
-	}
+    public float getLat() {
+        return this.lat;
+    }
 
-	public void setLat(float lat) {
-		this.lat = lat;
-	}
+    public void setLat(float lat) {
+        this.lat = lat;
+    }
 
-	public float getLng() {
-		return this.lng;
-	}
+    public float getLng() {
+        return this.lng;
+    }
 
-	public void setLng(float lng) {
-		this.lng = lng;
-	}
+    public void setLng(float lng) {
+        this.lng = lng;
+    }
 
-	public float getH() {
-		return h;
-	}
+    public float getH() {
+        return h;
+    }
 
-	public void setH(float h) {
-		this.h = h;
-	}
+    public void setH(float h) {
+        this.h = h;
+    }
 
-	public long getTimestamp() {
-		return this.timestamp;
-	}
+    public long getTimestamp() {
+        return this.timestamp;
+    }
 
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
-	public String getTransportationMode() {
-		return transportationMode;
-	}
+    public String getTransportationMode() {
+        return transportationMode;
+    }
 
-	public void setTransportationMode(String transportationMode) {
-		this.transportationMode = transportationMode;
-	}
+    public void setTransportationMode(String transportationMode) {
+        this.transportationMode = transportationMode;
+    }
 }

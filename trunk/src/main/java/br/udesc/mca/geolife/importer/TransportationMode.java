@@ -1,4 +1,4 @@
-package br.udesc.mca.geolife.relational;
+package br.udesc.mca.geolife.importer;
 
 import java.util.Date;
 

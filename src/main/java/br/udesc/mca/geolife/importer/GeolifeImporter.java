@@ -25,7 +25,8 @@ import br.udesc.mca.trajectory.model.User;
 
 public abstract class GeolifeImporter {
     private static Map<Integer, List<TransportationMode>> transModes;
-    PersistenceDAO<Trajectory> dao;
+    protected PersistenceDAO<Trajectory> dao;
+    protected UserDAO udao;
 
     @SuppressWarnings("unused")
     public void importData() throws Exception {
@@ -37,8 +38,6 @@ public abstract class GeolifeImporter {
         String[] ext = { "plt" };
         Iterator<File> ifs = FileUtils.iterateFiles(data, ext, true);
         boolean type = false;
-
-        UserDAO udao = new UserDAO();
         int prevUser = -1;
         User user = null;
 
@@ -48,7 +47,9 @@ public abstract class GeolifeImporter {
             int userId = Integer.parseInt(dir);
             if (userId != prevUser) {
                 user = new User(userId, "User " + userId);
-                udao.create(user);
+                if (this.udao != null) {
+                    this.udao.create(user);
+                }
                 prevUser = userId;
             }
             String trajDesc = f.getName();
@@ -150,5 +151,9 @@ public abstract class GeolifeImporter {
 
     public void setDao(PersistenceDAO<Trajectory> dao) {
         this.dao = dao;
+    }
+
+    public void setUserDao(UserDAO dao) {
+        this.udao = dao;
     }
 }

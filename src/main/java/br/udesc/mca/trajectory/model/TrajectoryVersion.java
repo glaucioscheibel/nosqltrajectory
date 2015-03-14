@@ -38,7 +38,7 @@ public class TrajectoryVersion implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModified;
     @OneToMany(cascade = CascadeType.ALL)
-    private List<TrajectoryPoint> points;
+    private List<TrajectorySegment> segments;
     private TrajectoryVersionData data;
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectoryProcessHistory> history;
@@ -91,15 +91,15 @@ public class TrajectoryVersion implements Serializable {
         this.lastModified = lastModified;
     }
 
-    public List<TrajectoryPoint> getPoints() {
-        return this.points;
+    public List<TrajectorySegment> getSegments() {
+        return this.segments;
     }
 
-    public void addPoint(TrajectoryPoint point) {
-        if (this.points == null) {
-            this.points = new ArrayList<>();
+    public void addSegment(TrajectorySegment segment) {
+        if (this.segments == null) {
+            this.segments = new ArrayList<>();
         }
-        this.points.add(point);
+        this.segments.add(segment);
     }
 
     public TrajectoryVersionData getData() {

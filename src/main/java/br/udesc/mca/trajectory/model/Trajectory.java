@@ -21,6 +21,7 @@ public class Trajectory implements Serializable {
     @Id
     private long id;
     private String description;
+    private int originalTrajectory;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModified;
@@ -77,6 +78,14 @@ public class Trajectory implements Serializable {
         if (this.versions != null) {
             this.versions.remove(version);
         }
+    }
+
+    public int getOriginalTrajectory() {
+        return this.originalTrajectory;
+    }
+
+    public void setOriginalTrajectory(int originalTrajectory) {
+        this.originalTrajectory = originalTrajectory;
     }
 
     @Override

@@ -34,6 +34,7 @@ public class TrajectoryVersion implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid")
     private User user;
+    private int previousVersion;
     private TrajectoryType type;
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModified;
@@ -81,6 +82,14 @@ public class TrajectoryVersion implements Serializable {
 
     public void setType(TrajectoryType type) {
         this.type = type;
+    }
+
+    public int getPreviousVersion() {
+        return this.previousVersion;
+    }
+
+    public void setPreviousVersion(int previousVersion) {
+        this.previousVersion = previousVersion;
     }
 
     public Date getLastModified() {

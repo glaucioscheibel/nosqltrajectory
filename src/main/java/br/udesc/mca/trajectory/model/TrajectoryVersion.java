@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -41,8 +42,8 @@ public class TrajectoryVersion implements Serializable {
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectorySegment> segments;
     private TrajectoryVersionData data;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<TrajectoryProcessHistory> history;
+    @OneToOne
+    private TrajectoryProcess history;
 
     public int getId() {
         return this.id;
@@ -119,14 +120,11 @@ public class TrajectoryVersion implements Serializable {
         this.data = data;
     }
 
-    public List<TrajectoryProcessHistory> getHistory() {
+    public TrajectoryProcess getProcess() {
         return this.history;
     }
 
-    public void addHistory(TrajectoryProcessHistory history) {
-        if (this.history == null) {
-            this.history = new ArrayList<>();
-        }
-        this.history.add(history);
+    public void setHistory(TrajectoryProcess history) {
+        this.history = history;
     }
 }

@@ -9,21 +9,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class TrajectoryProcessHistory implements Serializable {
+public class TrajectoryProcess implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trajectoryversionid")
     private TrajectoryVersion trajectoryVersion;
     private int componentId;
@@ -74,7 +74,7 @@ public class TrajectoryProcessHistory implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        TrajectoryProcessHistory other = (TrajectoryProcessHistory) obj;
+        TrajectoryProcess other = (TrajectoryProcess) obj;
         if (this.id != other.id) {
             return false;
         }

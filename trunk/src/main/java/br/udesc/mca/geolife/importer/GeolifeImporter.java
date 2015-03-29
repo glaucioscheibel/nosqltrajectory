@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 
@@ -21,19 +19,18 @@ import br.udesc.mca.trajectory.model.TrajectoryPoint;
 import br.udesc.mca.trajectory.model.TrajectorySegment;
 import br.udesc.mca.trajectory.model.TrajectoryType;
 import br.udesc.mca.trajectory.model.TrajectoryVersion;
+import br.udesc.mca.trajectory.model.TransportationMode;
 import br.udesc.mca.trajectory.model.User;
 
 public abstract class GeolifeImporter {
-    private static Map<Integer, List<TransportationMode>> transModes;
+    private List<TranspAux> transps;
     protected PersistenceDAO<Trajectory> dao;
     protected UserDAO udao;
 
     @SuppressWarnings("unused")
     public void importData() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        this.importTransportationMode();
-
+        this.transps = new ArrayList<>();
         File data = new File("C:/geolife/data");
         String[] ext = { "plt" };
         Iterator<File> ifs = FileUtils.iterateFiles(data, ext, true);
@@ -51,6 +48,8 @@ public abstract class GeolifeImporter {
                     this.udao.create(user);
                 }
                 prevUser = userId;
+                File transp = new File("c:/geolife/data/" + dir + "/labels.txt");
+                importTransportationMode(transp);
             }
             String trajDesc = f.getName();
             trajDesc = trajDesc.substring(0, trajDesc.indexOf('.'));
@@ -99,18 +98,11 @@ public abstract class GeolifeImporter {
                 Date ddate = sdf.parse(date + ' ' + time);
 
                 type = false;
-                if (transModes.containsKey(userId)) {
-                    List<TransportationMode> ltm = transModes.get(userId);
-                    for (TransportationMode tm : ltm) {
-                        if (tm.isBetween(ddate)) {
-                            tp.setTransportationMode(tm.getType());
-                            type = true;
-                            break;
-                        }
+                for (TranspAux t : this.transps) {
+                    if (ddate.after(t.dt1) && ddate.before(t.dt2)) {
+                        seg.setTransportationMode(t.mode);
+                        break;
                     }
-                }
-                if (!type) {
-                    tp.setTransportationMode(null);
                 }
                 seg.addPoint(tp);
             }
@@ -120,33 +112,25 @@ public abstract class GeolifeImporter {
         }
     }
 
-    private void importTransportationMode() throws Exception {
+    private void importTransportationMode(File f) throws Exception {
         SimpleDateFormat dateParser = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
-        transModes = new TreeMap<>();
-        File data = new File("C:/geolife/data");
-        String[] ext = { "txt" };
-        Iterator<File> ifs = FileUtils.iterateFiles(data, ext, true);
-        while (ifs.hasNext()) {
-            File f = ifs.next();
-            String dir = f.getParentFile().getName();
-            List<TransportationMode> ltm = new ArrayList<>();
+        this.transps.clear();
+        if (f.exists()) {
+            System.out.println(f.getAbsolutePath());
             FileReader fr = new FileReader(f);
             BufferedReader br = new BufferedReader(fr);
             br.readLine();
             String linha = null;
             while ((linha = br.readLine()) != null) {
                 StringTokenizer st = new StringTokenizer(linha, "\t");
-                TransportationMode tm = new TransportationMode();
-                tm.setDt1(dateParser.parse(st.nextToken()));
-                tm.setDt2(dateParser.parse(st.nextToken()));
-                tm.setType(st.nextToken());
-                ltm.add(tm);
+                Date dt1 = dateParser.parse(st.nextToken());
+                Date dt2 = dateParser.parse(st.nextToken());
+                TransportationMode tmode = TransportationMode.valueOf(st.nextToken().toUpperCase());
+                this.transps.add(new TranspAux(dt1, dt2, tmode));
             }
-            transModes.put(Integer.parseInt(dir), ltm);
             br.close();
             fr.close();
         }
-        System.out.println(transModes);
     }
 
     public void setDao(PersistenceDAO<Trajectory> dao) {
@@ -155,5 +139,17 @@ public abstract class GeolifeImporter {
 
     public void setUserDao(UserDAO dao) {
         this.udao = dao;
+    }
+
+    private static class TranspAux {
+        Date dt1;
+        Date dt2;
+        TransportationMode mode;
+
+        public TranspAux(Date dt1, Date dt2, TransportationMode mode) {
+            this.dt1 = dt1;
+            this.dt2 = dt2;
+            this.mode = mode;
+        }
     }
 }

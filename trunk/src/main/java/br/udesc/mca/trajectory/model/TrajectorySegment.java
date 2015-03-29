@@ -20,6 +20,7 @@ public class TrajectorySegment {
     private int id;
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectoryPoint> points;
+    private TransportationMode transportationMode;
 
     public List<TrajectoryPoint> getPoints() {
         return this.points;
@@ -30,5 +31,13 @@ public class TrajectorySegment {
             this.points = new ArrayList<>();
         }
         this.points.add(point);
+    }
+
+    public TransportationMode getTransportationMode() {
+        return this.transportationMode;
+    }
+
+    public void setTransportationMode(TransportationMode transportationMode) {
+        this.transportationMode = transportationMode;
     }
 }

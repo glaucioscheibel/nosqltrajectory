@@ -9,7 +9,9 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import br.udesc.mca.trajectory.model.Trajectory;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class RedisJsonPersistence extends KeyValuePersistence {
     private static RedisJsonPersistence instance;
@@ -27,6 +29,9 @@ public class RedisJsonPersistence extends KeyValuePersistence {
         this.log.info("Connecting Redis database");
         this.ds = new JedisPool("127.0.0.1");
         this.om = new ObjectMapper();
+        this.om.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
+        this.om.setSerializationInclusion(Include.NON_NULL);
+        this.om.setSerializationInclusion(Include.NON_EMPTY);
     }
 
     @Override

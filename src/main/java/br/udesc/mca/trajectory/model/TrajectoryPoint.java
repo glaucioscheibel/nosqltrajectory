@@ -30,7 +30,6 @@ public class TrajectoryPoint implements Serializable {
     private float lng;
     private float h;
     private long timestamp;
-    private String transportationMode;
 
     public int getId() {
         return this.id;
@@ -78,13 +77,5 @@ public class TrajectoryPoint implements Serializable {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public String getTransportationMode() {
-        return transportationMode;
-    }
-
-    public void setTransportationMode(String transportationMode) {
-        this.transportationMode = transportationMode;
     }
 }

@@ -31,7 +31,6 @@ public class CassandraPersistence<E> extends PersistenceDAO<E> {
             instance = new CassandraPersistence();
             instance.type = type;
             instance.createPersistenceTable(type);
-            instance.type = type;
         }
 
         return instance;

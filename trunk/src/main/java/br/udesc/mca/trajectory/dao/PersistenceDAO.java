@@ -49,6 +49,17 @@ public abstract class PersistenceDAO<E> {
         return null;
     }
 
+    public static PersistenceDAO<?> getInstance(PersistenceModel model, Class<?> type) {
+        try {
+            Class<?> persistenceClass = Class.forName(persistenceImpl.getProperty(model.toString().toLowerCase()));
+            Method getInstance = persistenceClass.getMethod("getInstance", Class.class);
+            return (PersistenceDAO<?>) getInstance.invoke(null, type);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public PersistenceDAO() {
         this.log = LoggerFactory.getLogger(this.getClass());
     }

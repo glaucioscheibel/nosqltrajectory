@@ -15,9 +15,11 @@ public class CassandraPersistenceTest extends PersistenceTest {
     @BeforeClass
     public static void beforeClass() {
         Trajectory c = new Trajectory();
-        CassandraPersistence cp = CassandraPersistence.getInstance();
-        System.out.println(cp.getClass().getName());
-        cp.createDB();
+        CassandraPersistence cp = CassandraPersistence.getInstance(c.getClass());
+
+        c.setId(1);
+        c.setDescription("ooooo");
+
         cp.store(c);
     }
 }

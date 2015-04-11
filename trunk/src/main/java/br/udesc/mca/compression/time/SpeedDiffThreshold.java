@@ -4,6 +4,7 @@ import java.util.List;
 
 import br.udesc.mca.compression.entities.Trajectory;
 
+//TODO implementar o algoritmo
 public class SpeedDiffThreshold {
 
 	private static double maxError;

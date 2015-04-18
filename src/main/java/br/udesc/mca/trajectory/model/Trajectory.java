@@ -4,14 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -19,7 +17,7 @@ public class Trajectory implements Serializable {
     private static final long serialVersionUID = 1L;
     @JsonProperty("_id")
     @Id
-    private long id;
+    private Long id;
     private String description;
     private int originalTrajectory;
 
@@ -30,20 +28,20 @@ public class Trajectory implements Serializable {
 
     public Trajectory() {}
 
-    public Trajectory(long id) {
+    public Trajectory(Long id) {
         this.id = id;
     }
 
-    public Trajectory(long id, String description) {
+    public Trajectory(Long id, String description) {
         this.id = id;
         this.description = description;
     }
 
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

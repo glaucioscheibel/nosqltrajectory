@@ -1,7 +1,6 @@
 package br.udesc.mca.trajectory.model;
 
 import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -11,25 +10,25 @@ import javax.persistence.Table;
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    private int id;
+    private Integer id;
     private String name;
 
     public User() {}
 
-    public User(int id) {
+    public User(Integer id) {
         this.id = id;
     }
 
-    public User(int id, String name) {
+    public User(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

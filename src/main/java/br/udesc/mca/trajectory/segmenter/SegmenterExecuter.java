@@ -12,7 +12,7 @@ public class SegmenterExecuter {
     @SuppressWarnings("unchecked")
     public static void main(String[] args) throws Exception {
         PersistenceDAO<Trajectory> dao = (PersistenceDAO<Trajectory>) PersistenceDAO
-                .getInstance(PersistenceModel.KEY_VALUE_JSON);
+                .getInstance(PersistenceModel.RELATIONAL);
         Trajectory t = dao.findById(20081023025304L);
         TrajectorySegment s = t.getVersions().get(0).getSegments().get(0);
         SegmenterService ss = new SegmenterService();

@@ -1,7 +1,6 @@
 package br.udesc.mca.trajectory.dao.document;
 
 import org.junit.BeforeClass;
-
 import br.udesc.mca.trajectory.dao.PersistenceModel;
 import br.udesc.mca.trajectory.dao.PersistenceTest;
 import br.udesc.mca.trajectory.model.Trajectory;
@@ -18,7 +17,7 @@ public class MongoPersistenceTest extends PersistenceTest {
 
     @BeforeClass
     public static void beforeClass() {
-        Trajectory c = new Trajectory(1, "teste");
+        Trajectory c = new Trajectory(1L, "teste");
         MongoPersistence mp = MongoPersistence.getInstance();
         mp.store(c);
     }

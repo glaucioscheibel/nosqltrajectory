@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,7 +16,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -26,7 +24,7 @@ public class TrajectoryVersion implements Serializable {
     @Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trajectoryid")
@@ -35,7 +33,7 @@ public class TrajectoryVersion implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid")
     private User user;
-    private int previousVersion;
+    private Integer previousVersion;
     private TrajectoryType type;
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModified;
@@ -45,11 +43,11 @@ public class TrajectoryVersion implements Serializable {
     @OneToOne
     private TrajectoryProcess history;
 
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

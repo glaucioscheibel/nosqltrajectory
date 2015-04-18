@@ -1,7 +1,6 @@
 package br.udesc.mca.trajectory.dao.column;
 
 import org.junit.BeforeClass;
-
 import br.udesc.mca.trajectory.dao.PersistenceModel;
 import br.udesc.mca.trajectory.dao.PersistenceTest;
 import br.udesc.mca.trajectory.model.Trajectory;
@@ -17,7 +16,7 @@ public class CassandraPersistenceTest extends PersistenceTest {
         Trajectory c = new Trajectory();
         CassandraPersistence cp = CassandraPersistence.getInstance(c.getClass());
 
-        c.setId(1);
+        c.setId(1L);
         c.setDescription("ooooo");
 
         cp.store(c);

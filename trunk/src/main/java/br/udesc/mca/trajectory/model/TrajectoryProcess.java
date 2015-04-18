@@ -2,7 +2,6 @@ package br.udesc.mca.trajectory.model;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -21,21 +19,21 @@ public class TrajectoryProcess implements Serializable {
     @Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trajectoryversionid")
     private TrajectoryVersion trajectoryVersion;
-    private int componentId;
+    private Integer componentId;
     @Temporal(TemporalType.TIMESTAMP)
     private Date executionTime;
     private long executionDuration;
 
-    public int getComponentId() {
+    public Integer getComponentId() {
         return this.componentId;
     }
 
-    public void setComponentId(int componentId) {
+    public void setComponentId(Integer componentId) {
         this.componentId = componentId;
     }
 

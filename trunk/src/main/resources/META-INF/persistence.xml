@@ -7,7 +7,8 @@
         <class>br.udesc.mca.trajectory.model.Trajectory</class>
         <class>br.udesc.mca.trajectory.model.TrajectoryPoint</class>
         <class>br.udesc.mca.trajectory.model.TrajectoryPointData</class>
-        <class>br.udesc.mca.trajectory.model.TrajectoryProcessHistory</class>
+        <class>br.udesc.mca.trajectory.model.TrajectoryProcess</class>
+        <class>br.udesc.mca.trajectory.model.TrajectorySegment</class>
         <class>br.udesc.mca.trajectory.model.TrajectoryVersion</class>
         <class>br.udesc.mca.trajectory.model.TrajectoryVersionData</class>
         <class>br.udesc.mca.trajectory.model.User</class>

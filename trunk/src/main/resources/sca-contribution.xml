@@ -1,4 +1,0 @@
-<contribution xmlns="" xmlns:trajectory="http://br.udesc.mca.trajectory.service">
-    <deployable composite="trajectory:TrajectoryService" />
-    <deployable composite="trajectory:TrajectoryWS" />
-</contribution>

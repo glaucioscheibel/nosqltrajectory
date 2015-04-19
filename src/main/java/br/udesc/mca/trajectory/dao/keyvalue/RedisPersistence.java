@@ -8,7 +8,6 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import br.udesc.mca.trajectory.model.Trajectory;
@@ -37,7 +36,7 @@ public class RedisPersistence extends KeyValuePersistence {
             oos.writeObject(c);
             Jedis db = this.ds.getResource();
             db.set(Long.toString(c.getId()).getBytes(), baos.toByteArray());
-            this.ds.returnResource(db);
+            this.ds.returnResourceObject(db);
         } catch (Exception e) {
             this.log.error(e.getMessage(), e);
         }
@@ -61,7 +60,7 @@ public class RedisPersistence extends KeyValuePersistence {
                 }
             }
         }
-        this.ds.returnResource(db);
+        this.ds.returnResourceObject(db);
         return lc;
     }
 
@@ -76,7 +75,7 @@ public class RedisPersistence extends KeyValuePersistence {
                 ObjectInputStream ois = new ObjectInputStream(bais);
                 ret = (Trajectory) ois.readObject();
             }
-            this.ds.returnResource(db);
+            this.ds.returnResourceObject(db);
         } catch (IOException | ClassNotFoundException e) {
             this.log.error(e.getMessage(), e);
         }
@@ -87,7 +86,7 @@ public class RedisPersistence extends KeyValuePersistence {
     public void deleteById(long id) {
         Jedis db = this.ds.getResource();
         db.del(Long.toString(id).getBytes());
-        this.ds.returnResource(db);
+        this.ds.returnResourceObject(db);
     }
 
     @Override

@@ -53,9 +53,9 @@ public final class PointConverter {
 
 		// Se apresentar o ponto cardial S ou W o sinal é negativo
 		if (coordinate.trim().startsWith("-")
-				|| coordinate.trim().toLowerCase().endsWith("S")
-				|| coordinate.trim().toLowerCase().endsWith("W")
-				|| coordinate.trim().toLowerCase().endsWith("O")) {
+				|| coordinate.trim().toUpperCase().endsWith("S")
+				|| coordinate.trim().toUpperCase().endsWith("W")
+				|| coordinate.trim().toUpperCase().endsWith("O")) {
 			degree = -degree;
 		}
 

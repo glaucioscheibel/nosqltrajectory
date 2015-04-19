@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import br.udesc.mca.trajectory.model.Trajectory;
-
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -40,7 +38,7 @@ public class RedisJsonPersistence extends KeyValuePersistence {
             Jedis db = this.ds.getResource();
             String json = this.om.writeValueAsString(c);
             db.set(String.valueOf(c.getId()), json);
-            this.ds.returnResource(db);
+            this.ds.returnResourceObject(db);
         } catch (Exception e) {
             this.log.error(e.getMessage(), e);
         }
@@ -62,7 +60,7 @@ public class RedisJsonPersistence extends KeyValuePersistence {
                 }
             }
         }
-        this.ds.returnResource(db);
+        this.ds.returnResourceObject(db);
         return lc;
     }
 
@@ -75,7 +73,7 @@ public class RedisJsonPersistence extends KeyValuePersistence {
             if (json != null) {
                 ret = this.om.readValue(json, Trajectory.class);
             }
-            this.ds.returnResource(db);
+            this.ds.returnResourceObject(db);
         } catch (IOException e) {
             this.log.error(e.getMessage(), e);
         }
@@ -86,7 +84,7 @@ public class RedisJsonPersistence extends KeyValuePersistence {
     public void deleteById(long id) {
         Jedis db = this.ds.getResource();
         db.del(String.valueOf(id));
-        this.ds.returnResource(db);
+        this.ds.returnResourceObject(db);
     }
 
     @Override

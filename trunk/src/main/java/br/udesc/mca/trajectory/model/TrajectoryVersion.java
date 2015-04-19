@@ -83,11 +83,11 @@ public class TrajectoryVersion implements Serializable {
         this.type = type;
     }
 
-    public int getPreviousVersion() {
+    public Integer getPreviousVersion() {
         return this.previousVersion;
     }
 
-    public void setPreviousVersion(int previousVersion) {
+    public void setPreviousVersion(Integer previousVersion) {
         this.previousVersion = previousVersion;
     }
 

@@ -2,23 +2,33 @@ package br.udesc.mca.azimuth;
 
 import java.text.DecimalFormat;
 
-// http://www.movable-type.co.uk/scripts/latlong.html
+/**
+ * Classe que trabalha com a questão do cálculo de Azimute e Distância em KM.
+ * Com base no trabalho em: http://www.movable-type.co.uk/scripts/latlong.html
+ * 
+ * @since 25/12/2014
+ */
 public final class Azimuth {
 
-	// Raio de curvatura da terra usado para achar distâncias
-	// fonte http://en.wikipedia.org/wiki/Earth_radius
+	/**
+	 * Valor do raio de curvatura de terra em KM
+	 */
 	public static int EARTH_RADIUS_KM = 6371;
 
 	/**
-	 * Implementação do cálculo de distância de Haversine entre dois pontos
+	 * Retorna a distância entre dois pontos usando a fórmula de haversine.
+	 * 
+	 * @param lat1
+	 *            latitude do primeiro ponto
+	 * @param lon2
+	 *            logintude do primeiro ponto
+	 * @param lat2
+	 *            latitude do segundo ponto
+	 * @param lon2
+	 *            logintude do segundo ponto
+	 *            
+	 * @returns Distância em KM entre os dois pontos.
 	 */
-	// http://www.movable-type.co.uk/scripts/latlong.html
-	// Azimuth.EARTH_RADIUS_KM = raio de curvatura da terra
-	// Δlat = lat2− lat1
-	// Δlong = long2− long1
-	// a = sin²(Δlat/2) + cos(lat1).cos(lat2).sin²(Δlong/2)
-	// c = 2.atan2(√a, √(1−a))
-	// d = R.c
 	public static double calculateLengthInKM(double lat1, double lon1,
 			double lat2, double lon2) {
 
@@ -37,7 +47,17 @@ public final class Azimuth {
 	}
 
 	/**
-	 * Implementação de azimute a frente
+	 * Retorna o azimute a frente entre 2 pontos.
+	 * 
+	 * @param lat1
+	 *            latitude do primeiro ponto
+	 * @param lon2
+	 *            logintude do primeiro ponto
+	 * @param lat2
+	 *            latitude do segundo ponto
+	 * @param lon2
+	 *            logintude do segundo ponto
+	 * @returns azimute em graus.
 	 */
 	public static double azimuth(double lat1, double lon1, double lat2,
 			double lon2) {

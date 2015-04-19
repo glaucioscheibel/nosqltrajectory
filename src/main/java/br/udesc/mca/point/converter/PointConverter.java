@@ -51,7 +51,7 @@ public final class PointConverter {
 			return 0;
 		}
 
-		// Se apresentar o ponto cardial S ou W o sinal é negativo
+		// Se apresentar o ponto cardial S, O ou W o sinal é negativo
 		if (coordinate.trim().startsWith("-")
 				|| coordinate.trim().toUpperCase().endsWith("S")
 				|| coordinate.trim().toUpperCase().endsWith("W")

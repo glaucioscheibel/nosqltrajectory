@@ -9,9 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import org.apache.commons.io.FileUtils;
-
 import br.udesc.mca.trajectory.dao.PersistenceDAO;
 import br.udesc.mca.trajectory.dao.user.UserDAO;
 import br.udesc.mca.trajectory.model.Trajectory;
@@ -72,6 +70,10 @@ public abstract class GeolifeImporter {
             }
             String linha = null;
             while ((linha = br.readLine()) != null) {
+                // pular linhas em branco
+                if (linha.trim().length() == 0) {
+                    continue;
+                }
                 StringTokenizer st = new StringTokenizer(linha, ",");
                 // Field 1: Latitude in decimal degrees.
                 String lat = st.nextToken();

@@ -79,4 +79,30 @@ public final class Azimuth {
         log.info(ret);
         return ret;
     }
+
+    // function(point) {
+    // if (!(point instanceof LatLon)) throw new TypeError('point is not LatLon
+    // object');
+    //
+    // var φ1 = this.lat.toRadians(), φ2 = point.lat.toRadians();
+    // var Δλ = (point.lon-this.lon).toRadians();
+    //
+    // // see http://mathforum.org/library/drmath/view/55417.html
+    // var y = Math.sin(Δλ) * Math.cos(φ2);
+    // var x = Math.cos(φ1) * Math.sin(φ2) -
+    // Math.sin(φ1) * Math.cos(φ2)*Math.cos(Δλ);
+    // var θ = Math.atan2(y, x);
+    //
+    // return (θ.toDegrees()+360) % 360;
+    // };
+
+    public static double azimuthJS(double lat1, double lon1, double lat2, double lon2) {
+        double phi1 = toRadians(lat1);
+        double phi2 = toRadians(lat2);
+        double delta = toRadians(lon2 - lon1);
+        double y = sin(delta) * cos(phi2);
+        double x = cos(phi1) * sin(phi2) - sin(phi1) * cos(phi2) * cos(delta);
+        double teta = atan2(y, x);
+        return (toDegrees(teta) + 360D) % 360D;
+    }
 }

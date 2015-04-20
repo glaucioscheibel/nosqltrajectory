@@ -1,7 +1,11 @@
 package br.udesc.mca.azimuth;
 
-import java.text.NumberFormat;
-import java.util.Locale;
+import static org.apache.commons.math3.util.FastMath.atan2;
+import static org.apache.commons.math3.util.FastMath.cos;
+import static org.apache.commons.math3.util.FastMath.sin;
+import static org.apache.commons.math3.util.FastMath.sqrt;
+import static org.apache.commons.math3.util.FastMath.toDegrees;
+import static org.apache.commons.math3.util.FastMath.toRadians;
 import org.apache.log4j.Logger;
 
 /**
@@ -37,10 +41,10 @@ public final class Azimuth {
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);
 
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) + Math.cos(Math.toRadians(lat1))
-                * Math.cos(Math.toRadians(lat2)) * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double a = sin(latDistance / 2) * sin(latDistance / 2) + cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2))
+                * sin(lonDistance / 2) * sin(lonDistance / 2);
 
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double c = 2 * atan2(sqrt(a), sqrt(1 - a));
         double distance = Azimuth.EARTH_RADIUS_KM * c;
 
         return distance;
@@ -62,20 +66,17 @@ public final class Azimuth {
     public static double azimuth(double lat1, double lon1, double lat2, double lon2) {
         log.info("azimuth(" + lat1 + ", " + lon1 + ", " + lat2 + ", " + lon2 + ")");
 
-        NumberFormat nf = NumberFormat.getInstance(Locale.US);
-        // DecimalFormat df = new DecimalFormat("0.0000000000000000000");
+        double phiLat1 = toRadians(lat1);
+        double phiLat2 = toRadians(lat2);
+        double aux = lon2 - lon1;
+        double deltaLon = toRadians(aux);
 
-        double phiLat1 = Math.toRadians(lat1);
-        double phiLat2 = Math.toRadians(lat2);
-        double deltaLon = new Double(nf.format(Math.toRadians(lon2 - lon1))).doubleValue();
+        double y = sin(deltaLon) * cos(phiLat2);
+        double x = cos(phiLat1) * cos(phiLat2) - sin(phiLat1) * cos(phiLat2) * cos(deltaLon);
+        double azimuth = atan2(y, x);
 
-        double y = Math.sin(deltaLon) * Math.cos(phiLat2);
-        double x = Math.cos(phiLat1) * Math.cos(phiLat2) - Math.sin(phiLat1) * Math.cos(phiLat2) * Math.cos(deltaLon);
-        double azimuth = Math.atan2(y, x);
-
-        double ret = (Math.toDegrees(azimuth) + 360) % 360;
+        double ret = (toDegrees(azimuth) + 360.0) % 360.0;
         log.info(ret);
         return ret;
-
     }
 }

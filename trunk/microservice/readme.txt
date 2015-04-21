@@ -1,7 +1,7 @@
 Passo 1- build do projeto trajectory (mvn clean install -DskipTests)
 Passo 2- build do projeto microservice (mvn clean install -DskipTests)
 Passo 3- ir ao diretorio do servico (eg microservice/kml)
-Passo 4- executar (java -jar microservice-XXXXXX-VERSAO.jar server conf.yml)
+Passo 4- executar (java -jar target\microservice-XXXXXX-VERSAO.jar server conf.yml)
 Passo 5- acessar (http://IP:8080/trajectory-to-kml)
 
 
@@ -11,7 +11,7 @@ Passo 5- acessar (http://IP:8080/trajectory-to-kml)
 
 JSON TRAJETORIA
 {
-    "_id":10
+    "_id":10,
     "description":"Trajectory Desc",
     "originalTrajectory":1,
     "lastModified":1429559053818,
@@ -32,7 +32,7 @@ JSON TRAJETORIA
                 "transportationMode":"RUN"}
             ],
             "data":null,
-            "process":null
+            "history":null
         }
-    ],
+    ]
 }

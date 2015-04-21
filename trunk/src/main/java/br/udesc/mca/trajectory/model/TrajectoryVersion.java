@@ -30,18 +30,24 @@ public class TrajectoryVersion implements Serializable {
     @JoinColumn(name = "trajectoryid")
     private Trajectory trajectory;
     private int version;
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid")
     private User user;
+    @JsonIgnore
     private Integer previousVersion;
+    @JsonIgnore
     private TrajectoryType type;
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
     private Date lastModified;
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectorySegment> segments;
+    @JsonIgnore
     private TrajectoryVersionData data;
     @OneToOne
-    private TrajectoryProcess history;
+    @JsonIgnore
+    private TrajectoryProcess history;   //TODO: ou apropriedade precisa mudar para process ou o get para history
 
     public Integer getId() {
         return this.id;

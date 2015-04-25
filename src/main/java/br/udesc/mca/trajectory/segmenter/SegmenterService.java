@@ -3,7 +3,6 @@ package br.udesc.mca.trajectory.segmenter;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.udesc.mca.trajectory.model.Trajectory;
 import br.udesc.mca.trajectory.model.TrajectoryPoint;
 import br.udesc.mca.trajectory.model.TrajectorySegment;
 

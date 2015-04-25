@@ -1,6 +1,9 @@
 package br.udesc.mca.trajectory.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -8,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -19,11 +23,12 @@ public class TrajectoryPoint implements Serializable {
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "segmentid")
     private TrajectorySegment segment;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<TrajectoryPointData> data;
     private float lat;
     private float lng;
     private float h;
@@ -43,6 +48,17 @@ public class TrajectoryPoint implements Serializable {
 
     public void setSegment(TrajectorySegment segment) {
         this.segment = segment;
+    }
+
+    public void addData(TrajectoryPointData data) {
+        if (this.data == null) {
+            this.data = new ArrayList<>();
+        }
+        this.data.add(data);
+    }
+
+    public List<TrajectoryPointData> getData() {
+        return this.data;
     }
 
     public float getLat() {

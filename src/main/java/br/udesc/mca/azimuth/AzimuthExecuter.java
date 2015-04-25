@@ -13,7 +13,7 @@ public class AzimuthExecuter {
     public static void main(String[] args) throws Exception {
         PersistenceDAO<Trajectory> dao = (PersistenceDAO<Trajectory>) PersistenceDAO
                 .getInstance(PersistenceModel.RELATIONAL);
-        Trajectory t = dao.findById(20150418093055L);
+        Trajectory t = dao.findById(20150419093055L);
         TrajectoryVersion tv = t.getVersions().get(1);
         double aziAnt = 0D;
         boolean first = true;
@@ -33,7 +33,7 @@ public class AzimuthExecuter {
             ts.addData(tsd);
             TrajectorySegmentData tsd2 = new TrajectorySegmentData();
             tsd2.setKey("azimuthDiff");
-            tsd2.setValue(String.valueOf(azi - aziAnt));
+            tsd2.setValue(String.valueOf(Azimuth.azimuthDifference(azi, aziAnt)));
             ts.addData(tsd2);
             aziAnt = azi;
         }

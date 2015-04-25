@@ -1,9 +1,5 @@
 package br.udesc.mca.trajectory.string.match;
 
-//http://contextroot.blogspot.com.br/2011/03/ratcliffobershelp-pattern-recognition.html
-//http://www.morfoedro.it/doc.php?n=223&lang=en
-//http://xlinux.nist.gov/dads//HTML/ratcliffObershelp.html
-//http://pt.wikipedia.org/wiki/Dist%C3%A2ncia_de_Jaro-Winkler
 public class Ratcliff {
 
 	private static float tcnt;

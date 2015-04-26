@@ -406,7 +406,3 @@ if (typeof Math.sign == 'undefined') {
         return typeof x === 'number' ? x ? x < 0 ? -1 : 1 : x === x ? 0 : NaN : NaN;
     }
 }
-
-
-/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
-if (!window.console) window.console = { log: function() {} };

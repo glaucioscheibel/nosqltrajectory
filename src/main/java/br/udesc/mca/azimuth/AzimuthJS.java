@@ -1,10 +1,10 @@
 package br.udesc.mca.azimuth;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import org.python.jline.internal.InputStreamReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

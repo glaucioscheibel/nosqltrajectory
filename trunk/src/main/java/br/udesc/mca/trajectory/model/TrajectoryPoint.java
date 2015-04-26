@@ -9,7 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,7 +24,6 @@ public class TrajectoryPoint implements Serializable {
     private Integer id;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "segmentid")
     private TrajectorySegment segment;
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectoryPointData> data;

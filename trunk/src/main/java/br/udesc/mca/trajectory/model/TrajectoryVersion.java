@@ -10,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -27,12 +26,10 @@ public class TrajectoryVersion implements Serializable {
     private Integer id;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trajectoryid")
     private Trajectory trajectory;
     private int version;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid")
     private User user;
     @JsonIgnore
     private Integer previousVersion;
@@ -47,7 +44,8 @@ public class TrajectoryVersion implements Serializable {
     private TrajectoryVersionData data;
     @OneToOne
     @JsonIgnore
-    private TrajectoryProcess history;   //TODO: ou apropriedade precisa mudar para process ou o get para history
+    private TrajectoryProcess history; // TODO: ou apropriedade precisa mudar
+                                       // para process ou o get para history
 
     public Integer getId() {
         return this.id;

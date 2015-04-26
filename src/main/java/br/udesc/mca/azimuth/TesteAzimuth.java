@@ -17,6 +17,14 @@ public class TesteAzimuth {
 				udesc2.getLongitude());
 
 		System.out.println(distancia + " e " + azimute);
+		System.out.println("=========================");
+		distancia = AzimuthJS.calculateLengthInKM(udesc.getLatitude(),
+				udesc.getLongitude(), udesc2.getLatitude(),
+				udesc2.getLongitude());
+		azimute = AzimuthJS.azimuth(udesc.getLatitude(),
+				udesc.getLongitude(), udesc2.getLatitude(),
+				udesc2.getLongitude());		
+		System.out.println(distancia + " e " + azimute);
 
 		// Trajetória um
 

@@ -2,12 +2,10 @@ package br.udesc.mca.trajectory.model;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -17,7 +15,6 @@ public class TrajectorySegmentData implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
     private Integer id;
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trajectorysegmentid")
     private TrajectorySegment trajectorySegment;
     private String key;

@@ -3,14 +3,7 @@ package br.udesc.mca.trajectory.dao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
-
-import br.udesc.mca.trajectory.dao.PersistenceAbstractFactory;
-import br.udesc.mca.trajectory.dao.PersistenceDAO;
-import br.udesc.mca.trajectory.dao.PersistenceModel;
-import br.udesc.mca.trajectory.dao.column.CassandraPersistence;
-import br.udesc.mca.trajectory.dao.column.ColumnPersistence;
 import br.udesc.mca.trajectory.dao.document.DocumentPersistence;
 import br.udesc.mca.trajectory.dao.document.MongoPersistence;
 import br.udesc.mca.trajectory.dao.graph.GraphPersistence;
@@ -51,12 +44,12 @@ public class PersistenceAbstractFactoryTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void columnTest() {
-//        PersistenceDAO<Trajectory> dao = PersistenceAbstractFactory.getPersistenceDAO(PersistenceModel.COLUMN_FAMILY);
-//        assertNotNull(dao);
-//        assertTrue(dao instanceof ColumnPersistence);
-//        assertEquals(CassandraPersistence.class, dao.getClass());
+        // PersistenceDAO<Trajectory> dao =
+        // PersistenceAbstractFactory.getPersistenceDAO(PersistenceModel.COLUMN_FAMILY);
+        // assertNotNull(dao);
+        // assertTrue(dao instanceof ColumnPersistence);
+        // assertEquals(CassandraPersistence.class, dao.getClass());
     }
 
     @Test
@@ -68,8 +61,8 @@ public class PersistenceAbstractFactoryTest {
         assertEquals(Neo4jPersistence.class, dao.getClass());
     }
 
-    @Test(expected=NullPointerException.class)
-    @SuppressWarnings({"unchecked", "unused"})
+    @Test(expected = NullPointerException.class)
+    @SuppressWarnings({ "unchecked", "unused" })
     public void nullTest() {
         PersistenceDAO<Trajectory> dao = PersistenceAbstractFactory.getPersistenceDAO(null);
     }

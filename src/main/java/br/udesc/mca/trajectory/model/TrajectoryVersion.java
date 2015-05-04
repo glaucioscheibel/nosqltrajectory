@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class TrajectoryVersion implements Serializable {
@@ -28,22 +29,22 @@ public class TrajectoryVersion implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Trajectory trajectory;
     private int version;
-    @JsonIgnore
+    @JsonProperty
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-    @JsonIgnore
+    @JsonProperty
     private Integer previousVersion;
-    @JsonIgnore
+    @JsonProperty
     private TrajectoryType type;
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonIgnore
+    @JsonProperty
     private Date lastModified;
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectorySegment> segments;
-    @JsonIgnore
+    @JsonProperty
     private TrajectoryVersionData data;
     @OneToOne
-    @JsonIgnore
+    @JsonProperty
     private TrajectoryProcess history; // TODO: ou apropriedade precisa mudar
                                        // para process ou o get para history
 

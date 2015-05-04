@@ -30,8 +30,8 @@ public abstract class PersistenceDAO<E> {
 
     static {
         persistenceImpl = new Properties();
-        try (FileReader fr = new FileReader("storage.properties")) {
-            persistenceImpl.load(fr);
+        try {
+            persistenceImpl.load(PersistenceDAO.class.getClassLoader().getResourceAsStream("storage.properties"));
             System.out.println(persistenceImpl);
         } catch (IOException e) {
             e.printStackTrace();

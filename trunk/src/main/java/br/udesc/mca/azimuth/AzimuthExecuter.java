@@ -16,6 +16,7 @@ public class AzimuthExecuter {
         Trajectory t = dao.findById(20150419093055L);
         TrajectoryVersion tv = t.getVersions().get(1);
         double aziAnt = 0D;
+        TrajectorySegment tsAnt = null;
         boolean first = true;
         for (TrajectorySegment ts : tv.getSegments()) {
             float lat1 = ts.getPoints().get(0).getLat();
@@ -24,8 +25,8 @@ public class AzimuthExecuter {
             float lgn2 = ts.getPoints().get(1).getLng();
             double azi = Azimuth.azimuth(lat1, lgn1, lat2, lgn2);
             if (first) {
+                tsAnt = ts;
                 aziAnt = azi;
-                first = false;
             }
             TrajectorySegmentData tsd = new TrajectorySegmentData();
             tsd.setKey("azimuth");
@@ -34,7 +35,7 @@ public class AzimuthExecuter {
             TrajectorySegmentData tsd2 = new TrajectorySegmentData();
             tsd2.setKey("azimuthDiff");
             tsd2.setValue(String.valueOf(Azimuth.azimuthDifference(azi, aziAnt)));
-            ts.addData(tsd2);
+            tsAnt.addData(tsd2);
             aziAnt = azi;
         }
         dao.store(t);

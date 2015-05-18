@@ -10,7 +10,6 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-import org.bson.BasicBSONObject;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -84,10 +83,6 @@ public class MongoPersistence extends DocumentPersistence {
         }
 
         MongoCollection<Trajectory> dbc = this.db.getCollection(colName, Trajectory.class);
-
-        BasicBSONObject dbo = new BasicBSONObject();
-        dbo.put("_id", id);
-
         FindIterable<Trajectory>  result = dbc.find(Filters.eq("_id", id));
 
         return result.first();

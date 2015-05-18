@@ -1,27 +1,26 @@
 package br.udesc.mca.trajectory.dao.document;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.udesc.mca.trajectory.model.Trajectory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.util.JSON;
+import com.mongodb.*;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import org.bson.BasicBSONObject;
+import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
 
 public class MongoPersistence extends DocumentPersistence {
 
     private static final String colName = "Trajectories";
     private static MongoPersistence instance;
-    private ObjectMapper om;
     private MongoClient mongo;
-    private DB db;
+    private MongoDatabase db;
 
     public static MongoPersistence getInstance() {
         if (instance == null) {
@@ -31,13 +30,17 @@ public class MongoPersistence extends DocumentPersistence {
     }
 
     private MongoPersistence() {
-        try {
-            this.mongo = new MongoClient();
-            this.db = this.mongo.getDB(DBNAME);
-            this.om = new ObjectMapper();
-        } catch (UnknownHostException e) {
-            this.log.error(e.getMessage(), e);
-        }
+        CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
+                MongoClient.getDefaultCodecRegistry(),
+                CodecRegistries.fromCodecs(new TrajectoryCodec()));
+
+        MongoClientOptions options =
+                MongoClientOptions.builder()
+                        .codecRegistry(codecRegistry)
+                        .build();
+
+        this.mongo = new MongoClient("localhost:27017", options);
+        this.db = this.mongo.getDatabase(DBNAME);
     }
 
     @Override
@@ -46,15 +49,14 @@ public class MongoPersistence extends DocumentPersistence {
             this.log.info("Storing " + c);
         }
         try {
-            String json = this.om.writeValueAsString(c);
-            DBCollection dbc = this.db.getCollection(colName);
-            DBObject aux = this._findById(c.getId());
-            DBObject dbo = (DBObject) JSON.parse(json);
-            if (aux == null) {
-                dbc.insert(dbo);
+            MongoCollection<Trajectory> dbc = this.db.getCollection(colName, Trajectory.class);
+            Trajectory aux = this.findById(c.getId());
+            if(aux == null) {
+                dbc.insertOne(c);
             } else {
-                dbc.update(aux, dbo);
+                dbc.updateOne(Filters.eq("_id", c.getId()), new Document("$set", c));
             }
+
         } catch (Exception e) {
             this.log.error(e.getMessage(), e);
         }
@@ -66,10 +68,9 @@ public class MongoPersistence extends DocumentPersistence {
         this.log.info("findAll");
         List<Trajectory> ret = new ArrayList<>();
         try {
-            DBCollection dbc = this.db.getCollection(colName);
-            DBCursor cursor = dbc.find();
-            for (DBObject dbo : cursor) {
-                ret.add(this.om.readValue(dbo.toString(), Trajectory.class));
+            MongoCollection<Trajectory> dbc = this.db.getCollection(colName, Trajectory.class);
+            for (Trajectory trajectory : dbc.find()) {
+                ret.add(trajectory);
             }
         } catch (Exception e) {
             this.log.error(e.getMessage(), e);
@@ -77,29 +78,19 @@ public class MongoPersistence extends DocumentPersistence {
         return ret;
     }
 
-    private DBObject _findById(long id) {
-        DBCollection dbc = this.db.getCollection(colName);
-        DBObject dbo = new BasicDBObject();
-        dbo.put("_id", id);
-        dbo = dbc.findOne(dbo);
-        return dbo;
-    }
-
-    @Override
     public Trajectory findById(long id) {
         if (this.log.isInfoEnabled()) {
             this.log.info("findById(" + id + ")");
         }
-        Trajectory ret = null;
-        try {
-            DBObject dbo = this._findById(id);
-            if (dbo != null) {
-                ret = this.om.readValue(dbo.toString(), Trajectory.class);
-            }
-        } catch (Exception e) {
-            this.log.error(e.getMessage(), e);
-        }
-        return ret;
+
+        MongoCollection<Trajectory> dbc = this.db.getCollection(colName, Trajectory.class);
+
+        BasicBSONObject dbo = new BasicBSONObject();
+        dbo.put("_id", id);
+
+        FindIterable<Trajectory>  result = dbc.find(Filters.eq("_id", id));
+
+        return result.first();
     }
 
     @Override
@@ -107,10 +98,8 @@ public class MongoPersistence extends DocumentPersistence {
         if (this.log.isInfoEnabled()) {
             this.log.info("deleteById(" + id + ")");
         }
-        DBCollection dbc = this.db.getCollection(colName);
-        DBObject dbo = new BasicDBObject();
-        dbo.put("_id", id);
-        dbc.findAndRemove(dbo);
+        MongoCollection<Trajectory> dbc = this.db.getCollection(colName, Trajectory.class);
+        dbc.deleteOne(Filters.eq("_id", id));
     }
 
     @Override

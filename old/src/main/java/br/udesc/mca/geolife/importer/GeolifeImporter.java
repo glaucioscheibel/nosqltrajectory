@@ -18,6 +18,7 @@ import br.udesc.mca.trajectory.model.TrajectoryType;
 import br.udesc.mca.trajectory.model.TrajectoryVersion;
 import br.udesc.mca.trajectory.model.TransportationMode;
 import br.udesc.mca.trajectory.model.User;
+import br.udesc.mca.user.dao.UserDAO;
 
 public abstract class GeolifeImporter {
     private List<TranspAux> transps;

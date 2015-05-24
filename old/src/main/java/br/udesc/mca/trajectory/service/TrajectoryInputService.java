@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import br.udesc.mca.trajectory.dao.PersistenceAbstractFactory;
 import br.udesc.mca.trajectory.dao.PersistenceDAO;
 import br.udesc.mca.trajectory.dao.PersistenceModel;
 import br.udesc.mca.trajectory.model.Trajectory;

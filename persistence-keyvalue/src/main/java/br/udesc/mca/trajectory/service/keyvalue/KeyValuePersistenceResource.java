@@ -2,8 +2,9 @@ package br.udesc.mca.trajectory.service.keyvalue;
 
 import java.util.List;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -21,12 +22,13 @@ public class KeyValuePersistenceResource {
         this.persistence = RedisJsonPersistence.getInstance();
     }
 
-    @PUT
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Trajectory store(Trajectory t) {
         return this.persistence.store(t);
     }
 
+    @GET
     public List<Trajectory> findAll() {
         return this.persistence.findAll();
     }
@@ -37,7 +39,9 @@ public class KeyValuePersistenceResource {
         return this.persistence.findById(id);
     }
 
-    public void deleteById(long id) {
+    @DELETE
+    @Path("{id}")
+    public void deleteById(@PathParam("id") Long id) {
         this.persistence.deleteById(id);
     }
 }

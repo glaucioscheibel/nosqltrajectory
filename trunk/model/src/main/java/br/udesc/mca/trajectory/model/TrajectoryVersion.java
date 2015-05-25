@@ -26,11 +26,11 @@ public class TrajectoryVersion implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Trajectory trajectory;
     private int version;
     @JsonProperty
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
     @JsonProperty
     private Integer previousVersion;

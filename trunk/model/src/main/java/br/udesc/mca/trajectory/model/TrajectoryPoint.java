@@ -23,7 +23,7 @@ public class TrajectoryPoint implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private TrajectorySegment segment;
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectoryPointData> data;

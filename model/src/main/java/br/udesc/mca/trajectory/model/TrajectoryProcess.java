@@ -21,7 +21,7 @@ public class TrajectoryProcess implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "trajectoryversionid")
     private TrajectoryVersion trajectoryVersion;
     private Integer componentId;

@@ -1,17 +1,19 @@
 package br.udesc.mca.trajectory.dao.document;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistries;
-import org.bson.codecs.configuration.CodecRegistry;
+
 import br.udesc.mca.trajectory.model.Trajectory;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.util.JSON;
+import org.bson.Document;
 
 public class MongoPersistence extends DocumentPersistence {
 
@@ -19,6 +21,7 @@ public class MongoPersistence extends DocumentPersistence {
     private static MongoPersistence instance;
     private MongoClient mongo;
     private MongoDatabase db;
+    private ObjectMapper om;
 
     public static MongoPersistence getInstance() {
         if (instance == null) {
@@ -28,13 +31,9 @@ public class MongoPersistence extends DocumentPersistence {
     }
 
     private MongoPersistence() {
-        CodecRegistry codecRegistry = CodecRegistries.fromRegistries(MongoClient.getDefaultCodecRegistry(),
-                CodecRegistries.fromCodecs(new TrajectoryCodec()));
-
-        MongoClientOptions options = MongoClientOptions.builder().codecRegistry(codecRegistry).build();
-
-        this.mongo = new MongoClient("localhost:27017", options);
+        this.mongo = new MongoClient();
         this.db = this.mongo.getDatabase(DBNAME);
+        this.om = new ObjectMapper();
     }
 
     @Override
@@ -42,13 +41,15 @@ public class MongoPersistence extends DocumentPersistence {
         if (this.log.isInfoEnabled()) {
             this.log.info("Storing " + c);
         }
+
         try {
-            MongoCollection<Trajectory> dbc = this.db.getCollection(colName, Trajectory.class);
-            Trajectory aux = this.findById(c.getId());
-            if (aux == null) {
-                dbc.insertOne(c);
+            String json = om.writeValueAsString(c);
+            MongoCollection<Document> dbc = this.db.getCollection(colName);
+            Document  aux = dbc.find(Filters.eq("_id", c.getId())).first();
+            if(aux == null) {
+                dbc.insertOne(new Document((BasicDBObject)JSON.parse(json)));
             } else {
-                dbc.updateOne(Filters.eq("_id", c.getId()), new Document("$set", c));
+                dbc.updateOne(aux, new Document((BasicDBObject)JSON.parse(json)));
             }
 
         } catch (Exception e) {
@@ -62,9 +63,9 @@ public class MongoPersistence extends DocumentPersistence {
         this.log.info("findAll");
         List<Trajectory> ret = new ArrayList<>();
         try {
-            MongoCollection<Trajectory> dbc = this.db.getCollection(colName, Trajectory.class);
-            for (Trajectory trajectory : dbc.find()) {
-                ret.add(trajectory);
+            MongoCollection<Document> dbc = this.db.getCollection(colName);
+            for (Document d : dbc.find()) {
+                ret.add(om.readValue(JSON.serialize(d), Trajectory.class));
             }
         } catch (Exception e) {
             this.log.error(e.getMessage(), e);
@@ -77,10 +78,20 @@ public class MongoPersistence extends DocumentPersistence {
             this.log.info("findById(" + id + ")");
         }
 
-        MongoCollection<Trajectory> dbc = this.db.getCollection(colName, Trajectory.class);
-        FindIterable<Trajectory> result = dbc.find(Filters.eq("_id", id));
+        MongoCollection<Document> dbc = this.db.getCollection(colName);
+        FindIterable<Document>  result = dbc.find(Filters.eq("_id", id));
 
-        return result.first();
+        Document first = result.first();
+        if(first != null) {
+            try {
+                return om.readValue(JSON.serialize(first), Trajectory.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -88,7 +99,7 @@ public class MongoPersistence extends DocumentPersistence {
         if (this.log.isInfoEnabled()) {
             this.log.info("deleteById(" + id + ")");
         }
-        MongoCollection<Trajectory> dbc = this.db.getCollection(colName, Trajectory.class);
+        MongoCollection<Document> dbc = this.db.getCollection(colName);
         dbc.deleteOne(Filters.eq("_id", id));
     }
 

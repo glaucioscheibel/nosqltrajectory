@@ -45,8 +45,7 @@ public class TrajectoryVersion implements Serializable {
     private TrajectoryVersionData data;
     @OneToOne
     @JsonProperty
-    private TrajectoryProcess history; // TODO: ou apropriedade precisa mudar
-                                       // para process ou o get para history
+    private TrajectoryProcess process;
 
     public Integer getId() {
         return this.id;
@@ -124,10 +123,10 @@ public class TrajectoryVersion implements Serializable {
     }
 
     public TrajectoryProcess getProcess() {
-        return this.history;
+        return this.process;
     }
 
-    public void setHistory(TrajectoryProcess history) {
-        this.history = history;
+    public void setProcess(TrajectoryProcess process) {
+        this.process = process;
     }
 }

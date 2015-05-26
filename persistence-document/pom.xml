@@ -26,5 +26,10 @@
             <artifactId>mongo-java-driver</artifactId>
             <version>3.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-core</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
     </dependencies>
 </project>

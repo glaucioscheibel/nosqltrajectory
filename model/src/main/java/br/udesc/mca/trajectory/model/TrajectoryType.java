@@ -1,5 +1,5 @@
 package br.udesc.mca.trajectory.model;
 
 public enum TrajectoryType {
-    RAW, COMPRESSED;
+    RAW, COMPRESSED, SEGMENTED;
 }

@@ -16,7 +16,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class TrajectoryVersion implements Serializable {
@@ -25,26 +24,20 @@ public class TrajectoryVersion implements Serializable {
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private Trajectory trajectory;
     private int version;
-    @JsonProperty
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
-    @JsonProperty
     private Integer previousVersion;
-    @JsonProperty
     private TrajectoryType type;
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonProperty
     private Date lastModified;
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectorySegment> segments;
-    @JsonProperty
-    private TrajectoryVersionData data;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<TrajectoryVersionData> data;
     @OneToOne
-    @JsonProperty
     private TrajectoryProcess process;
 
     public Integer getId() {
@@ -114,12 +107,15 @@ public class TrajectoryVersion implements Serializable {
         this.segments.add(segment);
     }
 
-    public TrajectoryVersionData getData() {
+    public List<TrajectoryVersionData> getData() {
         return this.data;
     }
 
-    public void setData(TrajectoryVersionData data) {
-        this.data = data;
+    public void addData(TrajectoryVersionData data) {
+        if (this.data == null) {
+            this.data = new ArrayList<>();
+        }
+        this.data.add(data);
     }
 
     public TrajectoryProcess getProcess() {

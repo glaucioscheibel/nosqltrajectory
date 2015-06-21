@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
     <name>trajectory-polyglot-persistence</name>
     <url>http://maven.apache.org</url>
-    <!--build>
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -41,7 +41,7 @@
                                     implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
                                 <transformer
                                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>br.udesc.mca.trajectory.service.keyvalue.KeyValuePersistenceApplication</mainClass>
+                                    <mainClass>br.udesc.mca.trajectory.polyglot.service.PolyglotApplication</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -49,7 +49,7 @@
                 </executions>
             </plugin>
         </plugins>
-    </build-->
+    </build>
     <dependencies>
         <dependency>
             <groupId>br.udesc.mca</groupId>
@@ -60,6 +60,16 @@
             <groupId>br.udesc.mca</groupId>
             <artifactId>persistence-api</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.4-1201-jdbc41</version>
         </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>

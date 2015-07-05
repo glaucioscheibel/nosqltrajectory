@@ -1,0 +1,24 @@
+package br.udesc.mca.trajectory.service.document;
+
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import io.dropwizard.Application;
+import io.dropwizard.setup.Environment;
+
+public class DocumentPersistenceApplication extends Application<DocumentPersistenceConfiguration> {
+
+    @Override
+    public void run(DocumentPersistenceConfiguration config, Environment env) throws Exception {
+        DocumentPersistenceResource resource = new DocumentPersistenceResource();
+        DocumentPersistenceHealthCheck healthCheck = new DocumentPersistenceHealthCheck();
+        env.getObjectMapper().configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
+        env.getObjectMapper().setSerializationInclusion(Include.NON_NULL);
+        env.getObjectMapper().setSerializationInclusion(Include.NON_EMPTY);
+        env.healthChecks().register("document", healthCheck);
+        env.jersey().register(resource);
+    }
+
+    public static void main(String[] args) throws Exception {
+        new DocumentPersistenceApplication().run(args);
+    }
+}

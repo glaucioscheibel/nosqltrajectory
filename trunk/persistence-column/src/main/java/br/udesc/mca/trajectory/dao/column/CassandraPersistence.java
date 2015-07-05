@@ -128,14 +128,14 @@ public class CassandraPersistence extends PersistenceDAO {
 
         Trajectory t = this.findById(o.getId());
         if(t == null) {
-            sb.append("insert into ").append(table).append("(id,type,lastModified,description,originalTrajectory,versions) values(?,?,?,?,?,?)");
+            sb.append("insert into ").append(table).append("(id,lastModified,description,originalTrajectory,versions) values(?,?,?,?,?)");
             PreparedStatement st = this.db.prepare(sb.toString());
             BoundStatement bs = st.bind();
             fillBoundStatement(bs, o);
 
             this.db.execute(bs);
         } else {
-            sb.append("update ").append(table).append(" set type=?, lastModified=?, description=?, originalTrajectory=?, versions=? where id=?");
+            sb.append("update ").append(table).append(" set lastModified=?, description=?, originalTrajectory=?, versions=? where id=?");
             PreparedStatement st = this.db.prepare(sb.toString());
             BoundStatement bs = st.bind();
             fillBoundStatement(bs, o);
@@ -171,10 +171,10 @@ public class CassandraPersistence extends PersistenceDAO {
                 version.setInt("id", tv.getId());
                 version.setInt("version", tv.getVersion());
                 version.setString("type", tv.getType() == null ? null : tv.getType().name());
-                version.setInt("previousVersion", tv.getPreviousVersion());
+                version.setInt("previousVersion", tv.getPreviousVersion() == null ? -1 : tv.getPreviousVersion());
                 if(tv.getUser() != null){
                     UDTValue user = userUT.newValue();
-                    user.setInt("id", tv.getUser().getId());
+                    user.setInt("id", tv.getUser().getId() == null ? -1 : tv.getUser().getId());
                     user.setString("name", tv.getUser().getName());
                     version.setUDTValue("user", user);
                 }
@@ -189,7 +189,7 @@ public class CassandraPersistence extends PersistenceDAO {
                     ArrayList<UDTValue> datas = new ArrayList<>();
                     for (TrajectoryVersionData d: tv.getData()) {
                         UDTValue data = dataUT.newValue();
-                        data.setInt("id", d.getId());
+                        data.setInt("id", d.getId() == null ? -1 : d.getId());
                         data.setString("key", d.getKey());
                         data.setString("value", d.getValue());
                         datas.add(data);
@@ -205,7 +205,7 @@ public class CassandraPersistence extends PersistenceDAO {
                             ArrayList<UDTValue> datas = new ArrayList<>();
                             for (TrajectorySegmentData d: s.getData()) {
                                 UDTValue data = dataUT.newValue();
-                                data.setInt("id", d.getId());
+                                data.setInt("id", d.getId() == null ? -1 : d.getId());
                                 data.setString("key", d.getKey());
                                 data.setString("value", d.getValue());
                                 datas.add(data);
@@ -216,7 +216,7 @@ public class CassandraPersistence extends PersistenceDAO {
                             ArrayList<UDTValue> points = new ArrayList<>();
                             for (TrajectoryPoint p: s.getPoints()) {
                                 UDTValue point = pointUT.newValue();
-                                point.setInt("id", p.getId());
+                                point.setInt("id", p.getId() == null ? -1 : p.getId());
                                 point.setFloat("h", p.getH());
                                 point.setFloat("lng", p.getLng());
                                 point.setFloat("lat", p.getLat());
@@ -225,7 +225,7 @@ public class CassandraPersistence extends PersistenceDAO {
                                     ArrayList<UDTValue> datas = new ArrayList<>();
                                     for (TrajectoryPointData d: p.getData()) {
                                         UDTValue data = dataUT.newValue();
-                                        data.setInt("id", d.getId());
+                                        data.setInt("id", d.getId() == null ? -1 : d.getId());
                                         data.setString("key", d.getKey());
                                         data.setString("value", d.getValue());
                                         datas.add(data);
@@ -257,7 +257,7 @@ public class CassandraPersistence extends PersistenceDAO {
             for (UDTValue version : versions) {
                 TrajectoryVersion v = new TrajectoryVersion();
                 v.setId(version.getInt("id"));
-                v.setPreviousVersion(version.getInt("previousVersion"));
+                v.setPreviousVersion(version.getInt("previousVersion") == -1 ? null : version.getInt("previousVersion"));
                 v.setVersion(version.getInt("version"));
                 v.setLastModified(version.getTimestamp("lastModified"));
                 String type = version.getString("type");
@@ -265,7 +265,7 @@ public class CassandraPersistence extends PersistenceDAO {
                 UDTValue user = version.getUDTValue("user");
                 if(user != null){
                     User u = new User();
-                    u.setId(user.getInt("id"));
+                    u.setId(user.getInt("id") == -1 ? null : user.getInt("id"));
                     u.setName(user.getString("name"));
                     v.setUser(u);
                 }
@@ -281,7 +281,7 @@ public class CassandraPersistence extends PersistenceDAO {
                 if(datas != null){
                     for(UDTValue data: datas){
                         TrajectoryVersionData d = new TrajectoryVersionData();
-                        d.setId(data.getInt("id"));
+                        d.setId(data.getInt("id") == -1 ? null : data.getInt("id"));
                         d.setKey(data.getString("key"));
                         d.setValue(data.getString("value"));
                         v.addData(d);
@@ -297,7 +297,7 @@ public class CassandraPersistence extends PersistenceDAO {
                         if(datas != null){
                             for(UDTValue data: datas){
                                 TrajectorySegmentData d = new TrajectorySegmentData();
-                                d.setId(data.getInt("id"));
+                                d.setId(data.getInt("id") == -1 ? null : data.getInt("id"));
                                 d.setKey(data.getString("key"));
                                 d.setValue(data.getString("value"));
                                 s.addData(d);
@@ -307,7 +307,7 @@ public class CassandraPersistence extends PersistenceDAO {
                         if(points != null){
                             for(UDTValue point: points){
                                 TrajectoryPoint p = new TrajectoryPoint();
-                                p.setId(point.getInt("id"));
+                                p.setId(point.getInt("id") == -1 ? null : point.getInt("id"));
                                 p.setH(point.getFloat("h"));
                                 p.setLat(point.getFloat("lat"));
                                 p.setLng(point.getFloat("lng"));
@@ -316,7 +316,7 @@ public class CassandraPersistence extends PersistenceDAO {
                                 if(datas != null){
                                     for(UDTValue data: datas){
                                         TrajectoryPointData d = new TrajectoryPointData();
-                                        d.setId(data.getInt("id"));
+                                        d.setId(data.getInt("id") == -1 ? null : data.getInt("id"));
                                         d.setKey(data.getString("key"));
                                         d.setValue(data.getString("value"));
                                         p.addData(d);
@@ -332,37 +332,5 @@ public class CassandraPersistence extends PersistenceDAO {
             }
         }
         return ret;
-    }
-
-    public  static void main(String... a){
-        CassandraPersistence p = CassandraPersistence.getInstance();
-        try {
-
-            p.createDB();
-
-            Trajectory t = new Trajectory();
-
-            t.setId(2l);
-            t.setDescription("desc");
-            t.setLastModified(new Date());
-            t.setOriginalTrajectory(0);
-
-
-            TrajectoryVersion v = new TrajectoryVersion();
-            v.setId(1);
-            v.setVersion(1);
-            t.addVersion(v);
-            p.store(t);
-
-
-            System.out.println(p.findById(2).getDescription());
-            System.out.println(p.findById(2).getVersions().get(0).getId());
-
-
-        }catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            p.close();
-        }
     }
 }

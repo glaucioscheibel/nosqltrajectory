@@ -7,7 +7,7 @@ public class TesteAzimuthQuinze {
 	//KML da Schulz
     public static void main(String[] args) {
 
-        /*GeoCoordinate udesc = new GeoCoordinate(-26.2980, -48.8551);
+        GeoCoordinate udesc = new GeoCoordinate(-26.2980, -48.8551);
         GeoCoordinate udesc2 = new GeoCoordinate(-26.2985, -48.8552);
 
         double distancia = Azimuth.calculateLengthInKM(udesc.getLatitude(), udesc.getLongitude(), udesc2.getLatitude(),

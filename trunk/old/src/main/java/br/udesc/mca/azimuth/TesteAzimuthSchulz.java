@@ -1,6 +1,5 @@
 package br.udesc.mca.azimuth;
 
-import org.apfloat.Apfloat;
 import br.udesc.mca.point.converter.PointConverter;
 
 public class TesteAzimuthSchulz {

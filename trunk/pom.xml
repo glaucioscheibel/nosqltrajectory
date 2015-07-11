@@ -21,8 +21,9 @@
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <dropwizard.version>0.8.1</dropwizard.version>
-        <jackson.version>2.5.1</jackson.version>
+        <dropwizard.version>0.9.0-rc2</dropwizard.version>
+        <jackson.version>2.5.3</jackson.version>
+        <slf4j.version>1.7.7</slf4j.version>
     </properties>
     <build>
         <plugins>
@@ -47,7 +48,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.7</version>
+            <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
 </project>

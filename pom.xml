@@ -16,6 +16,7 @@
         <module>persistence-graph</module>
         <module>persistence-polyglot</module>
         <module>segmenter-service</module>
+        <module>r-statistics-service</module>
         <module>client</module>
         <module>old</module>
     </modules>

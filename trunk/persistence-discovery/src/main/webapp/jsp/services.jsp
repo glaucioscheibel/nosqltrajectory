@@ -28,7 +28,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 for(InstanceInfo info : app.getInstances()){
                 String url = info.getHomePageUrl();
                 if("EUREKA".equals(info.getAppName())){
-                    url = "http://" + info.getHostName() + ":" + info.getPort() +"/jsp/services.jsp";
+                    url = "http://" + info.getHostName() + ":" + info.getPort() +"/persistence-discovery/jsp/services.jsp";
                 }
 
                     sb.append("<tr>");

@@ -4,13 +4,21 @@ import java.util.Collection;
 
 import javax.sql.RowSet;
 
+import org.hibernate.Session;
+
 import br.udesc.mca.modelo.ponto.Ponto;
 
 public class SegmentoDAOPostgreSQL implements SegmentoDAO {
 
+	private Session session;
+
+	public SegmentoDAOPostgreSQL(Session session) {
+		this.session = session;
+	}
+
 	@Override
 	public int inserirSegmento(Segmento segmento) {
-		// TODO Auto-generated method stub
+		this.session.save(segmento);
 		return 0;
 	}
 

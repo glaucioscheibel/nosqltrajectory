@@ -6,10 +6,10 @@
 
 	<session-factory>
 		<!-- Configuração da conexão com o banco Postgre e dialeto -->
-		<!-- <property name="dialect">org.hibernate.spatial.dialect.postgis.PostgisDialect 
-			</property> -->
-		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect
+		<property name="dialect">org.hibernate.spatial.dialect.postgis.PostgisDialect
 		</property>
+		<!-- <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property> -->
+
 		<property name="connection.driver_class">org.postgresql.Driver</property>
 		<property name="connection.url">jdbc:postgresql://localhost:5432/trajetoria
 		</property>
@@ -22,16 +22,13 @@
 		<property name="c3po.timeout">300</property>
 		<property name="c3po.max_statements">50</property>
 		<property name="c3po.idle_test_period">3000</property>
-		<!-- Configurações de debug -->
-		<property name="show_sql">true</property>
-		<property name="format_sql">true</property>
-		<property name="generate_statistics">true</property>
-		<property name="use_sql_comments">true</property>
+		<!-- Configurações de debug <property name="show_sql">true</property> <property 
+			name="format_sql">true</property> <property name="generate_statistics">true</property> 
+			<property name="use_sql_comments">true</property> -->
 		<!-- Configurações de criação da base -->
 		<property name="hbm2ddl.auto">update</property>
 		<!-- Mapeando classes -->
 		<mapping class="br.udesc.mca.modelo.ponto.Ponto" />
-		<mapping class="br.udesc.mca.modelo.pontosegmento.PontoSegmento" />
 		<mapping class="br.udesc.mca.modelo.segmento.Segmento" />
 		<mapping class="br.udesc.mca.modelo.trajetoria.Trajetoria" />
 		<mapping class="br.udesc.mca.modelo.transporte.Transporte" />

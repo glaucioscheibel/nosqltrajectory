@@ -1,17 +1,21 @@
 package br.udesc.mca.modelo.segmento;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import br.udesc.mca.modelo.pontosegmento.PontoSegmento;
+import br.udesc.mca.modelo.ponto.Ponto;
 
 @Entity
 @Table(name = "segmento")
@@ -20,7 +24,8 @@ public class Segmento implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name = "gen_segmento", sequenceName = "seq_segmentoid")
+	@GeneratedValue(generator = "gen_segmento")
 	@Column(name = "id")
 	private Integer id;
 
@@ -29,9 +34,15 @@ public class Segmento implements Serializable {
 	@Column(name = "diferenca_azimute")
 	private Double diferencaAzimute;
 
-	@OneToMany
-	@JoinColumn(name = "segmento_id")
-	private List<PontoSegmento> pontoSegmentoLista;
+	// Está mapeado para gerar as chaves estrangeiras com nome correto, mas tem
+	// um bug no hibernate que não faz que isso seja respeitado.
+	// Somente na versão 5 terá correção, e talvez saia na 4.
+	// https://hibernate.atlassian.net/browse/HHH-8862
+	@ManyToMany
+	@JoinTable(name = "ponto_segmento", foreignKey = @ForeignKey(name = "ponto_segmento_segmento_id_fk") , inverseForeignKey = @ForeignKey(name = "ponto_segmento_ponto_id_fk") , joinColumns = {
+			@JoinColumn(name = "segmento_id", referencedColumnName = "id") }, inverseJoinColumns = {
+					@JoinColumn(name = "ponto_id", referencedColumnName = "id") })
+	private Set<Ponto> ponto = new HashSet<Ponto>();
 
 	public Integer getId() {
 		return id;
@@ -57,6 +68,14 @@ public class Segmento implements Serializable {
 		this.diferencaAzimute = diferencaAzimute;
 	}
 
+	public Set<Ponto> getPonto() {
+		return ponto;
+	}
+
+	public void setPonto(Set<Ponto> ponto) {
+		this.ponto = ponto;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -64,6 +83,7 @@ public class Segmento implements Serializable {
 		result = prime * result + ((azimute == null) ? 0 : azimute.hashCode());
 		result = prime * result + ((diferencaAzimute == null) ? 0 : diferencaAzimute.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((ponto == null) ? 0 : ponto.hashCode());
 		return result;
 	}
 
@@ -90,6 +110,11 @@ public class Segmento implements Serializable {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
+			return false;
+		if (ponto == null) {
+			if (other.ponto != null)
+				return false;
+		} else if (!ponto.equals(other.ponto))
 			return false;
 		return true;
 	}

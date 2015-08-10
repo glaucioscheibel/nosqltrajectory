@@ -3,7 +3,10 @@ package br.udesc.mca.trajectory.service.keyvalue;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import br.udesc.mca.discovery.EurekaServiceRegister;
 import io.dropwizard.Application;
+import io.dropwizard.jetty.HttpConnectorFactory;
+import io.dropwizard.server.DefaultServerFactory;
 import io.dropwizard.setup.Environment;
 
 public class KeyValuePersistenceApplication extends Application<KeyValuePersistenceConfiguration> {
@@ -17,6 +20,12 @@ public class KeyValuePersistenceApplication extends Application<KeyValuePersiste
         env.getObjectMapper().setSerializationInclusion(Include.NON_EMPTY);
         env.healthChecks().register("keyvalue", healthCheck);
         env.jersey().register(resource);
+
+        if(config.getDiscoveryURL() != null) {
+            int port = ((HttpConnectorFactory)((DefaultServerFactory)config.getServerFactory()).getApplicationConnectors().get(0)).getPort();
+            EurekaServiceRegister discovery = new EurekaServiceRegister("Keyvalue", port, "/trajectorykeyvalue");
+            discovery.register(config.getDiscoveryURL());
+        }
     }
 
     public static void main(String[] args) throws Exception {

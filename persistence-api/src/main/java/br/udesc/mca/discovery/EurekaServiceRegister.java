@@ -25,6 +25,7 @@ public class EurekaServiceRegister implements Runnable{
     private String instanceId;
     private String appHost;
     private String appIp;
+    private String protocol = "http";
 
     public EurekaServiceRegister(String appName, int appPort, String appServiceURI){
         this.appName = appName;
@@ -108,6 +109,9 @@ public class EurekaServiceRegister implements Runnable{
     public void setAppHost(String host){
         this.appHost = host;
     }
+
+    public String getProtocol() {return protocol;}
+    public void setProtocol(String protocol) {this.protocol = protocol;}
 
     @Override
     public void run() {
@@ -218,9 +222,9 @@ public class EurekaServiceRegister implements Runnable{
                 .append("\"status\":").append("\"").append(UP).append("\",")
                 .append("\"port\":{").append("\"$\":").append(appPort).append(",\"@enabled\":\"true\"},")
                 .append("\"securePort\":{").append("\"$\":").append(443).append(",\"@enabled\":\"false\"},")
-                .append("\"homePageUrl\":").append("\"").append(appServiceURI).append("\",")
-                .append("\"statusPageUrl\":").append("\"").append(statusURI).append("\",")
-                .append("\"healthCheckUrl\":").append("\"").append(healthcheckURI).append("\",")
+                .append("\"homePageUrl\":").append("\"").append(protocol).append("://").append(appHost).append(":").append(appPort).append(appServiceURI).append("\",")
+                .append("\"statusPageUrl\":").append("\"").append(protocol).append("://").append(appHost).append(":").append(appPort).append(statusURI).append("\",")
+                .append("\"healthCheckUrl\":").append("\"").append(protocol).append("://").append(appHost).append(":").append(appPort).append(healthcheckURI).append("\",")
                 .append("\"dataCenterInfo\":")
                 .append("{")
                 .append("\"name\":\"MyOwn\"")

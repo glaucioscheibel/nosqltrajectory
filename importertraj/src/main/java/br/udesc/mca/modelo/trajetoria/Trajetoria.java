@@ -1,6 +1,7 @@
 package br.udesc.mca.modelo.trajetoria;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -11,9 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.vividsolutions.jts.geom.LineString;
+import org.hibernate.annotations.Type;
+import org.hibernate.spatial.jts.mgeom.MLineString;
 
 import br.udesc.mca.modelo.ponto.Ponto;
 import br.udesc.mca.modelo.transporte.Transporte;
@@ -25,7 +28,8 @@ public class Trajetoria implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name = "gen_trajetoria", sequenceName = "seq_trajetoriaid")
+	@GeneratedValue(generator = "gen_trajetoria")
 	@Column(name = "id")
 	private Integer id;
 
@@ -45,7 +49,11 @@ public class Trajetoria implements Serializable {
 
 	private Double velocidade_media;
 
-	private LineString trajetoria;
+	private Date data;
+
+	@Type(type = "org.hibernate.spatial.GeometryType")
+	private MLineString trajetoria;
+	
 
 	@OneToMany(mappedBy = "trajetoria")
 	private List<Ponto> pontos;
@@ -56,6 +64,14 @@ public class Trajetoria implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Transporte getTransporte() {
+		return transporte;
+	}
+
+	public void setTransporte(Transporte transporte) {
+		this.transporte = transporte;
 	}
 
 	public String getBase() {
@@ -98,11 +114,19 @@ public class Trajetoria implements Serializable {
 		this.velocidade_media = velocidade_media;
 	}
 
-	public LineString getTrajetoria() {
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
+	}
+
+	public MLineString getTrajetoria() {
 		return trajetoria;
 	}
 
-	public void setTrajetoria(LineString trajetoria) {
+	public void setTrajetoria(MLineString trajetoria) {
 		this.trajetoria = trajetoria;
 	}
 
@@ -121,10 +145,12 @@ public class Trajetoria implements Serializable {
 		result = prime * result + ((arquivo == null) ? 0 : arquivo.hashCode());
 		result = prime * result + ((base == null) ? 0 : base.hashCode());
 		result = prime * result + ((comprimento == null) ? 0 : comprimento.hashCode());
+		result = prime * result + ((data == null) ? 0 : data.hashCode());
 		result = prime * result + ((duracao == null) ? 0 : duracao.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((pontos == null) ? 0 : pontos.hashCode());
 		result = prime * result + ((trajetoria == null) ? 0 : trajetoria.hashCode());
+		result = prime * result + ((transporte == null) ? 0 : transporte.hashCode());
 		result = prime * result + ((velocidade_media == null) ? 0 : velocidade_media.hashCode());
 		return result;
 	}
@@ -153,6 +179,11 @@ public class Trajetoria implements Serializable {
 				return false;
 		} else if (!comprimento.equals(other.comprimento))
 			return false;
+		if (data == null) {
+			if (other.data != null)
+				return false;
+		} else if (!data.equals(other.data))
+			return false;
 		if (duracao == null) {
 			if (other.duracao != null)
 				return false;
@@ -173,6 +204,11 @@ public class Trajetoria implements Serializable {
 				return false;
 		} else if (!trajetoria.equals(other.trajetoria))
 			return false;
+		if (transporte == null) {
+			if (other.transporte != null)
+				return false;
+		} else if (!transporte.equals(other.transporte))
+			return false;
 		if (velocidade_media == null) {
 			if (other.velocidade_media != null)
 				return false;
@@ -180,5 +216,4 @@ public class Trajetoria implements Serializable {
 			return false;
 		return true;
 	}
-
 }

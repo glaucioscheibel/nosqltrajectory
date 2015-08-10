@@ -1,0 +1,8 @@
+server:
+  applicationConnectors:
+  - type: http
+    port: 8180
+  adminConnectors:
+  - type: http
+    port: 8181
+discoveryURL: http://localhost:8080/persistence-discovery/v2

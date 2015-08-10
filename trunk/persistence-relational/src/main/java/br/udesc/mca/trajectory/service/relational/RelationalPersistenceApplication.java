@@ -4,6 +4,8 @@ import org.eclipse.jetty.servlet.ServletHandler;
 
 import br.udesc.mca.discovery.EurekaServiceRegister;
 import io.dropwizard.Application;
+import io.dropwizard.jetty.HttpConnectorFactory;
+import io.dropwizard.server.DefaultServerFactory;
 import io.dropwizard.setup.Environment;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -20,11 +22,11 @@ public class RelationalPersistenceApplication extends Application<RelationalPers
         env.healthChecks().register("relational", healthCheck);
         env.jersey().register(resource);
 
-        int port = 9090; //TODO: Descobrir a porta
-
-        EurekaServiceRegister discovery = new EurekaServiceRegister("Relational", port, "/trajectoryrelational");
-        discovery.register("http://localhost:8080/persistence-discovery/v2");
-
+        if(config.getDiscoveryURL() != null) {
+            int port = ((HttpConnectorFactory)((DefaultServerFactory)config.getServerFactory()).getApplicationConnectors().get(0)).getPort();
+            EurekaServiceRegister discovery = new EurekaServiceRegister("Relational", port, "/trajectoryrelational");
+            discovery.register(config.getDiscoveryURL());
+        }
     }
 
     public static void main(String[] args) throws Exception {

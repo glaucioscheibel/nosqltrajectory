@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -15,7 +16,8 @@ public class Transporte implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name = "gen_transporte", sequenceName = "seq_transporteid")
+	@GeneratedValue(generator="gen_transporte")
 	@Column(name = "id")
 	private Integer id;
 

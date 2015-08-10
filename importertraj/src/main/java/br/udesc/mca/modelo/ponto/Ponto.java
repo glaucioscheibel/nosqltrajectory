@@ -1,7 +1,7 @@
 package br.udesc.mca.modelo.ponto;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import br.udesc.mca.modelo.trajetoria.Trajetoria;
@@ -21,7 +22,8 @@ public class Ponto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name = "gen_ponto", sequenceName = "seq_pontoid")
+	@GeneratedValue(generator="gen_ponto")
 	@Column(name = "id")
 	private Integer id;
 
@@ -37,7 +39,7 @@ public class Ponto implements Serializable {
 
 	private Double velocidade;
 
-	private Date tempo;
+	private Timestamp tempo;
 
 	public Integer getId() {
 		return id;
@@ -87,11 +89,11 @@ public class Ponto implements Serializable {
 		this.velocidade = velocidade;
 	}
 
-	public Date getTempo() {
+	public Timestamp getTempo() {
 		return tempo;
 	}
 
-	public void setTempo(Date tempo) {
+	public void setTempo(Timestamp tempo) {
 		this.tempo = tempo;
 	}
 

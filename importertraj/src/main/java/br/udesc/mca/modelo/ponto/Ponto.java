@@ -25,7 +25,7 @@ public class Ponto implements Serializable {
 	@SequenceGenerator(name = "gen_ponto", sequenceName = "seq_pontoid")
 	@GeneratedValue(generator="gen_ponto")
 	@Column(name = "id")
-	private Integer id;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "trajetoria_id", foreignKey = @ForeignKey(name = "ponto_trajetoria_id_fk") )
@@ -38,14 +38,18 @@ public class Ponto implements Serializable {
 	private Double altitude;
 
 	private Double velocidade;
+	
+	private Double acuracia;
+	
+	private Double bearing;
 
 	private Timestamp tempo;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -89,6 +93,22 @@ public class Ponto implements Serializable {
 		this.velocidade = velocidade;
 	}
 
+	public Double getAcuracia() {
+		return acuracia;
+	}
+
+	public void setAcuracia(Double acuracia) {
+		this.acuracia = acuracia;
+	}
+
+	public Double getBearing() {
+		return bearing;
+	}
+
+	public void setBearing(Double bearing) {
+		this.bearing = bearing;
+	}
+
 	public Timestamp getTempo() {
 		return tempo;
 	}
@@ -101,7 +121,9 @@ public class Ponto implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((acuracia == null) ? 0 : acuracia.hashCode());
 		result = prime * result + ((altitude == null) ? 0 : altitude.hashCode());
+		result = prime * result + ((bearing == null) ? 0 : bearing.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((latitude == null) ? 0 : latitude.hashCode());
 		result = prime * result + ((longitude == null) ? 0 : longitude.hashCode());
@@ -120,10 +142,20 @@ public class Ponto implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Ponto other = (Ponto) obj;
+		if (acuracia == null) {
+			if (other.acuracia != null)
+				return false;
+		} else if (!acuracia.equals(other.acuracia))
+			return false;
 		if (altitude == null) {
 			if (other.altitude != null)
 				return false;
 		} else if (!altitude.equals(other.altitude))
+			return false;
+		if (bearing == null) {
+			if (other.bearing != null)
+				return false;
+		} else if (!bearing.equals(other.bearing))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -157,5 +189,4 @@ public class Ponto implements Serializable {
 			return false;
 		return true;
 	}
-
 }

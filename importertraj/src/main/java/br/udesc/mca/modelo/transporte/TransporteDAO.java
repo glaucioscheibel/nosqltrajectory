@@ -8,9 +8,9 @@ public interface TransporteDAO {
 
 	public int inserirTransporte(Transporte transporte);
 
-	public boolean excluirTransporte(int id);
+	public boolean excluirTransporte(long id);
 
-	public Transporte selecionarTransporte(int id);
+	public Transporte selecionarTransporte(long id);
 
 	public boolean atualizarTransporte(Transporte transporte);
 

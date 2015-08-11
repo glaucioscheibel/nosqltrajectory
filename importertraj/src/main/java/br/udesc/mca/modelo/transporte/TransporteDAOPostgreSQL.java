@@ -13,13 +13,13 @@ public class TransporteDAOPostgreSQL implements TransporteDAO {
 	}
 
 	@Override
-	public boolean excluirTransporte(int id) {
+	public boolean excluirTransporte(long id) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public Transporte selecionarTransporte(int id) {
+	public Transporte selecionarTransporte(long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -42,5 +42,4 @@ public class TransporteDAOPostgreSQL implements TransporteDAO {
 		return null;
 	}
 
-	
 }

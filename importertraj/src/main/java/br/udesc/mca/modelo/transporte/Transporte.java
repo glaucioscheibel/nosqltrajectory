@@ -19,16 +19,16 @@ public class Transporte implements Serializable {
 	@SequenceGenerator(name = "gen_transporte", sequenceName = "seq_transporteid")
 	@GeneratedValue(generator="gen_transporte")
 	@Column(name = "id")
-	private Integer id;
+	private Long id;
 
 	@Column(length = 50)
 	private String descricao;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -69,5 +69,5 @@ public class Transporte implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
+	}	
 }

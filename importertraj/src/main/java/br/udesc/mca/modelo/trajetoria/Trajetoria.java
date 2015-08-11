@@ -16,7 +16,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
-import org.hibernate.spatial.jts.mgeom.MLineString;
+
+import com.vividsolutions.jts.geom.LineString;
 
 import br.udesc.mca.modelo.ponto.Ponto;
 import br.udesc.mca.modelo.transporte.Transporte;
@@ -51,9 +52,11 @@ public class Trajetoria implements Serializable {
 
 	private Date data;
 
+	// @Column(columnDefinition = "geometry(LineString,4326)")
+	// @Type(type = "org.hibernate.spatial.JTSGeometryType")
+	@Column(columnDefinition = "geometry(LineString,4326)")
 	@Type(type = "org.hibernate.spatial.GeometryType")
-	private MLineString trajetoria;
-	
+	private LineString trajetoria;
 
 	@OneToMany(mappedBy = "trajetoria")
 	private List<Ponto> pontos;
@@ -122,11 +125,11 @@ public class Trajetoria implements Serializable {
 		this.data = data;
 	}
 
-	public MLineString getTrajetoria() {
+	public LineString getTrajetoria() {
 		return trajetoria;
 	}
 
-	public void setTrajetoria(MLineString trajetoria) {
+	public void setTrajetoria(LineString trajetoria) {
 		this.trajetoria = trajetoria;
 	}
 
@@ -149,7 +152,8 @@ public class Trajetoria implements Serializable {
 		result = prime * result + ((duracao == null) ? 0 : duracao.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((pontos == null) ? 0 : pontos.hashCode());
-		result = prime * result + ((trajetoria == null) ? 0 : trajetoria.hashCode());
+		// result = prime * result + ((trajetoria == null) ? 0 :
+		// trajetoria.hashCode());
 		result = prime * result + ((transporte == null) ? 0 : transporte.hashCode());
 		result = prime * result + ((velocidade_media == null) ? 0 : velocidade_media.hashCode());
 		return result;

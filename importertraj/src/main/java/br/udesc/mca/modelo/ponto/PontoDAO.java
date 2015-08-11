@@ -8,9 +8,9 @@ public interface PontoDAO {
 
 	public int inserirPonto(Ponto ponto);
 
-	public boolean excluirPonto(int id);
+	public boolean excluirPonto(long id);
 
-	public Ponto selecionarPonto(int id);
+	public Ponto selecionarPonto(long id);
 
 	public boolean atualizarPonto(Ponto ponto);
 

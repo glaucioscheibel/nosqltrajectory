@@ -21,13 +21,13 @@ public class PontoDAOPostgreSQL implements PontoDAO {
 	}
 
 	@Override
-	public boolean excluirPonto(int id) {
+	public boolean excluirPonto(long id) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public Ponto selecionarPonto(int id) {
+	public Ponto selecionarPonto(long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -51,6 +51,7 @@ public class JoinvilleImportador {
 
 		Trajetoria trajetoria = null;
 		Ponto ponto = null;
+		Ponto pontoAux = null;
 		Segmento segmento = null;
 
 		List<Ponto> listaPonto = null;
@@ -67,10 +68,10 @@ public class JoinvilleImportador {
 		String hora = null;
 		String minuto = null;
 		String segundo = null;
-		int contaPonto = 0;
 		int recursivo = Integer.parseInt(prop.getProperty("prop.base.recursivo"));
 		int pontosPorSegmento = Integer.parseInt(prop.getProperty("prop.base.ponto.segmento"));
 		int contador = 0;
+		int contaPonto = 0;
 		int versaoArquivoAndroid = 0;
 		double lat1 = 0;
 		double lon1 = 0;
@@ -214,30 +215,48 @@ public class JoinvilleImportador {
 			// gerando os segmentos
 			segmento = new Segmento();
 			listaPontoAux = new HashSet<Ponto>();
-			contaPonto = 0;
+
 			for (Ponto pontoLista : listaPonto) {
-				if (contaPonto == pontosPorSegmento) {
+				if (listaPontoAux.size() == pontosPorSegmento) {
 					segmento.setPonto(listaPontoAux);
+
+					for (Ponto pontoListaAux : listaPontoAux) {
+						if (contaPonto == 0) {
+							lat1 = pontoListaAux.getLatitude();
+							lon1 = pontoListaAux.getLongitude();
+						} else {
+							lat2 = pontoListaAux.getLatitude();
+							lon2 = pontoListaAux.getLongitude();
+						}
+						contaPonto++;
+					}
+					contaPonto = 0;
 					azimute = Azimute.azimute(lat1, lon1, lat2, lon2);
 					segmento.setAzimute(azimute);
-
 					segmentoDAOPostgreSQL.inserirSegmento(segmento);
 					segmento = new Segmento();
 					listaPontoAux = new HashSet<Ponto>();
-					contaPonto = 0;
-				}
-
-				if (contaPonto == 0) {
-					lat1 = pontoLista.getLatitude();
-					lon1 = pontoLista.getLongitude();
-				} else {
-					if (contaPonto == 1) {
-						lat2 = pontoLista.getLatitude();
-						lon2 = pontoLista.getLongitude();
-					}
+					listaPontoAux.add(pontoAux);
 				}
 				listaPontoAux.add(pontoLista);
-				contaPonto++;
+				pontoAux = pontoLista;
+			}
+			if (listaPonto.size() > 1) {
+				contaPonto = 0;
+				segmento.setPonto(listaPontoAux);
+				for (Ponto pontoListaAux : listaPontoAux) {
+					if (contaPonto == 0) {
+						lat1 = pontoListaAux.getLatitude();
+						lon1 = pontoListaAux.getLongitude();
+					} else {
+						lat2 = pontoListaAux.getLatitude();
+						lon2 = pontoListaAux.getLongitude();
+					}
+					contaPonto++;
+				}
+				azimute = Azimute.azimute(lat1, lon1, lat2, lon2);
+				segmento.setAzimute(azimute);
+				segmentoDAOPostgreSQL.inserirSegmento(segmento);
 			}
 
 			transacao.commit();

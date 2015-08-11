@@ -171,7 +171,12 @@ public class EurekaServiceRegister implements Runnable{
                         con.setDoOutput(false);
                         con.setRequestProperty("Content-Type", "application/json");
 
-                        System.out.println("Heartbeat: " + con.getResponseCode());
+                        int response = con.getResponseCode();
+                        System.out.println("Heartbeat: " + response);
+
+                        if(response == 404){  //App nao encontrado no eureka.
+                            status = STARTING; //Envia a mensagem de registro novamente
+                        }
 
                         con.disconnect();
                     }catch (Exception e){

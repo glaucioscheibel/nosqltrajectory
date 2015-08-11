@@ -27,7 +27,7 @@ public class Segmento implements Serializable {
 	@SequenceGenerator(name = "gen_segmento", sequenceName = "seq_segmentoid")
 	@GeneratedValue(generator = "gen_segmento")
 	@Column(name = "id")
-	private Integer id;
+	private Long id;
 
 	private Double azimute;
 
@@ -44,11 +44,11 @@ public class Segmento implements Serializable {
 					@JoinColumn(name = "ponto_id", referencedColumnName = "id") })
 	private Set<Ponto> ponto = new HashSet<Ponto>();
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

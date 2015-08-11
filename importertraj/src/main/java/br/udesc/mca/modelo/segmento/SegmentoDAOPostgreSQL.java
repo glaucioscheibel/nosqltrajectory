@@ -23,13 +23,13 @@ public class SegmentoDAOPostgreSQL implements SegmentoDAO {
 	}
 
 	@Override
-	public boolean excluirSegmento(int id) {
+	public boolean excluirSegmento(long id) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public Ponto selecionarSegmento(int id) {
+	public Ponto selecionarSegmento(long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

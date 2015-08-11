@@ -10,9 +10,9 @@ public interface SegmentoDAO {
 
 	public int inserirSegmento(Segmento segmento);
 
-	public boolean excluirSegmento(int id);
+	public boolean excluirSegmento(long id);
 
-	public Ponto selecionarSegmento(int id);
+	public Ponto selecionarSegmento(long id);
 
 	public boolean atualizarSegmento(Segmento segmento);
 

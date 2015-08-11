@@ -21,13 +21,13 @@ public class TrajetoriaDAOPostgreSQL implements TrajetoriaDAO {
 	}
 
 	@Override
-	public boolean excluirTrajetoria(int id) {
+	public boolean excluirTrajetoria(long id) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public Trajetoria selecionarrTrajetoria(int id) {
+	public Trajetoria selecionarrTrajetoria(long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

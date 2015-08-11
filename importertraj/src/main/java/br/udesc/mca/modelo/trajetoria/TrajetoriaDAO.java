@@ -8,9 +8,9 @@ public interface TrajetoriaDAO {
 
 	public int inserirTrajetoria(Trajetoria trajetoria);
 
-	public boolean excluirTrajetoria(int id);
+	public boolean excluirTrajetoria(long id);
 
-	public Trajetoria selecionarrTrajetoria(int id);
+	public Trajetoria selecionarrTrajetoria(long id);
 
 	public boolean atualizarTrajetoria(Trajetoria trajetoria);
 

@@ -32,7 +32,7 @@ public class Trajetoria implements Serializable {
 	@SequenceGenerator(name = "gen_trajetoria", sequenceName = "seq_trajetoriaid")
 	@GeneratedValue(generator = "gen_trajetoria")
 	@Column(name = "id")
-	private Integer id;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "transporte_id", foreignKey = @ForeignKey(name = "trajetoria_transporte_id_fk") )
@@ -61,11 +61,11 @@ public class Trajetoria implements Serializable {
 	@OneToMany(mappedBy = "trajetoria")
 	private List<Ponto> pontos;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -152,8 +152,7 @@ public class Trajetoria implements Serializable {
 		result = prime * result + ((duracao == null) ? 0 : duracao.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((pontos == null) ? 0 : pontos.hashCode());
-		// result = prime * result + ((trajetoria == null) ? 0 :
-		// trajetoria.hashCode());
+		result = prime * result + ((trajetoria == null) ? 0 : trajetoria.hashCode());
 		result = prime * result + ((transporte == null) ? 0 : transporte.hashCode());
 		result = prime * result + ((velocidade_media == null) ? 0 : velocidade_media.hashCode());
 		return result;
@@ -219,5 +218,5 @@ public class Trajetoria implements Serializable {
 		} else if (!velocidade_media.equals(other.velocidade_media))
 			return false;
 		return true;
-	}
+	}	
 }

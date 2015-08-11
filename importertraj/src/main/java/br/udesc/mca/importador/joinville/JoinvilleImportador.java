@@ -44,6 +44,10 @@ public class JoinvilleImportador {
 		File diretorio = new File(prop.getProperty("prop.base.caminho"));
 		String[] ext = { prop.getProperty("prop.base.extesao") };
 		String versaoArquivo = prop.getProperty("prob.base.arquivo.versao.inicial").trim().toLowerCase();
+		String usuarioDiferente1 = prop.getProperty("prob.base.arquivo.usuario.diferente1").trim().toLowerCase();
+		String usuarioDiferente2 = prop.getProperty("prob.base.arquivo.usuario.diferente2").trim().toLowerCase();
+		String usuarioDiferente3 = prop.getProperty("prob.base.arquivo.usuario.diferente3").trim().toLowerCase();
+
 		Iterator<File> arquivos = null;
 
 		SimpleDateFormat formataDataHora = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -62,6 +66,8 @@ public class JoinvilleImportador {
 		String altitude = null;
 		String velocidade = null;
 		String tempoCorrido = null;
+		String acuracia = null;
+		String bearing = null;
 		String ano = null;
 		String mes = null;
 		String dia = null;
@@ -78,6 +84,7 @@ public class JoinvilleImportador {
 		double lat2 = 0;
 		double lon2 = 0;
 		double azimute = 0;
+		boolean achouUsuarioDiferente = false;
 
 		// iniciando leitura dos arquivos da pasta
 		if (recursivo == 0) {
@@ -90,11 +97,15 @@ public class JoinvilleImportador {
 			trajetoria = new Trajetoria();
 			listaPonto = new ArrayList<Ponto>();
 			versaoArquivoAndroid = 0;
+			achouUsuarioDiferente = false;
 
 			File arquivo = arquivos.next();
 			FileReader conteudoArquivo = new FileReader(arquivo);
 			BufferedReader bufferConteudo = new BufferedReader(conteudoArquivo);
 			String linha = null;
+
+			contador++;
+			System.out.println("Arquivo: " + contador + "-" + arquivo.getName().trim().toLowerCase());
 
 			// ignora linhas iniciais do arquivo
 			while ((linha = bufferConteudo.readLine()) != null) {
@@ -108,6 +119,14 @@ public class JoinvilleImportador {
 					if (linha.trim().toLowerCase().equals(versaoArquivo)) {
 						versaoArquivoAndroid = 2;
 					}
+
+					// procurando os usuários que estão fora do padrão 4.0.4
+					if (linha.trim().toLowerCase().equals(usuarioDiferente1)
+							|| linha.trim().toLowerCase().equals(usuarioDiferente2)
+							|| linha.trim().toLowerCase().equals(usuarioDiferente3)) {
+						achouUsuarioDiferente = true;
+					}
+
 					// acho o início dos dados da coleta quebra o laço
 					if (linha.trim().equals(prop.getProperty("prop.base.inicio.dados"))) {
 						break;
@@ -137,7 +156,7 @@ public class JoinvilleImportador {
 						longitude = tokenizer.nextToken(); // Longitude
 						altitude = tokenizer.nextToken(); // Altitude
 						velocidade = tokenizer.nextToken(); // Speed
-						tokenizer.nextToken(); // Accuracy
+						acuracia = tokenizer.nextToken(); // Accuracy
 						tokenizer.nextToken(); // Battery_%
 						ano = tokenizer.nextToken(); // Year
 						mes = tokenizer.nextToken(); // Month
@@ -150,33 +169,63 @@ public class JoinvilleImportador {
 						// o último valor
 						tempoCorrido = tokenizer.nextToken(); // Time_since_start_in_ms
 					} else {
-						tokenizer.nextToken(); // @
-						tokenizer.nextToken(); // Accelerometer_x
-						tokenizer.nextToken(); // Accelerometer_y
-						tokenizer.nextToken(); // Accelerometer_z
-						latitude = tokenizer.nextToken(); // Latitude
-						longitude = tokenizer.nextToken(); // Longitude
-						altitude = tokenizer.nextToken(); // Altitude
-						velocidade = tokenizer.nextToken(); // Speed
-						tokenizer.nextToken(); // Accuracy
-						tokenizer.nextToken(); // Bearing
-						tokenizer.nextToken(); // Battery_%
-						ano = tokenizer.nextToken(); // Year
-						mes = tokenizer.nextToken(); // Month
-						dia = tokenizer.nextToken(); // Day
-						hora = tokenizer.nextToken(); // Hour
-						minuto = tokenizer.nextToken(); // Minute
-						segundo = tokenizer.nextToken(); // Seconds
-						tokenizer.nextToken(); // Milliseconds
-						// esta informação é da trajetória sempre é gravado
-						// o último valor
-						tempoCorrido = tokenizer.nextToken(); // Time_since_start_in_ms
+						// usuario de versão 4.0.4 que o arquivo gerado está
+						// fora do padrão sem o bearing
+						if (achouUsuarioDiferente) {
+							tokenizer.nextToken(); // @
+							tokenizer.nextToken(); // Accelerometer_x
+							tokenizer.nextToken(); // Accelerometer_y
+							tokenizer.nextToken(); // Accelerometer_z
+							latitude = tokenizer.nextToken(); // Latitude
+							longitude = tokenizer.nextToken(); // Longitude
+							altitude = tokenizer.nextToken(); // Altitude
+							velocidade = tokenizer.nextToken(); // Speed
+							acuracia = tokenizer.nextToken(); // Accuracy
+							tokenizer.nextToken(); // Battery_%
+							ano = tokenizer.nextToken(); // Year
+							mes = tokenizer.nextToken(); // Month
+							dia = tokenizer.nextToken(); // Day
+							hora = tokenizer.nextToken(); // Hour
+							minuto = tokenizer.nextToken(); // Minute
+							segundo = tokenizer.nextToken(); // Seconds
+							tokenizer.nextToken(); // Milliseconds
+							// esta informação é da trajetória sempre é gravado
+							// o último valor
+							tempoCorrido = tokenizer.nextToken(); // Time_since_start_in_ms
+						} else {
+							tokenizer.nextToken(); // @
+							tokenizer.nextToken(); // Accelerometer_x
+							tokenizer.nextToken(); // Accelerometer_y
+							tokenizer.nextToken(); // Accelerometer_z
+							latitude = tokenizer.nextToken(); // Latitude
+							longitude = tokenizer.nextToken(); // Longitude
+							altitude = tokenizer.nextToken(); // Altitude
+							velocidade = tokenizer.nextToken(); // Speed
+							acuracia = tokenizer.nextToken(); // Accuracy
+							bearing = tokenizer.nextToken(); // Bearing
+							tokenizer.nextToken(); // Battery_%
+							ano = tokenizer.nextToken(); // Year
+							mes = tokenizer.nextToken(); // Month
+							dia = tokenizer.nextToken(); // Day
+							hora = tokenizer.nextToken(); // Hour
+							minuto = tokenizer.nextToken(); // Minute
+							segundo = tokenizer.nextToken(); // Seconds
+							tokenizer.nextToken(); // Milliseconds
+							// esta informação é da trajetória sempre é gravado
+							// o último valor
+							tempoCorrido = tokenizer.nextToken(); // Time_since_start_in_ms
+						}
 					}
 
 					ponto.setLatitude(Double.parseDouble(latitude));
 					ponto.setLongitude(Double.parseDouble(longitude));
 					ponto.setAltitude(Double.parseDouble(altitude));
 					ponto.setVelocidade(Double.parseDouble(velocidade));
+					ponto.setAcuracia(Double.parseDouble(acuracia));
+					if (bearing != null) {
+						ponto.setBearing(Double.parseDouble(bearing));
+					}
+
 					try {
 						ponto.setTempo(new Timestamp((formataDataHora
 								.parse(ano + "-" + mes + "-" + dia + " " + hora + ":" + minuto + ":" + segundo)
@@ -263,8 +312,6 @@ public class JoinvilleImportador {
 			sessao.close();
 			bufferConteudo.close();
 			conteudoArquivo.close();
-			contador++;
-			System.out.println("Arquivos: " + contador);
 		}
 
 	}

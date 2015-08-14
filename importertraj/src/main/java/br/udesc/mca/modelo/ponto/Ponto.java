@@ -13,6 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
+import com.vividsolutions.jts.geom.Point;
+
 import br.udesc.mca.modelo.trajetoria.Trajetoria;
 
 @Entity
@@ -23,7 +27,7 @@ public class Ponto implements Serializable {
 
 	@Id
 	@SequenceGenerator(name = "gen_ponto", sequenceName = "seq_pontoid")
-	@GeneratedValue(generator="gen_ponto")
+	@GeneratedValue(generator = "gen_ponto")
 	@Column(name = "id")
 	private Long id;
 
@@ -38,12 +42,16 @@ public class Ponto implements Serializable {
 	private Double altitude;
 
 	private Double velocidade;
-	
+
 	private Double acuracia;
-	
+
 	private Double bearing;
 
 	private Timestamp tempo;
+
+	@Column(columnDefinition = "geometry(Point,4326)")
+	@Type(type = "org.hibernate.spatial.GeometryType")
+	private Point localizacao;
 
 	public Long getId() {
 		return id;
@@ -117,6 +125,14 @@ public class Ponto implements Serializable {
 		this.tempo = tempo;
 	}
 
+	public Point getLocalizacao() {
+		return localizacao;
+	}
+
+	public void setLocalizacao(Point localizacao) {
+		this.localizacao = localizacao;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -126,6 +142,7 @@ public class Ponto implements Serializable {
 		result = prime * result + ((bearing == null) ? 0 : bearing.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((latitude == null) ? 0 : latitude.hashCode());
+		result = prime * result + ((localizacao == null) ? 0 : localizacao.hashCode());
 		result = prime * result + ((longitude == null) ? 0 : longitude.hashCode());
 		result = prime * result + ((tempo == null) ? 0 : tempo.hashCode());
 		result = prime * result + ((trajetoria == null) ? 0 : trajetoria.hashCode());
@@ -166,6 +183,11 @@ public class Ponto implements Serializable {
 			if (other.latitude != null)
 				return false;
 		} else if (!latitude.equals(other.latitude))
+			return false;
+		if (localizacao == null) {
+			if (other.localizacao != null)
+				return false;
+		} else if (!localizacao.equals(other.localizacao))
 			return false;
 		if (longitude == null) {
 			if (other.longitude != null)

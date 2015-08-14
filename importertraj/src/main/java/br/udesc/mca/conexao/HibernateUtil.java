@@ -5,6 +5,11 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
+/**
+ * Classe de configuração do hibernate e que retorna uma sessão para acesso a banco.
+ * 
+ * @since 25/12/2012
+ */
 public class HibernateUtil {
 
 	private static final SessionFactory sessionFactory = buildSessionFactory();
@@ -13,6 +18,7 @@ public class HibernateUtil {
 		try {
 			Configuration cfg = new Configuration();
 			cfg.configure("hibernate.cfg.xml");
+
 			StandardServiceRegistryBuilder registradorServico = new StandardServiceRegistryBuilder();
 			registradorServico.applySettings(cfg.getProperties());
 			StandardServiceRegistry servico = registradorServico.build();

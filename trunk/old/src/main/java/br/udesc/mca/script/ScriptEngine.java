@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
-  A ideia dessa classe � ter metodos abstratos para conversao dos objetos e metodos concretos para a  possivel regra na execucao de um script
+  A ideia dessa classe eh ter metodos abstratos para conversao dos objetos e metodos concretos para a  possivel regra na execucao de um script
  */
 public abstract class ScriptEngine implements AutoCloseable {
 
@@ -60,7 +60,7 @@ public abstract class ScriptEngine implements AutoCloseable {
 
         i.lat = t.getLat();
         i.lon = t.getLng();
-        i.precisao = 0.9f; // TODO: nao deveria ter isso na trajetorioa?
+        i.precisao = 0.9f; // TODO: nao deveria ter isso na trajetoria?
 
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(t.getTimestamp());
@@ -110,7 +110,7 @@ public abstract class ScriptEngine implements AutoCloseable {
 
 
     /**
-     * Esse é o primeiro exemplo/ideia de execução de scrip. Dado uma lista de trajetorias (e mais tarde as informacoes complementares dos sensores)
+     * Esse é o primeiro exemplo/ideia de execucao de scrip. Dado uma lista de trajetorias (e mais tarde as informacoes complementares dos sensores)
      * Cria uma nova versao da lista fazendo uma transformacao na mesma (exemplo remover itens impressisos ou duplicados)
      */
     public List<TrajectoryPoint> processTrajectoryList(List<TrajectoryPoint> toProcess) throws Exception {

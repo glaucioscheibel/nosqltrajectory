@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -21,9 +22,11 @@ import com.vividsolutions.jts.geom.LineString;
 
 import br.udesc.mca.modelo.ponto.Ponto;
 import br.udesc.mca.modelo.transporte.Transporte;
+import br.udesc.mca.modelo.usuario.Usuario;
 
 @Entity
 @Table(name = "trajetoria")
+@NamedQuery(name = "consultaTrajetoriaBase", query = "from Trajetoria t where t.base = :base")
 public class Trajetoria implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -37,6 +40,10 @@ public class Trajetoria implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "transporte_id", foreignKey = @ForeignKey(name = "trajetoria_transporte_id_fk") )
 	private Transporte transporte;
+	
+	@ManyToOne
+	@JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "trajetoria_usuario_id_fk") )
+	private Usuario usuario;
 
 	@Column(length = 30)
 	private String base;
@@ -75,6 +82,14 @@ public class Trajetoria implements Serializable {
 
 	public void setTransporte(Transporte transporte) {
 		this.transporte = transporte;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	public String getBase() {
@@ -154,6 +169,7 @@ public class Trajetoria implements Serializable {
 		result = prime * result + ((pontos == null) ? 0 : pontos.hashCode());
 		result = prime * result + ((trajetoria == null) ? 0 : trajetoria.hashCode());
 		result = prime * result + ((transporte == null) ? 0 : transporte.hashCode());
+		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
 		result = prime * result + ((velocidade_media == null) ? 0 : velocidade_media.hashCode());
 		return result;
 	}
@@ -211,6 +227,11 @@ public class Trajetoria implements Serializable {
 			if (other.transporte != null)
 				return false;
 		} else if (!transporte.equals(other.transporte))
+			return false;
+		if (usuario == null) {
+			if (other.usuario != null)
+				return false;
+		} else if (!usuario.equals(other.usuario))
 			return false;
 		if (velocidade_media == null) {
 			if (other.velocidade_media != null)

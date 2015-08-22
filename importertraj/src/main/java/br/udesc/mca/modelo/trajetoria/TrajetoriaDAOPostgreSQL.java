@@ -1,10 +1,13 @@
 package br.udesc.mca.modelo.trajetoria;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.sql.RowSet;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class TrajetoriaDAOPostgreSQL implements TrajetoriaDAO {
 
@@ -46,8 +49,15 @@ public class TrajetoriaDAOPostgreSQL implements TrajetoriaDAO {
 
 	@Override
 	public Collection<Trajetoria> selecionarTrajetoriaCollection() {
-		// TODO Auto-generated method stub
-		return null;
+		Transaction transacao = null;
+		Query consulta = null;
+		List<Trajetoria> resultado = null;
+		
+		transacao = this.session.beginTransaction();
+		consulta = this.session.createQuery("from Trajetoria");
+		resultado = consulta.list();
+		transacao.commit();
+		return resultado;
 	}
 
 }

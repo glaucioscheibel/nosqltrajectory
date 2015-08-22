@@ -1,4 +1,4 @@
-package br.udesc.mca.matematica.azimute;
+package br.udesc.mca.matematica;
 
 /**
  * Classe que trabalha com a questão do cálculo de Azimute e Distância em KM.

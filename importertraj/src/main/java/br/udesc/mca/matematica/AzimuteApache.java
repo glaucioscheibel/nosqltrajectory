@@ -1,4 +1,4 @@
-package br.udesc.mca.matematica.azimute;
+package br.udesc.mca.matematica;
 
 import static org.apache.commons.math3.util.FastMath.atan2;
 import static org.apache.commons.math3.util.FastMath.cos;

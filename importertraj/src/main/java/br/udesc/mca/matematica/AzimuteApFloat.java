@@ -1,4 +1,4 @@
-package br.udesc.mca.matematica.azimute;
+package br.udesc.mca.matematica;
 
 import static org.apfloat.ApfloatMath.atan2;
 import static org.apfloat.ApfloatMath.cos;

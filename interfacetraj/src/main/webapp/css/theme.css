@@ -1,0 +1,102 @@
+.azul{
+    background-color: #3B537B !important;
+    color: #fff!important;
+}
+
+.button.azul:hover{
+    background-color: #58719C !important;
+}
+
+.galeria{
+    
+}
+
+.centro{
+    padding: 0px 0px 25px 0px!important;
+}
+
+.row.footer span{
+    color: #ffffff!important;
+}
+
+.row.topo{
+    margin-top: 10px!important;
+}
+
+.objetos_ocultos{
+    display: none;
+}
+
+.galeria .reveal{
+    width: 80%;
+    margin-left: 10%;
+    border-radius: 5px;
+}
+
+.botao{
+    color: #fff!important;
+}
+
+.botao:hover{
+    background-color: #4B658F!important;
+}
+
+/*===============================*/
+
+#map{
+    margin-top: 15px !important;
+}
+
+/*INPUT RANGE ...*/
+
+input[type="range"] {
+    -webkit-appearance: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #3B537B;
+    padding: 3px 5px;
+    width: 100%;
+    height: 30px;
+    border-radius: 5px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track{
+    background: #DEDEDE;
+}
+
+input[type="range"]::-moz-range-track {
+    background: #DEDEDE;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: #3B537B;
+    height: 1.5em;
+    width: 1.2em;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+input[type="range"]::-moz-range-thumb {
+    background: #3B537B;
+    border-color: #3B537B;
+    height: 1.5em;
+    width: 1.2em;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.parametros{
+    width: 100%;
+}
+
+.parametros tr td{
+    padding: 5px 1px;
+    border: 0px;
+}
+
+#and, #or{
+    cursor: pointer!important;
+    text-align: center!important;
+    font-size: 15px!important;
+}

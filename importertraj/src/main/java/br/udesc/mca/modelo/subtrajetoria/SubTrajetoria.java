@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -15,27 +14,26 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 
 import com.vividsolutions.jts.geom.LineString;
 
 import br.udesc.mca.modelo.consulta.Consulta;
-import br.udesc.mca.modelo.trajetoria.Trajetoria;
+import br.udesc.mca.modelo.tipo.StringArrayUserType;
 
 @Entity
 @Table(name = "subtrajetoria")
+@TypeDefs({ @TypeDef(name = "StringArrayObject", typeClass = StringArrayUserType.class) })
 public class SubTrajetoria implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "gen_subtrajetoria", sequenceName = "seq_subtrajetoria")
+	@SequenceGenerator(name = "gen_subtrajetoria", sequenceName = "seq_subtrajetoriaid")
 	@GeneratedValue(generator = "gen_subtrajetoria")
 	@Column(name = "id")
 	private Long id;
-
-	@ManyToOne
-	@JoinColumn(name = "trajetoria_id", foreignKey = @ForeignKey(name = "subtrajetoria_trajetoria_id_fk") )
-	private Trajetoria trajetoria;
 
 	@ManyToOne
 	@JoinColumn(name = "consulta_id", foreignKey = @ForeignKey(name = "subtrajetoria_consulta_id_fk") )
@@ -49,9 +47,9 @@ public class SubTrajetoria implements Serializable {
 
 	private Double duracao;
 
-	// @Column(name = "diferenca_azimute", length = 100000)
-	@ElementCollection
-	private Character[] trajetoriaDiferencaAzimute;
+	@Column(name = "diferenca_azimute", columnDefinition = "varchar(100000)[]")
+	@Type(type = "StringArrayObject")
+	private String[] trajetoriaDiferencaAzimute;
 
 	public Long getId() {
 		return id;
@@ -59,14 +57,6 @@ public class SubTrajetoria implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Trajetoria getTrajetoria() {
-		return trajetoria;
-	}
-
-	public void setTrajetoria(Trajetoria trajetoria) {
-		this.trajetoria = trajetoria;
 	}
 
 	public Consulta getConsulta() {
@@ -101,11 +91,11 @@ public class SubTrajetoria implements Serializable {
 		this.duracao = duracao;
 	}
 
-	public Character[] getTrajetoriaDiferencaAzimute() {
+	public String[] getTrajetoriaDiferencaAzimute() {
 		return trajetoriaDiferencaAzimute;
 	}
 
-	public void setTrajetoriaDiferencaAzimute(Character[] trajetoriaDiferencaAzimute) {
+	public void setTrajetoriaDiferencaAzimute(String[] trajetoriaDiferencaAzimute) {
 		this.trajetoriaDiferencaAzimute = trajetoriaDiferencaAzimute;
 	}
 
@@ -118,7 +108,6 @@ public class SubTrajetoria implements Serializable {
 		result = prime * result + ((duracao == null) ? 0 : duracao.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((subtrajetoria == null) ? 0 : subtrajetoria.hashCode());
-		result = prime * result + ((trajetoria == null) ? 0 : trajetoria.hashCode());
 		result = prime * result + Arrays.hashCode(trajetoriaDiferencaAzimute);
 		return result;
 	}
@@ -156,11 +145,6 @@ public class SubTrajetoria implements Serializable {
 			if (other.subtrajetoria != null)
 				return false;
 		} else if (!subtrajetoria.equals(other.subtrajetoria))
-			return false;
-		if (trajetoria == null) {
-			if (other.trajetoria != null)
-				return false;
-		} else if (!trajetoria.equals(other.trajetoria))
 			return false;
 		if (!Arrays.equals(trajetoriaDiferencaAzimute, other.trajetoriaDiferencaAzimute))
 			return false;

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<!-- Configuração da conexão com o banco -->
+		<property name="connection.driver_class">org.postgresql.Driver</property>
+		<property name="connection.url">jdbc:postgresql://localhost:5432/trajetoria
+		</property>
+		<property name="connection.username">postgres</property>
+		<property name="connection.password">postgres</property>
+
+		<!-- JDBC pool de conexão (usar the built-in) -->
+		<property name="connection.pool_size">1</property>
+
+		<!-- Dialeto -->
+		<!--
+		<property name="dialect">org.hibernate.spatial.dialect.postgis.PostgisDialect
+		</property>
+		-->		
+		<!-- <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property> -->
+		<property name="dialect">br.udesc.mca.modelo.dialeto.ArrayPostgreSQLDialect</property>
+
+		<!-- Habilitando a opção do Hibernate para contexto de sessão -->
+		<property name="current_session_context_class">thread</property>
+
+		<!-- Sem o segundo nível de cache -->
+		<property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
+
+		<!-- Mostra a execução das consultas SQL <property name="show_sql">true</property> -->
+
+		<!-- Opção de atualização do modelo -->
+		<property name="hbm2ddl.auto">update</property>
+		<!-- Mapeando classes -->
+		<mapping class="br.udesc.mca.modelo.consulta.Consulta" />
+		<mapping class="br.udesc.mca.modelo.ponto.Ponto" />
+		<mapping class="br.udesc.mca.modelo.segmento.Segmento" />
+		<mapping class="br.udesc.mca.modelo.subtrajetoria.SubTrajetoria" />
+		<mapping class="br.udesc.mca.modelo.trajetoria.Trajetoria" />
+		<mapping class="br.udesc.mca.modelo.transporte.Transporte" />
+		<mapping class="br.udesc.mca.modelo.usuario.Usuario" />
+	</session-factory>
+</hibernate-configuration>

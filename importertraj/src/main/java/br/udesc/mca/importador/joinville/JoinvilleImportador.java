@@ -18,17 +18,25 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.PrecisionModel;
+
 import br.udesc.mca.conexao.HibernateUtil;
-import br.udesc.mca.matematica.azimute.Azimute;
+import br.udesc.mca.matematica.Azimute;
 import br.udesc.mca.modelo.ponto.Ponto;
 import br.udesc.mca.modelo.ponto.PontoDAOPostgreSQL;
 import br.udesc.mca.modelo.segmento.Segmento;
 import br.udesc.mca.modelo.segmento.SegmentoDAOPostgreSQL;
 import br.udesc.mca.modelo.trajetoria.Trajetoria;
 import br.udesc.mca.modelo.trajetoria.TrajetoriaDAOPostgreSQL;
+import br.udesc.mca.modelo.usuario.Usuario;
+import br.udesc.mca.modelo.usuario.UsuarioDAOPostgreSQL;
 
 public class JoinvilleImportador {
 
@@ -47,19 +55,28 @@ public class JoinvilleImportador {
 		String usuarioDiferente1 = prop.getProperty("prob.base.arquivo.usuario.diferente1").trim().toLowerCase();
 		String usuarioDiferente2 = prop.getProperty("prob.base.arquivo.usuario.diferente2").trim().toLowerCase();
 		String usuarioDiferente3 = prop.getProperty("prob.base.arquivo.usuario.diferente3").trim().toLowerCase();
+		String usuarioModelo = prop.getProperty("prop.base.usuario.modelo").trim().toLowerCase();
+		String usuarioAndroid = prop.getProperty("prop.base.usuario.android").trim().toLowerCase();
+		String usuarioNome = prop.getProperty("prop.base.usuario.usuario").trim().toLowerCase();
+		String usuarioDevice = prop.getProperty("prop.base.usuario.device").trim().toLowerCase();
+		String usuarioColetor = prop.getProperty("prop.base.usuario.coletor").trim().toLowerCase();
 
 		Iterator<File> arquivos = null;
 
 		SimpleDateFormat formataDataHora = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		SimpleDateFormat formataData = new SimpleDateFormat("yyyy-MM-dd");
 
+		Usuario usuario = null;
 		Trajetoria trajetoria = null;
 		Ponto ponto = null;
 		Ponto pontoAux = null;
 		Segmento segmento = null;
+		Coordinate coordenada = null;
+		Point pontoGeografico = null;
 
 		List<Ponto> listaPonto = null;
 		Set<Ponto> listaPontoAux = null;
+		Coordinate[] vetorCoordenada = null;
 
 		String latitude = null;
 		String longitude = null;
@@ -79,6 +96,7 @@ public class JoinvilleImportador {
 		int contador = 0;
 		int contaPonto = 0;
 		int versaoArquivoAndroid = 0;
+		int contaVetorCoordenada = 0;
 		double lat1 = 0;
 		double lon1 = 0;
 		double lat2 = 0;
@@ -94,6 +112,7 @@ public class JoinvilleImportador {
 		}
 
 		while (arquivos.hasNext()) {
+			usuario = new Usuario();
 			trajetoria = new Trajetoria();
 			listaPonto = new ArrayList<Ponto>();
 			versaoArquivoAndroid = 0;
@@ -125,6 +144,21 @@ public class JoinvilleImportador {
 							|| linha.trim().toLowerCase().equals(usuarioDiferente2)
 							|| linha.trim().toLowerCase().equals(usuarioDiferente3)) {
 						achouUsuarioDiferente = true;
+					}
+
+					// procurando os dados do usuário
+					if (linha.length() > 8) {
+						if (linha.trim().toLowerCase().substring(0, 12).equals(usuarioModelo)) {
+							usuario.setModeloCelular(linha.trim().substring(14, linha.length()));
+						} else if (linha.trim().toLowerCase().substring(0, 15).equals(usuarioAndroid)) {
+							usuario.setAndroid(linha.trim().substring(17, linha.length()));
+						} else if (linha.trim().toLowerCase().substring(0, 9).equals(usuarioNome)) {
+							usuario.setDescricao(linha.trim().substring(11, linha.length()));
+						} else if (linha.trim().toLowerCase().substring(0, 9).equals(usuarioDevice)) {
+							usuario.setDevice(linha.trim().substring(11, linha.length()));
+						} else if (linha.trim().toLowerCase().substring(0, 15).equals(usuarioColetor)) {
+							usuario.setVersaoColetor(linha.trim().substring(17, linha.length()));
+						}
 					}
 
 					// acho o início dos dados da coleta quebra o laço
@@ -234,17 +268,37 @@ public class JoinvilleImportador {
 						e.printStackTrace();
 					}
 					ponto.setTrajetoria(trajetoria);
+					coordenada = new Coordinate(ponto.getLatitude(), ponto.getLongitude());
+					pontoGeografico = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326)
+							.createPoint(coordenada);
+					ponto.setLocalizacao(pontoGeografico);
 					listaPonto.add(ponto);
-
 				}
 			}
 
 			// gravando no banco
 			Session sessao = HibernateUtil.getSessionFactory().openSession();
 			Transaction transacao = sessao.beginTransaction();
+			UsuarioDAOPostgreSQL usuarioDAOPostgreSQL = new UsuarioDAOPostgreSQL(sessao);
 			TrajetoriaDAOPostgreSQL trajetoriaDAOPostgreSQL = new TrajetoriaDAOPostgreSQL(sessao);
 			PontoDAOPostgreSQL pontoDAOPostgreSQL = new PontoDAOPostgreSQL(sessao);
 			SegmentoDAOPostgreSQL segmentoDAOPostgreSQL = new SegmentoDAOPostgreSQL(sessao);
+
+			if (usuario.getDescricao() != null) {
+				Query consulta = sessao.getNamedQuery("consultaUsuarioDescricao");
+
+				consulta.setString("descricao", usuario.getDescricao());
+				List<Usuario> resultado = consulta.list();
+
+				if (resultado.size() > 0) {
+					usuario = resultado.get(0);
+				} else {
+					usuarioDAOPostgreSQL.inserirUsuario(usuario);
+				}
+			} else {
+				usuarioDAOPostgreSQL.inserirUsuario(usuario);
+			}
+			trajetoria.setUsuario(usuario);
 
 			trajetoria.setBase(prop.getProperty("prop.base.nome"));
 			trajetoria.setArquivo(arquivo.getName().trim().toLowerCase());
@@ -255,6 +309,17 @@ public class JoinvilleImportador {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
+
+			vetorCoordenada = new Coordinate[listaPonto.size()];
+			contaVetorCoordenada = 0;
+			for (Ponto pontoLista : listaPonto) {
+				coordenada = new Coordinate(pontoLista.getLatitude(), pontoLista.getLongitude());
+				vetorCoordenada[contaVetorCoordenada] = coordenada;
+				contaVetorCoordenada++;
+			}
+
+			trajetoria.setTrajetoria(new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326)
+					.createLineString(vetorCoordenada));
 
 			trajetoriaDAOPostgreSQL.inserirTrajetoria(trajetoria);
 			for (Ponto pontoLista : listaPonto) {

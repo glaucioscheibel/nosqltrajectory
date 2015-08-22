@@ -30,7 +30,7 @@ public class Consulta implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "gen_consulta", sequenceName = "seq_consulta")
+	@SequenceGenerator(name = "gen_consulta", sequenceName = "seq_consultaid")
 	@GeneratedValue(generator = "gen_consulta")
 	@Column(name = "id")
 	private Long id;

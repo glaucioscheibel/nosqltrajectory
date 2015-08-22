@@ -36,8 +36,9 @@
 		<mapping class="br.udesc.mca.modelo.consulta.Consulta" />
 		<mapping class="br.udesc.mca.modelo.ponto.Ponto" />
 		<mapping class="br.udesc.mca.modelo.segmento.Segmento" />
-		<!-- <mapping class="br.udesc.mca.modelo.subtrajetoria.SubTrajetoria" /> -->
+		<mapping class="br.udesc.mca.modelo.subtrajetoria.SubTrajetoria" />
 		<mapping class="br.udesc.mca.modelo.trajetoria.Trajetoria" />
 		<mapping class="br.udesc.mca.modelo.transporte.Transporte" />
+		<mapping class="br.udesc.mca.modelo.usuario.Usuario" />
 	</session-factory>
 </hibernate-configuration>

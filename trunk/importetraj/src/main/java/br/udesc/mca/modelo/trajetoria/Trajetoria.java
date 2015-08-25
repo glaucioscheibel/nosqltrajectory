@@ -40,7 +40,7 @@ public class Trajetoria implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "transporte_id", foreignKey = @ForeignKey(name = "trajetoria_transporte_id_fk") )
 	private Transporte transporte;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "trajetoria_usuario_id_fk") )
 	private Usuario usuario;
@@ -55,7 +55,8 @@ public class Trajetoria implements Serializable {
 
 	private Double duracao;
 
-	private Double velocidade_media;
+	@Column(name = "velocidade_media")
+	private Double velocidadeMedia;
 
 	private Date data;
 
@@ -124,12 +125,12 @@ public class Trajetoria implements Serializable {
 		this.duracao = duracao;
 	}
 
-	public Double getVelocidade_media() {
-		return velocidade_media;
+	public Double getVelocidadeMedia() {
+		return velocidadeMedia;
 	}
 
-	public void setVelocidade_media(Double velocidade_media) {
-		this.velocidade_media = velocidade_media;
+	public void setVelocidadeMedia(Double velocidadeMedia) {
+		this.velocidadeMedia = velocidadeMedia;
 	}
 
 	public Date getData() {
@@ -170,7 +171,7 @@ public class Trajetoria implements Serializable {
 		result = prime * result + ((trajetoria == null) ? 0 : trajetoria.hashCode());
 		result = prime * result + ((transporte == null) ? 0 : transporte.hashCode());
 		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
-		result = prime * result + ((velocidade_media == null) ? 0 : velocidade_media.hashCode());
+		result = prime * result + ((velocidadeMedia == null) ? 0 : velocidadeMedia.hashCode());
 		return result;
 	}
 
@@ -233,11 +234,11 @@ public class Trajetoria implements Serializable {
 				return false;
 		} else if (!usuario.equals(other.usuario))
 			return false;
-		if (velocidade_media == null) {
-			if (other.velocidade_media != null)
+		if (velocidadeMedia == null) {
+			if (other.velocidadeMedia != null)
 				return false;
-		} else if (!velocidade_media.equals(other.velocidade_media))
+		} else if (!velocidadeMedia.equals(other.velocidadeMedia))
 			return false;
 		return true;
-	}	
+	}
 }

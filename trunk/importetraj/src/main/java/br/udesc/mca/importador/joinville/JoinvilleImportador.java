@@ -29,6 +29,7 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 
 import br.udesc.mca.conexao.HibernateUtil;
 import br.udesc.mca.matematica.Azimute;
+import br.udesc.mca.matematica.Fisica;
 import br.udesc.mca.modelo.ponto.Ponto;
 import br.udesc.mca.modelo.ponto.PontoDAOPostgreSQL;
 import br.udesc.mca.modelo.segmento.Segmento;
@@ -60,6 +61,7 @@ public class JoinvilleImportador {
 		String usuarioNome = prop.getProperty("prop.base.usuario.usuario").trim().toLowerCase();
 		String usuarioDevice = prop.getProperty("prop.base.usuario.device").trim().toLowerCase();
 		String usuarioColetor = prop.getProperty("prop.base.usuario.coletor").trim().toLowerCase();
+		String base = prop.getProperty("prop.base.nome");
 
 		Iterator<File> arquivos = null;
 
@@ -70,6 +72,8 @@ public class JoinvilleImportador {
 		Trajetoria trajetoria = null;
 		Ponto ponto = null;
 		Ponto pontoAux = null;
+		Ponto pontoPrimeiro = null;
+		Ponto pontoUltimo = null;
 		Segmento segmento = null;
 		Coordinate coordenada = null;
 		Point pontoGeografico = null;
@@ -102,6 +106,7 @@ public class JoinvilleImportador {
 		double lat2 = 0;
 		double lon2 = 0;
 		double azimute = 0;
+		double comprimento = 0;
 		boolean achouUsuarioDiferente = false;
 
 		// iniciando leitura dos arquivos da pasta
@@ -300,7 +305,7 @@ public class JoinvilleImportador {
 			}
 			trajetoria.setUsuario(usuario);
 
-			trajetoria.setBase(prop.getProperty("prop.base.nome"));
+			trajetoria.setBase(base);
 			trajetoria.setArquivo(arquivo.getName().trim().toLowerCase());
 			// transforma em segundos
 			trajetoria.setDuracao((Double.parseDouble(tempoCorrido) / 1000) % 60);
@@ -320,6 +325,15 @@ public class JoinvilleImportador {
 
 			trajetoria.setTrajetoria(new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326)
 					.createLineString(vetorCoordenada));
+
+			pontoPrimeiro = listaPonto.get(0);
+			pontoUltimo = listaPonto.get(listaPonto.size() - 1);
+			comprimento = Azimute.calculaDistanciaKM(pontoPrimeiro.getLatitude(), pontoPrimeiro.getLongitude(),
+					pontoUltimo.getLatitude(), pontoUltimo.getLongitude());
+
+			trajetoria.setComprimento(comprimento);
+			trajetoria.setVelocidadeMedia(Fisica.velocidadeMediaSistemaInternacional(trajetoria.getComprimento(),
+					trajetoria.getComprimento()));
 
 			trajetoriaDAOPostgreSQL.inserirTrajetoria(trajetoria);
 			for (Ponto pontoLista : listaPonto) {

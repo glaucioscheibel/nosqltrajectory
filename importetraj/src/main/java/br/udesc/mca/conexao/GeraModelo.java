@@ -6,6 +6,7 @@ import org.hibernate.Session;
 //de criar a extensão espacial no banco alvo.
 //Exemplo a seguir no PostgreSQL
 //PostgreSQL = CREATE EXTENSION postgis;
+//
 
 /**
  * Classe responsável por gerar o modelo de trajetórias.

@@ -43,6 +43,10 @@ public class SubTrajetoria implements Serializable {
 	@Type(type = "org.hibernate.spatial.GeometryType")
 	private LineString subtrajetoria;
 
+	@Column(name = "subtrajetoria_inversa", columnDefinition = "geometry(LineString,4326)")
+	@Type(type = "org.hibernate.spatial.GeometryType")
+	private LineString subtrajetoriaInversa;
+
 	private Double comprimento;
 
 	private Double duracao;
@@ -73,6 +77,14 @@ public class SubTrajetoria implements Serializable {
 
 	public void setSubtrajetoria(LineString subtrajetoria) {
 		this.subtrajetoria = subtrajetoria;
+	}
+
+	public LineString getSubtrajetoriaInversa() {
+		return subtrajetoriaInversa;
+	}
+
+	public void setSubtrajetoriaInvertida(LineString subtrajetoriaInversa) {
+		this.subtrajetoriaInversa = subtrajetoriaInversa;
 	}
 
 	public Double getComprimento() {
@@ -108,6 +120,7 @@ public class SubTrajetoria implements Serializable {
 		result = prime * result + ((duracao == null) ? 0 : duracao.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((subtrajetoria == null) ? 0 : subtrajetoria.hashCode());
+		result = prime * result + ((subtrajetoriaInversa == null) ? 0 : subtrajetoriaInversa.hashCode());
 		result = prime * result + Arrays.hashCode(trajetoriaDiferencaAzimute);
 		return result;
 	}
@@ -145,6 +158,11 @@ public class SubTrajetoria implements Serializable {
 			if (other.subtrajetoria != null)
 				return false;
 		} else if (!subtrajetoria.equals(other.subtrajetoria))
+			return false;
+		if (subtrajetoriaInversa == null) {
+			if (other.subtrajetoriaInversa != null)
+				return false;
+		} else if (!subtrajetoriaInversa.equals(other.subtrajetoriaInversa))
 			return false;
 		if (!Arrays.equals(trajetoriaDiferencaAzimute, other.trajetoriaDiferencaAzimute))
 			return false;

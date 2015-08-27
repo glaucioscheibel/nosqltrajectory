@@ -16,6 +16,11 @@ public class Fisica {
 	public static final int SED = 1;
 
 	/**
+	 * Valor da distância time ratio
+	 */
+	public static final int TIME_RATIO = 2;
+
+	/**
 	 * Método para calcular a velocidade média. Os parâmetros passados devem
 	 * estar em metros e segundos. Delta T = Instante final - Instante inicial
 	 * Delta S = Posição final - Posição inicial
@@ -96,12 +101,9 @@ public class Fisica {
 	 * yB)) x'B = xA + vXAC * (tb - ta) y'B = yA + vYAC * (tb - ta) vXAC = (xc -
 	 * xa) / (tc - ta) vYAC = (yc - ya) / (tc - ta)
 	 * 
-	 * @param ponto
-	 *            (p)
+	 * @param p
 	 * @param a
-	 *            (a)
 	 * @param b
-	 *            (a)
 	 * 
 	 * @return a distância euclidiana sincronizada
 	 */
@@ -130,6 +132,40 @@ public class Fisica {
 				predicted.getLongitude());
 
 		return sed;
+	}
+
+	/**
+	 * Método que cálcula a distância via time ratio distance.
+	 * 
+	 * @param p
+	 * @param a
+	 * @param b
+	 * 
+	 * @return a distância em metros
+	 */
+	public static double getTRD(Ponto p, Ponto a, Ponto b) {
+
+		double timeIntervalE = b.getTempo().getTime() - a.getTempo().getTime();
+
+		if (timeIntervalE == 0)
+			return 0;
+		else {
+			double timeIntervalI = p.getTempo().getTime() - a.getTempo().getTime();
+			double timeRatio = timeIntervalI / timeIntervalE;
+
+			double xI = a.getLongitude() + (timeRatio * (b.getLongitude() - a.getLongitude()));
+			double yI = a.getLatitude() + (timeRatio * (b.getLatitude() - a.getLatitude()));
+
+			Ponto predicted = new Ponto();
+
+			predicted.setLatitude(yI);
+			predicted.setLongitude(xI);
+
+			double distance = Azimute.calculaDistanciaKM(p.getLatitude(), p.getLongitude(), predicted.getLatitude(),
+					predicted.getLongitude());
+
+			return distance;
+		}
 	}
 
 }

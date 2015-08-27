@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -19,6 +20,7 @@ import br.udesc.mca.modelo.ponto.Ponto;
 
 @Entity
 @Table(name = "segmento")
+@NamedQuery(name = "consultaSegmento", query = "from Segmento s where t.base = :base")
 public class Segmento implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -62,10 +62,11 @@ public class OpeningWindowTimeRatio {
 		for (; floater <= end; floater++) {
 			for (index = anchor + 1; index < floater; index++) {
 
-				if (errorMetric == Fisica.SED)
+				if (errorMetric == Fisica.SED) {
 					dist = Fisica.getSED(pontoTrajetoria[index], anchorPt, pontoTrajetoria[floater]);
-				else
-					dist = Fisica.getSED(pontoTrajetoria[index], anchorPt, pontoTrajetoria[floater]);
+				} else {
+					dist = Fisica.getTRD(pontoTrajetoria[index], anchorPt, pontoTrajetoria[floater]);
+				}
 
 				if (dist > maxError) {
 					anchor = floater - 1;

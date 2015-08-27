@@ -2,6 +2,7 @@ package br.udesc.mca.modelo.consulta;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,6 +52,10 @@ public class Consulta implements Serializable {
 	@Column(columnDefinition = "geometry(Polygon,4326)")
 	@Type(type = "org.hibernate.spatial.GeometryType")
 	private Polygon poligono;
+
+	@Column(name = "poligono_inverso", columnDefinition = "geometry(Polygon,4326)")
+	@Type(type = "org.hibernate.spatial.GeometryType")
+	private Polygon poligonoInverso;
 
 	@Column(name = "diferenca_azimute", columnDefinition = "varchar(100000)[]")
 	@Type(type = "StringArrayObject")
@@ -104,6 +109,14 @@ public class Consulta implements Serializable {
 		this.poligono = poligono;
 	}
 
+	public Polygon getPoligonoInverso() {
+		return poligonoInverso;
+	}
+
+	public void setPoligonoInverso(Polygon poligonoInverso) {
+		this.poligonoInverso = poligonoInverso;
+	}
+
 	public String[] getTrajetoriaDiferencaAzimute() {
 		return trajetoriaDiferencaAzimute;
 	}
@@ -121,8 +134,9 @@ public class Consulta implements Serializable {
 		result = prime * result + ((dataPesquisaInicio == null) ? 0 : dataPesquisaInicio.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((poligono == null) ? 0 : poligono.hashCode());
+		result = prime * result + ((poligonoInverso == null) ? 0 : poligonoInverso.hashCode());
 		result = prime * result + ((trajetoria == null) ? 0 : trajetoria.hashCode());
-		result = prime * result + ((trajetoriaDiferencaAzimute == null) ? 0 : trajetoriaDiferencaAzimute.hashCode());
+		result = prime * result + Arrays.hashCode(trajetoriaDiferencaAzimute);
 		return result;
 	}
 
@@ -160,15 +174,17 @@ public class Consulta implements Serializable {
 				return false;
 		} else if (!poligono.equals(other.poligono))
 			return false;
+		if (poligonoInverso == null) {
+			if (other.poligonoInverso != null)
+				return false;
+		} else if (!poligonoInverso.equals(other.poligonoInverso))
+			return false;
 		if (trajetoria == null) {
 			if (other.trajetoria != null)
 				return false;
 		} else if (!trajetoria.equals(other.trajetoria))
 			return false;
-		if (trajetoriaDiferencaAzimute == null) {
-			if (other.trajetoriaDiferencaAzimute != null)
-				return false;
-		} else if (!trajetoriaDiferencaAzimute.equals(other.trajetoriaDiferencaAzimute))
+		if (!Arrays.equals(trajetoriaDiferencaAzimute, other.trajetoriaDiferencaAzimute))
 			return false;
 		return true;
 	}

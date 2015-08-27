@@ -66,6 +66,10 @@ public class Trajetoria implements Serializable {
 	@Type(type = "org.hibernate.spatial.GeometryType")
 	private LineString trajetoria;
 
+	@Column(name = "trajetoria_inversa", columnDefinition = "geometry(LineString,4326)")
+	@Type(type = "org.hibernate.spatial.GeometryType")
+	private LineString trajetoriaInversa;
+
 	@OneToMany(mappedBy = "trajetoria")
 	private List<Ponto> pontos;
 
@@ -149,6 +153,14 @@ public class Trajetoria implements Serializable {
 		this.trajetoria = trajetoria;
 	}
 
+	public LineString getTrajetoriaInversa() {
+		return trajetoriaInversa;
+	}
+
+	public void setTrajetoriaInversa(LineString trajetoriaInversa) {
+		this.trajetoriaInversa = trajetoriaInversa;
+	}
+
 	public List<Ponto> getPontos() {
 		return pontos;
 	}
@@ -169,6 +181,7 @@ public class Trajetoria implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((pontos == null) ? 0 : pontos.hashCode());
 		result = prime * result + ((trajetoria == null) ? 0 : trajetoria.hashCode());
+		result = prime * result + ((trajetoriaInversa == null) ? 0 : trajetoriaInversa.hashCode());
 		result = prime * result + ((transporte == null) ? 0 : transporte.hashCode());
 		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
 		result = prime * result + ((velocidadeMedia == null) ? 0 : velocidadeMedia.hashCode());
@@ -223,6 +236,11 @@ public class Trajetoria implements Serializable {
 			if (other.trajetoria != null)
 				return false;
 		} else if (!trajetoria.equals(other.trajetoria))
+			return false;
+		if (trajetoriaInversa == null) {
+			if (other.trajetoriaInversa != null)
+				return false;
+		} else if (!trajetoriaInversa.equals(other.trajetoriaInversa))
 			return false;
 		if (transporte == null) {
 			if (other.transporte != null)

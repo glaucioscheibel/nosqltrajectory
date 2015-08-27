@@ -51,7 +51,14 @@ public class Ponto implements Serializable {
 
 	@Column(columnDefinition = "geometry(Point,4326)")
 	@Type(type = "org.hibernate.spatial.GeometryType")
-	private Point localizacao;
+	private Point ponto;
+
+	//esse campo grava a lat/lon invertida o eixo x passa a ser a longitude
+	//dica de http://postgis.net/2013/08/18/tip_lon_lat
+	//e de http://postgis.net/docs/ST_FlipCoordinates.html
+	@Column(name = "ponto_inverso", columnDefinition = "geometry(Point,4326)")
+	@Type(type = "org.hibernate.spatial.GeometryType")
+	private Point pontoInverso;
 
 	public Long getId() {
 		return id;
@@ -125,12 +132,20 @@ public class Ponto implements Serializable {
 		this.tempo = tempo;
 	}
 
-	public Point getLocalizacao() {
-		return localizacao;
+	public Point getPonto() {
+		return ponto;
 	}
 
-	public void setLocalizacao(Point localizacao) {
-		this.localizacao = localizacao;
+	public void setPonto(Point ponto) {
+		this.ponto = ponto;
+	}
+
+	public Point getPontoInverso() {
+		return pontoInverso;
+	}
+
+	public void setPontoInverso(Point pontoInverso) {
+		this.pontoInverso = pontoInverso;
 	}
 
 	@Override
@@ -142,8 +157,9 @@ public class Ponto implements Serializable {
 		result = prime * result + ((bearing == null) ? 0 : bearing.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((latitude == null) ? 0 : latitude.hashCode());
-		result = prime * result + ((localizacao == null) ? 0 : localizacao.hashCode());
 		result = prime * result + ((longitude == null) ? 0 : longitude.hashCode());
+		result = prime * result + ((ponto == null) ? 0 : ponto.hashCode());
+		result = prime * result + ((pontoInverso == null) ? 0 : pontoInverso.hashCode());
 		result = prime * result + ((tempo == null) ? 0 : tempo.hashCode());
 		result = prime * result + ((trajetoria == null) ? 0 : trajetoria.hashCode());
 		result = prime * result + ((velocidade == null) ? 0 : velocidade.hashCode());
@@ -184,15 +200,20 @@ public class Ponto implements Serializable {
 				return false;
 		} else if (!latitude.equals(other.latitude))
 			return false;
-		if (localizacao == null) {
-			if (other.localizacao != null)
-				return false;
-		} else if (!localizacao.equals(other.localizacao))
-			return false;
 		if (longitude == null) {
 			if (other.longitude != null)
 				return false;
 		} else if (!longitude.equals(other.longitude))
+			return false;
+		if (ponto == null) {
+			if (other.ponto != null)
+				return false;
+		} else if (!ponto.equals(other.ponto))
+			return false;
+		if (pontoInverso == null) {
+			if (other.pontoInverso != null)
+				return false;
+		} else if (!pontoInverso.equals(other.pontoInverso))
 			return false;
 		if (tempo == null) {
 			if (other.tempo != null)

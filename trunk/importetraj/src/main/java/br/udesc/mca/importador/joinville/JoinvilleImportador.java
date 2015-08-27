@@ -53,6 +53,7 @@ public class JoinvilleImportador {
 		File diretorio = new File(prop.getProperty("prop.base.caminho"));
 		String[] ext = { prop.getProperty("prop.base.extesao") };
 		String versaoArquivo = prop.getProperty("prob.base.arquivo.versao.inicial").trim().toLowerCase();
+		String versaoDiferente = prop.getProperty("prob.base.arquivo.versao.diferente").trim().toLowerCase();
 		String usuarioDiferente1 = prop.getProperty("prob.base.arquivo.usuario.diferente1").trim().toLowerCase();
 		String usuarioDiferente2 = prop.getProperty("prob.base.arquivo.usuario.diferente2").trim().toLowerCase();
 		String usuarioDiferente3 = prop.getProperty("prob.base.arquivo.usuario.diferente3").trim().toLowerCase();
@@ -76,11 +77,14 @@ public class JoinvilleImportador {
 		Ponto pontoUltimo = null;
 		Segmento segmento = null;
 		Coordinate coordenada = null;
+		Coordinate coordenadaInversa = null;
 		Point pontoGeografico = null;
+		Point pontoGeograficoInverso = null;
 
 		List<Ponto> listaPonto = null;
 		Set<Ponto> listaPontoAux = null;
 		Coordinate[] vetorCoordenada = null;
+		Coordinate[] vetorCoordenadaInversa = null;
 
 		String latitude = null;
 		String longitude = null;
@@ -142,6 +146,10 @@ public class JoinvilleImportador {
 					// inicial é a versão 2.3.6 depois vira 4.0.4
 					if (linha.trim().toLowerCase().equals(versaoArquivo)) {
 						versaoArquivoAndroid = 2;
+					}
+
+					if (linha.trim().toLowerCase().equals(versaoDiferente)) {
+						versaoArquivoAndroid = 404;
 					}
 
 					// procurando os usuários que estão fora do padrão 4.0.4
@@ -210,7 +218,7 @@ public class JoinvilleImportador {
 					} else {
 						// usuario de versão 4.0.4 que o arquivo gerado está
 						// fora do padrão sem o bearing
-						if (achouUsuarioDiferente) {
+						if (achouUsuarioDiferente && versaoArquivoAndroid == 404) {
 							tokenizer.nextToken(); // @
 							tokenizer.nextToken(); // Accelerometer_x
 							tokenizer.nextToken(); // Accelerometer_y
@@ -231,6 +239,7 @@ public class JoinvilleImportador {
 							// esta informação é da trajetória sempre é gravado
 							// o último valor
 							tempoCorrido = tokenizer.nextToken(); // Time_since_start_in_ms
+							System.out.println("@Usuario diferente: " + arquivo.getName().trim().toLowerCase());
 						} else {
 							tokenizer.nextToken(); // @
 							tokenizer.nextToken(); // Accelerometer_x
@@ -274,11 +283,21 @@ public class JoinvilleImportador {
 					}
 					ponto.setTrajetoria(trajetoria);
 					coordenada = new Coordinate(ponto.getLatitude(), ponto.getLongitude());
+					coordenadaInversa = new Coordinate(ponto.getLongitude(), ponto.getLatitude());
 					pontoGeografico = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326)
 							.createPoint(coordenada);
-					ponto.setLocalizacao(pontoGeografico);
+					pontoGeograficoInverso = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326)
+							.createPoint(coordenadaInversa);
+					ponto.setPonto(pontoGeografico);
+					ponto.setPontoInverso(pontoGeograficoInverso);
 					listaPonto.add(ponto);
 				}
+			}
+
+			// Trajetórias só com um ponto são descartadas
+			if (listaPonto.size() == 1) {
+				System.out.println("#Só um ponto: " + arquivo.getName().trim().toLowerCase());
+				continue;
 			}
 
 			// gravando no banco
@@ -316,15 +335,20 @@ public class JoinvilleImportador {
 			}
 
 			vetorCoordenada = new Coordinate[listaPonto.size()];
+			vetorCoordenadaInversa = new Coordinate[listaPonto.size()];
 			contaVetorCoordenada = 0;
 			for (Ponto pontoLista : listaPonto) {
 				coordenada = new Coordinate(pontoLista.getLatitude(), pontoLista.getLongitude());
+				coordenadaInversa = new Coordinate(pontoLista.getLongitude(), pontoLista.getLatitude());
 				vetorCoordenada[contaVetorCoordenada] = coordenada;
+				vetorCoordenadaInversa[contaVetorCoordenada] = coordenadaInversa;
 				contaVetorCoordenada++;
 			}
 
 			trajetoria.setTrajetoria(new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326)
 					.createLineString(vetorCoordenada));
+			trajetoria.setTrajetoriaInversa(new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326)
+					.createLineString(vetorCoordenadaInversa));
 
 			pontoPrimeiro = listaPonto.get(0);
 			pontoUltimo = listaPonto.get(listaPonto.size() - 1);
@@ -332,8 +356,8 @@ public class JoinvilleImportador {
 					pontoUltimo.getLatitude(), pontoUltimo.getLongitude());
 
 			trajetoria.setComprimento(comprimento);
-			trajetoria.setVelocidadeMedia(Fisica.velocidadeMediaSistemaInternacional(trajetoria.getComprimento(),
-					trajetoria.getComprimento()));
+			trajetoria.setVelocidadeMedia(
+					Fisica.velocidadeMediaSistemaInternacional(trajetoria.getComprimento(), trajetoria.getDuracao()));
 
 			trajetoriaDAOPostgreSQL.inserirTrajetoria(trajetoria);
 			for (Ponto pontoLista : listaPonto) {
@@ -392,7 +416,5 @@ public class JoinvilleImportador {
 			bufferConteudo.close();
 			conteudoArquivo.close();
 		}
-
 	}
-
 }

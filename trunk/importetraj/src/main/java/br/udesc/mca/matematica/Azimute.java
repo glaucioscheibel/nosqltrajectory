@@ -15,7 +15,7 @@ public final class Azimute {
 	 * Valor do raio de curvatura de terra em KM
 	 */
 	public static int RAIO_TERRA_KM = 6371;
-	
+
 	/**
 	 * Retorna a distância entre dois pontos usando a fórmula de haversine.
 	 * 
@@ -124,5 +124,19 @@ public final class Azimute {
 	 */
 	public static double diferencaAzimute(double azimute1, double azimute2) {
 		return azimute1 - azimute2;
+	}
+
+	/**
+	 * Retorna a diferença de azimute em graus decimais do primeiro subtraindo
+	 * do segundo, retornando o valor positivo.
+	 * 
+	 * @param azimute1
+	 *            recebe o azimute em graus decimais.
+	 * @param azimute2
+	 *            recebe o azimute em graus decimais.
+	 * @returns direferença de azimute em graus decimais.
+	 */
+	public static double diferencaAzimutePositivo(double azimute1, double azimute2) {
+		return Math.abs(azimute1 - azimute2);
 	}
 }

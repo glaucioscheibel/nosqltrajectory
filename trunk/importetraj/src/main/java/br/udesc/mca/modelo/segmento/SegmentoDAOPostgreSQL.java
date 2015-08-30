@@ -36,7 +36,7 @@ public class SegmentoDAOPostgreSQL implements SegmentoDAO {
 
 	@Override
 	public boolean atualizarSegmento(Segmento segmento) {
-		// TODO Auto-generated method stub
+		this.session.update(segmento);
 		return false;
 	}
 

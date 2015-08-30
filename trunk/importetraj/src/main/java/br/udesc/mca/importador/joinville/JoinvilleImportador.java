@@ -10,11 +10,9 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
@@ -82,7 +80,7 @@ public class JoinvilleImportador {
 		Point pontoGeograficoInverso = null;
 
 		List<Ponto> listaPonto = null;
-		Set<Ponto> listaPontoAux = null;
+		List<Ponto> listaPontoAux = null;
 		Coordinate[] vetorCoordenada = null;
 		Coordinate[] vetorCoordenadaInversa = null;
 
@@ -366,7 +364,7 @@ public class JoinvilleImportador {
 
 			// gerando os segmentos
 			segmento = new Segmento();
-			listaPontoAux = new HashSet<Ponto>();
+			listaPontoAux = new ArrayList<Ponto>();
 
 			for (Ponto pontoLista : listaPonto) {
 				if (listaPontoAux.size() == pontosPorSegmento) {
@@ -387,7 +385,7 @@ public class JoinvilleImportador {
 					segmento.setAzimute(azimute);
 					segmentoDAOPostgreSQL.inserirSegmento(segmento);
 					segmento = new Segmento();
-					listaPontoAux = new HashSet<Ponto>();
+					listaPontoAux = new ArrayList<Ponto>();
 					listaPontoAux.add(pontoAux);
 				}
 				listaPontoAux.add(pontoLista);

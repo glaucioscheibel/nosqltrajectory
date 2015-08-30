@@ -38,6 +38,9 @@ public class Segmento implements Serializable {
 
 	@Column(name = "diferenca_azimute")
 	private Double diferencaAzimute;
+	
+	@Column(name = "diferenca_azimute_positiva")
+	private Double diferencaAzimutePositiva;
 
 	// Está mapeado para gerar as chaves estrangeiras com nome correto, mas tem
 	// um bug no hibernate que não faz que isso seja respeitado.
@@ -73,6 +76,14 @@ public class Segmento implements Serializable {
 		this.diferencaAzimute = diferencaAzimute;
 	}
 
+	public Double getDiferencaAzimutePositiva() {
+		return diferencaAzimutePositiva;
+	}
+
+	public void setDiferencaAzimutePositiva(Double diferencaAzimutePositiva) {
+		this.diferencaAzimutePositiva = diferencaAzimutePositiva;
+	}
+
 	public List<Ponto> getPonto() {
 		return ponto;
 	}
@@ -87,6 +98,7 @@ public class Segmento implements Serializable {
 		int result = 1;
 		result = prime * result + ((azimute == null) ? 0 : azimute.hashCode());
 		result = prime * result + ((diferencaAzimute == null) ? 0 : diferencaAzimute.hashCode());
+		result = prime * result + ((diferencaAzimutePositiva == null) ? 0 : diferencaAzimutePositiva.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((ponto == null) ? 0 : ponto.hashCode());
 		return result;
@@ -111,6 +123,11 @@ public class Segmento implements Serializable {
 				return false;
 		} else if (!diferencaAzimute.equals(other.diferencaAzimute))
 			return false;
+		if (diferencaAzimutePositiva == null) {
+			if (other.diferencaAzimutePositiva != null)
+				return false;
+		} else if (!diferencaAzimutePositiva.equals(other.diferencaAzimutePositiva))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -122,5 +139,5 @@ public class Segmento implements Serializable {
 		} else if (!ponto.equals(other.ponto))
 			return false;
 		return true;
-	}
+	}	
 }

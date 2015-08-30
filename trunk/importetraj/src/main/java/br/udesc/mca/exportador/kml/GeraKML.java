@@ -79,6 +79,7 @@ public class GeraKML {
 			// kml.setFeature(lugar);
 			try {
 				kml.marshal(new File(trajetoria.getArquivo() + ".kml"));
+				sessao.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}

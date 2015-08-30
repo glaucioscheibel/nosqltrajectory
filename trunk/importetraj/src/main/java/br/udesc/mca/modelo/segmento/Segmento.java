@@ -1,8 +1,7 @@
 package br.udesc.mca.modelo.segmento;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,9 +19,13 @@ import br.udesc.mca.modelo.ponto.Ponto;
 
 @Entity
 @Table(name = "segmento")
-@NamedQuery(name = "consultaSegmento", query = "from Segmento s where t.base = :base")
+@NamedQuery(name = "consultaSegmentoTrajetoria", query = "select distinct(s) from Segmento s inner join s.ponto p where p.trajetoria.id = :trajetoriaId order by s.id")
 public class Segmento implements Serializable {
 
+	/*
+	 * select distinct(s.*) from segmento s, ponto_segmento ps, ponto p where
+	 * s.id = ps.segmento_id and ps.ponto_id = p.id order by s.id
+	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -44,7 +47,7 @@ public class Segmento implements Serializable {
 	@JoinTable(name = "ponto_segmento", foreignKey = @ForeignKey(name = "ponto_segmento_segmento_id_fk") , inverseForeignKey = @ForeignKey(name = "ponto_segmento_ponto_id_fk") , joinColumns = {
 			@JoinColumn(name = "segmento_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "ponto_id", referencedColumnName = "id") })
-	private Set<Ponto> ponto = new HashSet<Ponto>();
+	private List<Ponto> ponto;
 
 	public Long getId() {
 		return id;
@@ -70,11 +73,11 @@ public class Segmento implements Serializable {
 		this.diferencaAzimute = diferencaAzimute;
 	}
 
-	public Set<Ponto> getPonto() {
+	public List<Ponto> getPonto() {
 		return ponto;
 	}
 
-	public void setPonto(Set<Ponto> ponto) {
+	public void setPonto(List<Ponto> ponto) {
 		this.ponto = ponto;
 	}
 

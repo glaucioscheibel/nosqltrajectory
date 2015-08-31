@@ -365,6 +365,7 @@ public class JoinvilleImportador {
 			// gerando os segmentos
 			segmento = new Segmento();
 			listaPontoAux = new ArrayList<Ponto>();
+			contaPonto = 0;
 
 			for (Ponto pontoLista : listaPonto) {
 				if (listaPontoAux.size() == pontosPorSegmento) {

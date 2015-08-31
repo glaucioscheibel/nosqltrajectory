@@ -71,6 +71,7 @@ public class DiferencaAzimute {
 				contaSegmento = 0;
 				transacao.commit();
 			}
+			contaSegmento = 0;
 			segmento1 = null;
 			segmento2 = null;
 		}

@@ -15,9 +15,13 @@ public class Transporte implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	public enum TipoTransporte {
+		AIRPLANE, BIKE, BOAT, BUS, CAR, MOTORCYCLE, RUN, SUBWAY, TAXI, TRAIN, WALK, DRONE;
+	}
+
 	@Id
 	@SequenceGenerator(name = "gen_transporte", sequenceName = "seq_transporteid")
-	@GeneratedValue(generator="gen_transporte")
+	@GeneratedValue(generator = "gen_transporte")
 	@Column(name = "id")
 	private Long id;
 
@@ -69,5 +73,5 @@ public class Transporte implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}	
+	}
 }

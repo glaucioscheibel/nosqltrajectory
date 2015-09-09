@@ -100,6 +100,8 @@ public class JoinvilleImportador {
 		int recursivo = Integer.parseInt(prop.getProperty("prop.base.recursivo"));
 		int pontosPorSegmento = Integer.parseInt(prop.getProperty("prop.base.ponto.segmento"));
 		int contador = 0;
+		long contadorUsuarioDiferente = 0;
+		int contadorSoUmPonto = 0;
 		int contaPonto = 0;
 		int versaoArquivoAndroid = 0;
 		int contaVetorCoordenada = 0;
@@ -237,7 +239,9 @@ public class JoinvilleImportador {
 							// esta informação é da trajetória sempre é gravado
 							// o último valor
 							tempoCorrido = tokenizer.nextToken(); // Time_since_start_in_ms
-							System.out.println("@Usuario diferente: " + arquivo.getName().trim().toLowerCase());
+							contadorUsuarioDiferente++;
+							System.out.println("@Usuario diferente: " + contadorUsuarioDiferente + " "
+									+ arquivo.getName().trim().toLowerCase());
 						} else {
 							tokenizer.nextToken(); // @
 							tokenizer.nextToken(); // Accelerometer_x
@@ -294,7 +298,8 @@ public class JoinvilleImportador {
 
 			// Trajetórias só com um ponto são descartadas
 			if (listaPonto.size() == 1) {
-				System.out.println("#Só um ponto: " + arquivo.getName().trim().toLowerCase());
+				contadorSoUmPonto++;
+				System.out.println("#Só um ponto: " + contadorSoUmPonto + " " + arquivo.getName().trim().toLowerCase());
 				continue;
 			}
 

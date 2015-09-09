@@ -8,15 +8,15 @@ import org.hibernate.Session;
 
 public class SubTrajetoriaDAOPostgreSQL implements SubTrajetoriaDAO {
 
-	private Session session;
+	private Session sessao;
 
-	public SubTrajetoriaDAOPostgreSQL(Session session) {
-		this.session = session;
+	public SubTrajetoriaDAOPostgreSQL(Session sessao) {
+		this.sessao = sessao;
 	}
 
 	@Override
 	public int inserirSubTrajetoria(SubTrajetoria subTrajetoria) {
-		this.session.save(subTrajetoria);
+		this.sessao.save(subTrajetoria);
 		return 0;
 	}
 

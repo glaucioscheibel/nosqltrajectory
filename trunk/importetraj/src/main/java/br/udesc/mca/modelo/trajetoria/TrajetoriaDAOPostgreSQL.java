@@ -11,15 +11,15 @@ import org.hibernate.Transaction;
 
 public class TrajetoriaDAOPostgreSQL implements TrajetoriaDAO {
 
-	private Session session;
+	private Session sessao;
 
-	public TrajetoriaDAOPostgreSQL(Session session) {
-		this.session = session;
+	public TrajetoriaDAOPostgreSQL(Session sessao) {
+		this.sessao = sessao;
 	}
 
 	@Override
 	public int inserirTrajetoria(Trajetoria trajetoria) {
-		this.session.save(trajetoria);
+		this.sessao.save(trajetoria);
 		return 0;
 	}
 
@@ -53,8 +53,8 @@ public class TrajetoriaDAOPostgreSQL implements TrajetoriaDAO {
 		Query consulta = null;
 		List<Trajetoria> resultado = null;
 		
-		transacao = this.session.beginTransaction();
-		consulta = this.session.createQuery("from Trajetoria");
+		transacao = this.sessao.beginTransaction();
+		consulta = this.sessao.createQuery("from Trajetoria");
 		resultado = consulta.list();
 		transacao.commit();
 		return resultado;

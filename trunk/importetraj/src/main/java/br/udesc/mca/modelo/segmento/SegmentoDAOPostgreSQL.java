@@ -10,15 +10,15 @@ import br.udesc.mca.modelo.ponto.Ponto;
 
 public class SegmentoDAOPostgreSQL implements SegmentoDAO {
 
-	private Session session;
+	private Session sessao;
 
-	public SegmentoDAOPostgreSQL(Session session) {
-		this.session = session;
+	public SegmentoDAOPostgreSQL(Session sessao) {
+		this.sessao = sessao;
 	}
 
 	@Override
 	public int inserirSegmento(Segmento segmento) {
-		this.session.save(segmento);
+		this.sessao.save(segmento);
 		return 0;
 	}
 
@@ -36,7 +36,7 @@ public class SegmentoDAOPostgreSQL implements SegmentoDAO {
 
 	@Override
 	public boolean atualizarSegmento(Segmento segmento) {
-		this.session.update(segmento);
+		this.sessao.update(segmento);
 		return false;
 	}
 

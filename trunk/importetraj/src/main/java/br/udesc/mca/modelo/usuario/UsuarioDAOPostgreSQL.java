@@ -8,15 +8,15 @@ import org.hibernate.Session;
 
 public class UsuarioDAOPostgreSQL implements UsuarioDAO {
 
-	private Session session;
+	private Session sessao;
 
-	public UsuarioDAOPostgreSQL(Session session) {
-		this.session = session;
+	public UsuarioDAOPostgreSQL(Session sessao) {
+		this.sessao = sessao;
 	}
 
 	@Override
 	public int inserirUsuario(Usuario usuario) {
-		this.session.save(usuario);
+		this.sessao.save(usuario);
 		return 0;
 	}
 

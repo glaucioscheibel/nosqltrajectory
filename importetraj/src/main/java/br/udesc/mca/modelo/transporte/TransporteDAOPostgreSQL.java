@@ -4,11 +4,19 @@ import java.util.Collection;
 
 import javax.sql.RowSet;
 
+import org.hibernate.Session;
+
 public class TransporteDAOPostgreSQL implements TransporteDAO {
 
+	private Session sessao;
+
+	public TransporteDAOPostgreSQL(Session sessao) {
+		this.sessao = sessao;
+	}
+	
 	@Override
 	public int inserirTransporte(Transporte transporte) {
-		// TODO Auto-generated method stub
+		this.sessao.save(transporte);
 		return 0;
 	}
 

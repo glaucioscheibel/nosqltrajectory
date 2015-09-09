@@ -8,15 +8,15 @@ import org.hibernate.Session;
 
 public class PontoDAOPostgreSQL implements PontoDAO {
 
-	private Session session;
+	private Session sessao;
 
-	public PontoDAOPostgreSQL(Session session) {
-		this.session = session;
+	public PontoDAOPostgreSQL(Session sessao) {
+		this.sessao = sessao;
 	}
 
 	@Override
 	public int inserirPonto(Ponto ponto) {
-		this.session.save(ponto);
+		this.sessao.save(ponto);
 		return 0;
 	}
 

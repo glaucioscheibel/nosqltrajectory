@@ -8,15 +8,15 @@ import org.hibernate.Session;
 
 public class ConsultaDAOPostgreSQL implements ConsultaDAO{
 
-	private Session session;
+	private Session sessao;
 
-	public ConsultaDAOPostgreSQL(Session session) {
-		this.session = session;
+	public ConsultaDAOPostgreSQL(Session sessao) {
+		this.sessao = sessao;
 	}
 
 	@Override
 	public int inserirConsulta(Consulta consulta) {
-		this.session.save(consulta);
+		this.sessao.save(consulta);
 		return 0;
 	}
 

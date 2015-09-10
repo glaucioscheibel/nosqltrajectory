@@ -70,13 +70,14 @@ public class Fisica {
 	}
 
 	/**
-	 * Retorna a velocidade média entre dois pontos
+	 * Retorna a velocidade média entre dois pontos com base em metros por
+	 * segundo
 	 * 
 	 * @param pontoA
 	 * @param pontoB
 	 * @return A velocidade em metros/segundo
 	 */
-	public static double velocidadeMediaSistemaInternacionalPonto(Ponto pontoA, Ponto pontoB) {
+	public static double velocidadeMediaSistemaInternacionalMPSPonto(Ponto pontoA, Ponto pontoB) {
 		double vm = 0;
 
 		double tempo = pontoB.getTempo().getTime() - pontoA.getTempo().getTime();
@@ -90,6 +91,31 @@ public class Fisica {
 				pontoB.getLongitude());
 
 		vm = distancia / tempo;
+		return vm;
+	}
+
+	/**
+	 * Retorna a velocidade média entre dois pontos kilometros por hora
+	 * 
+	 * @param pontoA
+	 * @param pontoB
+	 * @return A velocidade em metros/segundo
+	 */
+	public static double velocidadeMediaSistemaInternacionalKMHPonto(Ponto pontoA, Ponto pontoB) {
+		double vm = 0;
+
+		double tempo = pontoB.getTempo().getTime() - pontoA.getTempo().getTime();
+
+		if (tempo == 0) {
+			return 0;
+		}
+
+		tempo = tempo / 1000; // Milissegundos para Segundos
+		double distancia = Azimute.calculaDistanciaKM(pontoA.getLatitude(), pontoA.getLongitude(), pontoB.getLatitude(),
+				pontoB.getLongitude());
+
+		vm = distancia / tempo;
+		vm = (vm * 3600.0) / 1000.0;
 		return vm;
 	}
 

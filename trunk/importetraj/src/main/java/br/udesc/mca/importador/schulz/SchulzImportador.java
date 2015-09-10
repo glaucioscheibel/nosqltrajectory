@@ -1,5 +1,7 @@
 package br.udesc.mca.importador.schulz;
 
+
+//TODO problema na hora de trocar as trajetórias rever o importador. 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,6 +12,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -223,7 +226,7 @@ public class SchulzImportador {
 				if (pontoAux == null) {
 					ponto.setVelocidade(0d);
 				} else {
-					ponto.setVelocidade(Fisica.velocidadeMediaSistemaInternacionalPonto(pontoAux, ponto));
+					ponto.setVelocidade(Fisica.velocidadeMediaSistemaInternacionalMPSPonto(pontoAux, ponto));
 				}
 
 				ponto.setTrajetoria(trajetoria);
@@ -235,7 +238,6 @@ public class SchulzImportador {
 					arquivoTrajetoriaAux = arquivoTrajetoria;
 				} else {
 					if (!arquivoTrajetoria.equals(arquivoTrajetoriaAux)) {
-
 						// trajetórias com 1 ponto são descartadas
 						if (listaPonto.size() == 1) {
 							continue;
@@ -278,8 +280,15 @@ public class SchulzImportador {
 
 							trajetoria.setComprimento(comprimento);
 
+							trajetoria.setDuracao(new Double(
+									((pontoUltimo.getTempo().getTime() - pontoPrimeiro.getTempo().getTime()) / 1000)
+											% 60));
+
 							trajetoria.setVelocidadeMedia(
-									Fisica.velocidadeMediaSistemaInternacionalPonto(pontoPrimeiro, pontoUltimo));
+									Fisica.velocidadeMediaSistemaInternacionalMPSPonto(pontoPrimeiro, pontoUltimo));
+
+							transporteDAOPostgreSQL.inserirTransporte(transporte);
+							usuarioDAOPostgreSQL.inserirUsuario(usuario);
 
 							trajetoriaDAOPostgreSQL.inserirTrajetoria(trajetoria);
 							for (Ponto pontoLista : listaPonto) {
@@ -350,6 +359,121 @@ public class SchulzImportador {
 					}
 				}
 			}
+
+			// aqui é gravado a última trajetória lida do arquivo
+			// trajetórias com 1 ponto são descartadas
+			if (listaPonto.size() != 1) {
+				transacao = sessao.beginTransaction();
+
+				try {
+					trajetoria.setData(new Date((formataData.parse(ano + "-" + mes + "-" + dia).getTime())));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+
+				vetorCoordenada = new Coordinate[listaPonto.size()];
+				vetorCoordenadaInversa = new Coordinate[listaPonto.size()];
+				contaVetorCoordenada = 0;
+				for (Ponto pontoLista : listaPonto) {
+					coordenada = new Coordinate(pontoLista.getLatitude(), pontoLista.getLongitude());
+					coordenadaInversa = new Coordinate(pontoLista.getLongitude(), pontoLista.getLatitude());
+					vetorCoordenada[contaVetorCoordenada] = coordenada;
+					vetorCoordenadaInversa[contaVetorCoordenada] = coordenadaInversa;
+					contaVetorCoordenada++;
+				}
+
+				trajetoria.setTrajetoria(new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326)
+						.createLineString(vetorCoordenada));
+				trajetoria.setTrajetoriaInversa(new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326)
+						.createLineString(vetorCoordenadaInversa));
+
+				trajetoria.setBase(base);
+				trajetoria.setArquivo(arquivoTrajetoriaAux);
+
+				pontoPrimeiro = listaPonto.get(0);
+				pontoUltimo = listaPonto.get(listaPonto.size() - 1);
+				comprimento = Azimute.calculaDistanciaKM(pontoPrimeiro.getLatitude(), pontoPrimeiro.getLongitude(),
+						pontoUltimo.getLatitude(), pontoUltimo.getLongitude());
+
+				trajetoria.setComprimento(comprimento);
+
+				trajetoria.setDuracao(new Double(
+						((pontoUltimo.getTempo().getTime() - pontoPrimeiro.getTempo().getTime()) / 1000) % 60));
+
+				trajetoria.setVelocidadeMedia(
+						Fisica.velocidadeMediaSistemaInternacionalMPSPonto(pontoPrimeiro, pontoUltimo));
+
+				transporteDAOPostgreSQL.inserirTransporte(transporte);
+				usuarioDAOPostgreSQL.inserirUsuario(usuario);
+
+				trajetoriaDAOPostgreSQL.inserirTrajetoria(trajetoria);
+				for (Ponto pontoLista : listaPonto) {
+					pontoDAOPostgreSQL.inserirPonto(pontoLista);
+				}
+
+				// gerando os segmentos
+				segmento = new Segmento();
+				listaPontoAux = new ArrayList<Ponto>();
+				contaPonto = 0;
+
+				for (Ponto pontoLista : listaPonto) {
+					if (listaPontoAux.size() == pontosPorSegmento) {
+						segmento.setPonto(listaPontoAux);
+
+						for (Ponto pontoListaAux : listaPontoAux) {
+							if (contaPonto == 0) {
+								lat1 = pontoListaAux.getLatitude();
+								lon1 = pontoListaAux.getLongitude();
+							} else {
+								lat2 = pontoListaAux.getLatitude();
+								lon2 = pontoListaAux.getLongitude();
+							}
+							contaPonto++;
+						}
+						contaPonto = 0;
+						azimute = Azimute.azimute(lat1, lon1, lat2, lon2);
+						segmento.setAzimute(azimute);
+						segmentoDAOPostgreSQL.inserirSegmento(segmento);
+						segmento = new Segmento();
+						listaPontoAux = new ArrayList<Ponto>();
+						listaPontoAux.add(pontoAux);
+					}
+					listaPontoAux.add(pontoLista);
+					pontoAux = pontoLista;
+				}
+				if (listaPonto.size() > 1) {
+					contaPonto = 0;
+					segmento.setPonto(listaPontoAux);
+					for (Ponto pontoListaAux : listaPontoAux) {
+						if (contaPonto == 0) {
+							lat1 = pontoListaAux.getLatitude();
+							lon1 = pontoListaAux.getLongitude();
+						} else {
+							lat2 = pontoListaAux.getLatitude();
+							lon2 = pontoListaAux.getLongitude();
+						}
+						contaPonto++;
+					}
+					azimute = Azimute.azimute(lat1, lon1, lat2, lon2);
+					segmento.setAzimute(azimute);
+					segmentoDAOPostgreSQL.inserirSegmento(segmento);
+				}
+
+				trajetoria = new Trajetoria();
+				listaPonto = new ArrayList<Ponto>();
+				arquivoTrajetoriaAux = arquivoTrajetoria;
+
+				usuario.setDescricao(usuarioTrajetoria);
+				trajetoria.setTransporte(transporte);
+				trajetoria.setUsuario(usuario);
+
+				pontoAux = null;
+
+				transacao.commit();
+
+			}
+			bufferConteudo.close();
+			conteudoArquivo.close();
 		}
 		sessao.close();
 	}

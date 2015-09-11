@@ -4,9 +4,8 @@ import java.util.Collection;
 
 import javax.sql.RowSet;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
-
-import br.udesc.mca.modelo.ponto.Ponto;
 
 public class SegmentoDAOPostgreSQL implements SegmentoDAO {
 
@@ -29,9 +28,10 @@ public class SegmentoDAOPostgreSQL implements SegmentoDAO {
 	}
 
 	@Override
-	public Ponto selecionarSegmento(long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Segmento selecionarSegmento(long id) {
+		Query consulta = sessao.createQuery("from Segmento where id = :parametro");
+		consulta.setLong("parametro", id);
+		return (Segmento) consulta.uniqueResult();
 	}
 
 	@Override
@@ -51,5 +51,4 @@ public class SegmentoDAOPostgreSQL implements SegmentoDAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

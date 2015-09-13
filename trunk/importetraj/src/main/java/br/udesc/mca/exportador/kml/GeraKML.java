@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import br.udesc.mca.conexao.HibernateUtil;
 import br.udesc.mca.modelo.ponto.Ponto;
 import br.udesc.mca.modelo.trajetoria.Trajetoria;
+import br.udesc.mca.modelo.trajetoria.TrajetoriaDAOPostgreSQL;
 import de.micromata.opengis.kml.v_2_2_0.AltitudeMode;
 import de.micromata.opengis.kml.v_2_2_0.Document;
 import de.micromata.opengis.kml.v_2_2_0.IconStyle;
@@ -31,58 +32,59 @@ import de.micromata.opengis.kml.v_2_2_0.Style;
 public class GeraKML {
 
 	public static void main(String[] args) {
+		boolean full = false;
 		final Kml kml = KmlFactory.createKml();
 		final Document documento = kml.createAndSetDocument();
 		final Style estilo = documento.createAndAddStyle().withId("icone");
 		final IconStyle iconeEstilo = estilo.createAndSetIconStyle().withScale(1.0d);// .withColor("003366").withColorMode(ColorMode.NORMAL).withScale(0.7d);
-				
 
 		iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/blu-circle.png");
-		//iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/blu-blank-lv.png");
+		// iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/blu-blank-lv.png");
 
 		Session sessao = HibernateUtil.getSessionFactory().openSession();
+		TrajetoriaDAOPostgreSQL trajetoriaDAOPostgreSQL = new TrajetoriaDAOPostgreSQL(sessao);
 
-		Query consulta = sessao.getNamedQuery("consultaTrajetoriaBase");
-		consulta.setString("base", "joinville");
-		List<Trajetoria> resultado = consulta.list();
-		Trajetoria trajetoria = resultado.get(0);
+		Query consulta = null;
+		List<Trajetoria> resultado = null;
 
-		if (trajetoria != null) {
-			// kml.createAndSetDocument().withName(trajetoria.getBase());
-			// documento.createAndAddPlacemark().setName(trajetoria.getArquivo());
-			// lugar.setVisibility(Boolean.TRUE);
+		if (full) {
+			consulta = sessao.getNamedQuery("consultaTrajetoriaBase");
+			consulta.setString("base", "schulz");
+			resultado = consulta.list();
 
-			List<Ponto> listaPontoTrajetoria = trajetoria.getPontos();
-			/*
-			 * LineString linha = KmlFactory.createLineString();
-			 * linha.setAltitudeMode(AltitudeMode.CLAMP_TO_GROUND);
-			 * linha.setTessellate(Boolean.TRUE); Point ponto =
-			 * KmlFactory.createPoint();
-			 * ponto.setAltitudeMode(AltitudeMode.CLAMP_TO_GROUND);
-			 */
+			for (Trajetoria trajetoria : resultado) {
+				List<Ponto> listaPontoTrajetoria = trajetoria.getPontos();
 
-			for (Ponto pontoTrajetoria : listaPontoTrajetoria) {
-				documento.createAndAddPlacemark().withStyleUrl("#icone").createAndSetPoint()
-						.withAltitudeMode(AltitudeMode.CLAMP_TO_GROUND)
-						.addToCoordinates(pontoTrajetoria.getLongitude(), pontoTrajetoria.getLatitude());
-
-				// linha.addToCoordinates(pontoTrajetoria.getLongitude(),
-				// pontoTrajetoria.getLatitude());
-				// ponto.addToCoordinates(pontoTrajetoria.getLongitude(),
-				// pontoTrajetoria.getLatitude());
+				for (Ponto pontoTrajetoria : listaPontoTrajetoria) {
+					documento.createAndAddPlacemark().withStyleUrl("#icone").createAndSetPoint()
+							.withAltitudeMode(AltitudeMode.CLAMP_TO_GROUND)
+							.addToCoordinates(pontoTrajetoria.getLongitude(), pontoTrajetoria.getLatitude());
+				}
 			}
-
-			// documento.getm
-			// lugar.setGeometry(linha);
-			// lugar.setGeometry(ponto);
-
-			// kml.setFeature(lugar);
 			try {
-				kml.marshal(new File(trajetoria.getArquivo() + ".kml"));
-				sessao.close();
+				kml.marshal(new File("schulz.kml"));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
+		} else {
+			Trajetoria trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(7);
+
+			if (trajetoria != null) {
+				List<Ponto> listaPontoTrajetoria = trajetoria.getPontos();
+
+				for (Ponto pontoTrajetoria : listaPontoTrajetoria) {
+					documento.createAndAddPlacemark().withStyleUrl("#icone").createAndSetPoint()
+							.withAltitudeMode(AltitudeMode.CLAMP_TO_GROUND)
+							.addToCoordinates(pontoTrajetoria.getLongitude(), pontoTrajetoria.getLatitude());
+				}
+				try {
+					kml.marshal(new File(trajetoria.getId() + "-" + trajetoria.getArquivo() + ".kml"));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+
 		}
+		sessao.close();
 	}
 }

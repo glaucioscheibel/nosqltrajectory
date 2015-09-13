@@ -10,7 +10,7 @@ public interface TrajetoriaDAO {
 
 	public boolean excluirTrajetoria(long id);
 
-	public Trajetoria selecionarrTrajetoria(long id);
+	public Trajetoria selecionarTrajetoria(long id);
 
 	public boolean atualizarTrajetoria(Trajetoria trajetoria);
 

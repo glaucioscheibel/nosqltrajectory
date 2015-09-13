@@ -7,7 +7,6 @@ import javax.sql.RowSet;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 public class TrajetoriaDAOPostgreSQL implements TrajetoriaDAO {
 
@@ -30,9 +29,10 @@ public class TrajetoriaDAOPostgreSQL implements TrajetoriaDAO {
 	}
 
 	@Override
-	public Trajetoria selecionarrTrajetoria(long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Trajetoria selecionarTrajetoria(long id) {
+		Query consulta = sessao.createQuery("from Trajetoria where id = :parametro");
+		consulta.setLong("parametro", id);
+		return (Trajetoria) consulta.uniqueResult();
 	}
 
 	@Override
@@ -49,14 +49,10 @@ public class TrajetoriaDAOPostgreSQL implements TrajetoriaDAO {
 
 	@Override
 	public Collection<Trajetoria> selecionarTrajetoriaCollection() {
-		Transaction transacao = null;
 		Query consulta = null;
 		List<Trajetoria> resultado = null;
-		
-		transacao = this.sessao.beginTransaction();
 		consulta = this.sessao.createQuery("from Trajetoria");
 		resultado = consulta.list();
-		transacao.commit();
 		return resultado;
 	}
 

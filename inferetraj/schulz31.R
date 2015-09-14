@@ -16,5 +16,6 @@ cor.test(x, y, method = "spearman", alternative = "two.sided")
 spearman.test(x, y, alternative ="two.sided", approximation ="t-distribution")
 
 plot(x,y,pch=19)
+title("Análise Diferença Angular BR-Trevo Industrial - Joinville - SC - Pearson")
 
 

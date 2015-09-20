@@ -2,6 +2,7 @@ package br.udesc.mca.exportador.kml;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -12,6 +13,7 @@ import br.udesc.mca.modelo.ponto.Ponto;
 import br.udesc.mca.modelo.trajetoria.Trajetoria;
 import br.udesc.mca.modelo.trajetoria.TrajetoriaDAOPostgreSQL;
 import de.micromata.opengis.kml.v_2_2_0.AltitudeMode;
+import de.micromata.opengis.kml.v_2_2_0.Coordinate;
 import de.micromata.opengis.kml.v_2_2_0.Document;
 import de.micromata.opengis.kml.v_2_2_0.IconStyle;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
@@ -33,6 +35,8 @@ public class GeraKML {
 
 	public static void main(String[] args) {
 		boolean full = false;
+		boolean lineString = false;
+		String base = "schulz";
 		final Kml kml = KmlFactory.createKml();
 		final Document documento = kml.createAndSetDocument();
 		final Style estilo = documento.createAndAddStyle().withId("icone");
@@ -49,7 +53,7 @@ public class GeraKML {
 
 		if (full) {
 			consulta = sessao.getNamedQuery("consultaTrajetoriaBase");
-			consulta.setString("base", "schulz");
+			consulta.setString("base", base);
 			resultado = consulta.list();
 
 			for (Trajetoria trajetoria : resultado) {
@@ -67,15 +71,29 @@ public class GeraKML {
 				e.printStackTrace();
 			}
 		} else {
-			Trajetoria trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(7);
+			Trajetoria trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(61);
 
 			if (trajetoria != null) {
-				List<Ponto> listaPontoTrajetoria = trajetoria.getPontos();
+				List<Ponto> pontos = trajetoria.getPontos();
+				String valores = new String();
+				List<Coordinate> listaCoordenada = new ArrayList<Coordinate>();
+				Coordinate coordenada = null;
 
-				for (Ponto pontoTrajetoria : listaPontoTrajetoria) {
-					documento.createAndAddPlacemark().withStyleUrl("#icone").createAndSetPoint()
-							.withAltitudeMode(AltitudeMode.CLAMP_TO_GROUND)
-							.addToCoordinates(pontoTrajetoria.getLongitude(), pontoTrajetoria.getLatitude());
+
+				for (Ponto pontoTrajetoria : pontos) {
+					if (lineString) {
+						coordenada = new Coordinate(pontoTrajetoria.getLongitude(), pontoTrajetoria.getLatitude());
+						listaCoordenada.add(coordenada);
+					} else {
+						documento.createAndAddPlacemark().withStyleUrl("#icone").createAndSetPoint()
+								.withAltitudeMode(AltitudeMode.CLAMP_TO_GROUND)
+								.addToCoordinates(pontoTrajetoria.getLongitude(), pontoTrajetoria.getLatitude());
+					}
+				}
+
+				if (lineString) {
+					documento.createAndAddPlacemark().createAndSetLineString().withExtrude(true).withTessellate(true)
+							.withCoordinates(listaCoordenada);
 				}
 				try {
 					kml.marshal(new File(trajetoria.getId() + "-" + trajetoria.getArquivo() + ".kml"));

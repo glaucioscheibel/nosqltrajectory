@@ -8,20 +8,20 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.apache.commons.io.FileUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import br.udesc.mca.trajectory.model.Trajectory;
 import br.udesc.mca.trajectory.model.TrajectoryPoint;
 import br.udesc.mca.trajectory.model.TrajectorySegment;
 import br.udesc.mca.trajectory.model.TrajectoryType;
 import br.udesc.mca.trajectory.model.TrajectoryVersion;
 import br.udesc.mca.trajectory.model.User;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class GeoLifeKeyValueJsonImport {
 
@@ -32,10 +32,6 @@ public class GeoLifeKeyValueJsonImport {
         String[] ext = {"plt"};
         Iterator<File> ifs = FileUtils.iterateFiles(data, ext, true);
         User user = null;
-
-        HttpClient hc = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost("http://127.0.0.1:8080/trajectorykeyvalue/");
-        post.addHeader("accept", "application/json");
 
         ObjectMapper om = new ObjectMapper();
         om.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
@@ -100,8 +96,11 @@ public class GeoLifeKeyValueJsonImport {
             String json = om.writeValueAsString(tr);
             StringEntity entity = new StringEntity(json);
             entity.setContentType("application/json");
+            CloseableHttpClient hc = HttpClients.createDefault();
+            HttpPost post = new HttpPost("http://127.0.0.1:8080/trajectorykeyvalue/");
+            post.addHeader("accept", "application/json");
             post.setEntity(entity);
-            HttpResponse response = hc.execute(post);
+            CloseableHttpResponse response = hc.execute(post);
             System.out.println(response.getStatusLine());
         }
     }

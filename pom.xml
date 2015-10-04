@@ -22,6 +22,7 @@
         <module>r-statistics-service</module>
         <module>client</module>
         <module>old</module>
+        <module>importabusrj</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

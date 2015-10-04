@@ -38,7 +38,7 @@ public class RedisJsonPersistence extends KeyValuePersistence {
             Jedis db = this.ds.getResource();
             String json = this.om.writeValueAsString(c);
             db.set(String.valueOf(c.getId()), json);
-            this.ds.returnResourceObject(db);
+            db.close();
         } catch (Exception e) {
             this.log.error(e.getMessage(), e);
         }
@@ -60,7 +60,7 @@ public class RedisJsonPersistence extends KeyValuePersistence {
                 }
             }
         }
-        this.ds.returnResourceObject(db);
+        db.close();
         return lc;
     }
 
@@ -73,7 +73,7 @@ public class RedisJsonPersistence extends KeyValuePersistence {
             if (json != null) {
                 ret = this.om.readValue(json, Trajectory.class);
             }
-            this.ds.returnResourceObject(db);
+            db.close();
         } catch (IOException e) {
             this.log.error(e.getMessage(), e);
         }
@@ -84,7 +84,7 @@ public class RedisJsonPersistence extends KeyValuePersistence {
     public void deleteById(long id) {
         Jedis db = this.ds.getResource();
         db.del(String.valueOf(id));
-        this.ds.returnResourceObject(db);
+        db.close();
     }
 
     @Override

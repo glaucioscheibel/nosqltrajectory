@@ -25,11 +25,14 @@ import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ImportJSON implements Job {
     private static final String URL = "http://dadosabertos.rio.rj.gov.br/apiTransporte/apresentacao/rest/index.cfm/onibus";
     private static Map<String, Long> buses = new HashMap<>();
+    private static final Logger log = LoggerFactory.getLogger(ImportJSON.class);
 
     public void importa() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -40,7 +43,7 @@ public class ImportJSON implements Job {
         HttpEntity entity = result.getEntity();
         String json = EntityUtils.toString(entity, "UTF-8");
         httpClient.close();
-        System.out.println(json.getBytes().length);
+        log.info(String.valueOf(json.getBytes().length));
         ObjectMapper om = new ObjectMapper();
         BusData bd = om.readValue(json, BusData.class);
         for (List<String> ls : bd.getData()) {
@@ -87,6 +90,7 @@ public class ImportJSON implements Job {
         meiaNoite.set(Calendar.SECOND, 0);
         meiaNoite.set(Calendar.MILLISECOND, 0);
         meiaNoite.add(Calendar.DATE, 1);
+        log.info("Vai iniciar em " + meiaNoite.getTime());
         JobDetail job = JobBuilder.newJob(ImportJSON.class).withIdentity("job1", "group1").build();
         Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger1", "group1").startAt(meiaNoite.getTime())
                 .withSchedule(SimpleScheduleBuilder.repeatMinutelyForTotalCount(1440)).build();

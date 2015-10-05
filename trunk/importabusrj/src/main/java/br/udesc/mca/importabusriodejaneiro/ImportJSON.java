@@ -49,13 +49,12 @@ public class ImportJSON implements Job {
         for (List<String> ls : bd.getData()) {
             long ts = sdf.parse(ls.get(0)).getTime();
             String busid = ls.get(1);
-            if (buses.containsKey(busid)) {
-                if (ts <= buses.get(busid)) {
-                    continue;
-                }
-            } else {
-                buses.put(busid, ts);
+            if (buses.containsKey(busid) && ts <= buses.get(busid)) {
+                continue;
             }
+
+            buses.put(busid, ts);
+
             String pre = ls.get(1).substring(0, 2);
             File dir = new File("/busrj/" + pre + "/");
             dir.mkdirs();

@@ -3,17 +3,16 @@ package br.udesc.mca.trajectory.dao.document;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import br.udesc.mca.trajectory.model.Trajectory;
-
+import org.bson.Document;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.util.JSON;
-import org.bson.Document;
+import br.udesc.mca.trajectory.model.Trajectory;
 
 public class MongoPersistence extends DocumentPersistence {
 
@@ -45,11 +44,11 @@ public class MongoPersistence extends DocumentPersistence {
         try {
             String json = om.writeValueAsString(c);
             MongoCollection<Document> dbc = this.db.getCollection(colName);
-            Document  aux = dbc.find(Filters.eq("_id", c.getId())).first();
-            if(aux == null) {
-                dbc.insertOne(new Document((BasicDBObject)JSON.parse(json)));
+            Document aux = dbc.find(Filters.eq("_id", c.getId())).first();
+            if (aux == null) {
+                dbc.insertOne(new Document((BasicDBObject) JSON.parse(json)));
             } else {
-                dbc.updateOne(aux, new Document((BasicDBObject)JSON.parse(json)));
+                dbc.updateOne(aux, new Document((BasicDBObject) JSON.parse(json)));
             }
 
         } catch (Exception e) {
@@ -79,10 +78,10 @@ public class MongoPersistence extends DocumentPersistence {
         }
 
         MongoCollection<Document> dbc = this.db.getCollection(colName);
-        FindIterable<Document>  result = dbc.find(Filters.eq("_id", id));
+        FindIterable<Document> result = dbc.find(Filters.eq("_id", id));
 
         Document first = result.first();
-        if(first != null) {
+        if (first != null) {
             try {
                 return om.readValue(JSON.serialize(first), Trajectory.class);
             } catch (IOException e) {

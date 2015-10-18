@@ -1,5 +1,7 @@
 package br.udesc.mca.importador.joinville;
 
+//TODO melhorar a questão do usuário usar a informação, por exemplo, Samsung GT-I9000 como usuário padrão.
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,6 +62,7 @@ public class JoinvilleImportador {
 		String usuarioNome = prop.getProperty("prop.base.usuario.usuario").trim().toLowerCase();
 		String usuarioDevice = prop.getProperty("prop.base.usuario.device").trim().toLowerCase();
 		String usuarioColetor = prop.getProperty("prop.base.usuario.coletor").trim().toLowerCase();
+		String usuarioVersaoColetor = prop.getProperty("prob.base.arquivo.coletor.versao").trim().toLowerCase();
 		String base = prop.getProperty("prop.base.nome");
 
 		Iterator<File> arquivos = null;
@@ -97,6 +100,7 @@ public class JoinvilleImportador {
 		String hora = null;
 		String minuto = null;
 		String segundo = null;
+		String usuarioVersaoColetorLeitura = null;
 		int recursivo = Integer.parseInt(prop.getProperty("prop.base.recursivo"));
 		int pontosPorSegmento = Integer.parseInt(prop.getProperty("prop.base.ponto.segmento"));
 		int contador = 0;
@@ -171,6 +175,8 @@ public class JoinvilleImportador {
 							usuario.setDevice(linha.trim().substring(11, linha.length()));
 						} else if (linha.trim().toLowerCase().substring(0, 15).equals(usuarioColetor)) {
 							usuario.setVersaoColetor(linha.trim().substring(17, linha.length()));
+							usuarioVersaoColetorLeitura = linha.trim().substring(17, linha.length());
+							usuarioVersaoColetorLeitura = usuarioVersaoColetorLeitura.substring(0, 2);
 						}
 					}
 
@@ -219,26 +225,52 @@ public class JoinvilleImportador {
 						// usuario de versão 4.0.4 que o arquivo gerado está
 						// fora do padrão sem o bearing
 						if (achouUsuarioDiferente && versaoArquivoAndroid == 404) {
-							tokenizer.nextToken(); // @
-							tokenizer.nextToken(); // Accelerometer_x
-							tokenizer.nextToken(); // Accelerometer_y
-							tokenizer.nextToken(); // Accelerometer_z
-							latitude = tokenizer.nextToken(); // Latitude
-							longitude = tokenizer.nextToken(); // Longitude
-							altitude = tokenizer.nextToken(); // Altitude
-							velocidade = tokenizer.nextToken(); // Speed
-							acuracia = tokenizer.nextToken(); // Accuracy
-							tokenizer.nextToken(); // Battery_%
-							ano = tokenizer.nextToken(); // Year
-							mes = tokenizer.nextToken(); // Month
-							dia = tokenizer.nextToken(); // Day
-							hora = tokenizer.nextToken(); // Hour
-							minuto = tokenizer.nextToken(); // Minute
-							segundo = tokenizer.nextToken(); // Seconds
-							tokenizer.nextToken(); // Milliseconds
-							// esta informação é da trajetória sempre é gravado
-							// o último valor
-							tempoCorrido = tokenizer.nextToken(); // Time_since_start_in_ms
+							if (usuarioVersaoColetor.equals(usuarioVersaoColetorLeitura)) {
+								tokenizer.nextToken(); // @
+								tokenizer.nextToken(); // Accelerometer_x
+								tokenizer.nextToken(); // Accelerometer_y
+								tokenizer.nextToken(); // Accelerometer_z
+								latitude = tokenizer.nextToken(); // Latitude
+								longitude = tokenizer.nextToken(); // Longitude
+								altitude = tokenizer.nextToken(); // Altitude
+								velocidade = tokenizer.nextToken(); // Speed
+								acuracia = tokenizer.nextToken(); // Accuracy
+								bearing = tokenizer.nextToken(); // Bearing
+								tokenizer.nextToken(); // Battery_%
+								ano = tokenizer.nextToken(); // Year
+								mes = tokenizer.nextToken(); // Month
+								dia = tokenizer.nextToken(); // Day
+								hora = tokenizer.nextToken(); // Hour
+								minuto = tokenizer.nextToken(); // Minute
+								segundo = tokenizer.nextToken(); // Seconds
+								tokenizer.nextToken(); // Milliseconds
+								// esta informação é da trajetória sempre é
+								// gravado
+								// o último valor
+								tempoCorrido = tokenizer.nextToken(); // Time_since_start_in_ms
+							} else {
+								tokenizer.nextToken(); // @
+								tokenizer.nextToken(); // Accelerometer_x
+								tokenizer.nextToken(); // Accelerometer_y
+								tokenizer.nextToken(); // Accelerometer_z
+								latitude = tokenizer.nextToken(); // Latitude
+								longitude = tokenizer.nextToken(); // Longitude
+								altitude = tokenizer.nextToken(); // Altitude
+								velocidade = tokenizer.nextToken(); // Speed
+								acuracia = tokenizer.nextToken(); // Accuracy
+								tokenizer.nextToken(); // Battery_%
+								ano = tokenizer.nextToken(); // Year
+								mes = tokenizer.nextToken(); // Month
+								dia = tokenizer.nextToken(); // Day
+								hora = tokenizer.nextToken(); // Hour
+								minuto = tokenizer.nextToken(); // Minute
+								segundo = tokenizer.nextToken(); // Seconds
+								tokenizer.nextToken(); // Milliseconds
+								// esta informação é da trajetória sempre é
+								// gravado
+								// o último valor
+								tempoCorrido = tokenizer.nextToken(); // Time_since_start_in_ms
+							}
 							contadorUsuarioDiferente++;
 							System.out.println("@Usuario diferente: " + contadorUsuarioDiferente + " "
 									+ arquivo.getName().trim().toLowerCase());
@@ -314,7 +346,7 @@ public class JoinvilleImportador {
 			if (usuario.getDescricao() != null) {
 				Query consulta = sessao.getNamedQuery("consultaUsuarioDescricao");
 
-				consulta.setString("descricao", usuario.getDescricao());
+				consulta.setString("descricao", usuario.getDescricao().trim());
 				List<Usuario> resultado = consulta.list();
 
 				if (resultado.size() > 0) {
@@ -330,7 +362,7 @@ public class JoinvilleImportador {
 			trajetoria.setBase(base);
 			trajetoria.setArquivo(arquivo.getName().trim().toLowerCase());
 			// transforma em segundos
-			trajetoria.setDuracao((Double.parseDouble(tempoCorrido) / 1000) % 60);
+			trajetoria.setDuracao(Fisica.duracaoSegundos(tempoCorrido, true));
 			try {
 				trajetoria.setData(new Date((formataData.parse(ano + "-" + mes + "-" + dia).getTime())));
 			} catch (ParseException e) {
@@ -355,12 +387,12 @@ public class JoinvilleImportador {
 
 			pontoPrimeiro = listaPonto.get(0);
 			pontoUltimo = listaPonto.get(listaPonto.size() - 1);
-			comprimento = Azimute.calculaDistanciaKM(pontoPrimeiro.getLatitude(), pontoPrimeiro.getLongitude(),
-					pontoUltimo.getLatitude(), pontoUltimo.getLongitude());
+			comprimento = Azimute.calculaDistanciaMetros(pontoPrimeiro.getLatitude(), pontoPrimeiro.getLongitude(),
+					pontoUltimo.getLatitude(), pontoUltimo.getLongitude(), true);
 
 			trajetoria.setComprimento(comprimento);
-			trajetoria.setVelocidadeMedia(
-					Fisica.velocidadeMediaSistemaInternacional(trajetoria.getComprimento(), trajetoria.getDuracao()));
+			trajetoria.setVelocidadeMedia(Fisica.velocidadeMediaSistemaInternacional(trajetoria.getComprimento(),
+					trajetoria.getDuracao(), true));
 
 			trajetoriaDAOPostgreSQL.inserirTrajetoria(trajetoria);
 			for (Ponto pontoLista : listaPonto) {

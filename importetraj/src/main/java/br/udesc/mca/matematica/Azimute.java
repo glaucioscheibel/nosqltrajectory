@@ -45,6 +45,41 @@ public final class Azimute {
 	}
 
 	/**
+	 * Retorna a distância entre dois pontos usando a fórmula de haversine.
+	 * 
+	 * @param lat1
+	 *            latitude do primeiro ponto
+	 * @param lon2
+	 *            logintude do primeiro ponto
+	 * @param lat2
+	 *            latitude do segundo ponto
+	 * @param lon2
+	 *            logintude do segundo ponto
+	 * 
+	 * @param arredondar
+	 *            indicativo se deseja arredondar o valor retornado
+	 * 
+	 * @returns Distância em metros entre os dois pontos.
+	 */
+	public static double calculaDistanciaMetros(double lat1, double lon1, double lat2, double lon2,
+			boolean arredondar) {
+
+		double latDistance = Math.toRadians(lat2 - lat1);
+		double lonDistance = Math.toRadians(lon2 - lon1);
+
+		double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) + Math.cos(Math.toRadians(lat1))
+				* Math.cos(Math.toRadians(lat2)) * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		double distance = Azimute.RAIO_TERRA_KM * c;
+
+		if (arredondar) {
+			return Math.round(distance * 1000);
+		}
+		return distance * 1000;
+	}
+
+	/**
 	 * Calcula a distância a partir de um ponto P passando pelo grande círculo
 	 * que passa por outros dois pontos A e B.
 	 * 
@@ -80,12 +115,21 @@ public final class Azimute {
 		if (sin2th < 1.0E-8) {
 			// a e b são muito próximos; return a distância de a para p
 			double costhp = sinlata * sinlatp + coslata * coslatp * (coslnga * coslngp + sinlnga * sinlngp);
+			// se não tem altitude no ponto atribui-se 0
+			if (p.getAltitude() == null) {
+				return Math.acos(costhp) * (RAIO_TERRA_KM + 0);
+			}
 			return Math.acos(costhp) * (RAIO_TERRA_KM + p.getAltitude());
 		}
 		double num = sinlata * (coslatb * coslatp * coslngb * sinlngp - coslatb * coslatp * sinlngb * coslngp)
 				+ coslata * coslnga * (coslatb * sinlatp * sinlngb - sinlatb * coslatp * sinlngp)
 				+ coslata * sinlnga * (sinlatb * coslatp * coslngp - coslatb * sinlatp * coslngb);
 		double sinr = Math.abs(num) / Math.sqrt(sin2th);
+
+		// se não tem altitude no ponto atribui-se 0
+		if (p.getAltitude() == null) {
+			return (RAIO_TERRA_KM + 0) * Math.asin(sinr);
+		}
 		return (RAIO_TERRA_KM + p.getAltitude()) * Math.asin(sinr);
 	}
 

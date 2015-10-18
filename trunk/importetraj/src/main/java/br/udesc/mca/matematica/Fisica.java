@@ -1,5 +1,7 @@
 package br.udesc.mca.matematica;
 
+import java.sql.Timestamp;
+
 import br.udesc.mca.modelo.ponto.Ponto;
 
 /**
@@ -53,18 +55,24 @@ public class Fisica {
 
 	/**
 	 * Método para calcular a velocidade média. Os parâmetros passados devem
-	 * estar em metros e segundos, conforme o .
+	 * estar em metros e segundos.
 	 * 
 	 * @param distanciaPercorrida
 	 * @param duracao
+	 * @param arredondamento
 	 * 
 	 * @return A velocidade média.
 	 */
-	public static final double velocidadeMediaSistemaInternacional(double distanciaPercorrida, double duracao) {
+	public static final double velocidadeMediaSistemaInternacional(double distanciaPercorrida, double duracao,
+			boolean arredondamento) {
 		double vm = 0;
 
 		if (duracao != 0) {
 			vm = distanciaPercorrida / duracao;
+		}
+
+		if (arredondamento) {
+			vm = Math.round(vm);
 		}
 		return vm;
 	}
@@ -75,9 +83,12 @@ public class Fisica {
 	 * 
 	 * @param pontoA
 	 * @param pontoB
+	 * @param arredondamento
+	 * 
 	 * @return A velocidade em metros/segundo
 	 */
-	public static double velocidadeMediaSistemaInternacionalMPSPonto(Ponto pontoA, Ponto pontoB) {
+	public static double velocidadeMediaSistemaInternacionalMPSPonto(Ponto pontoA, Ponto pontoB,
+			boolean arredondamento) {
 		double vm = 0;
 
 		double tempo = pontoB.getTempo().getTime() - pontoA.getTempo().getTime();
@@ -87,11 +98,58 @@ public class Fisica {
 		}
 
 		tempo = tempo / 1000; // Milissegundos para Segundos
-		double distancia = Azimute.calculaDistanciaKM(pontoA.getLatitude(), pontoA.getLongitude(), pontoB.getLatitude(),
-				pontoB.getLongitude());
+		double distancia = Azimute.calculaDistanciaMetros(pontoA.getLatitude(), pontoA.getLongitude(),
+				pontoB.getLatitude(), pontoB.getLongitude(), true);
 
 		vm = distancia / tempo;
+		
+		if (arredondamento) {
+			vm = Math.round(vm);
+		}
+		
 		return vm;
+	}
+
+	/**
+	 * Tempo em segundos entre dois ponto B-A.
+	 * 
+	 * @param pontoA
+	 * @param pontoB
+	 * @param arredondamento
+	 * 
+	 * @return Segundos entre dois pontos
+	 */
+	public static double duracaoSegundos(Timestamp pontoA, Timestamp pontoB, boolean arredondamento) {
+		double duracao = 0;
+
+		duracao = ((pontoB.getTime() - pontoA.getTime()) / 1000) % 60;
+
+		if (arredondamento) {
+			duracao = Math.round(duracao);
+		}
+
+		return duracao;
+	}
+
+	/**
+	 * Tempo em segundos entre dois ponto B-A.
+	 * 
+	 * @param pontoA
+	 * @param pontoB
+	 * @param arredondamento
+	 * 
+	 * @return Segundos entre dois pontos
+	 */
+	public static double duracaoSegundos(String tempoCorrido, boolean arredondamento) {
+		double duracao = 0;
+
+		duracao = ((Double.parseDouble(tempoCorrido) / 1000) % 60);
+
+		if (arredondamento) {
+			duracao = Math.round(duracao);
+		}
+
+		return duracao;
 	}
 
 	/**
@@ -192,6 +250,112 @@ public class Fisica {
 
 			return distance;
 		}
+	}
+
+	/**
+	 * sed(A,B,C) = square root of ((x'B - xB)*(x'B - xB) + ((y'B - yB)*(y'B -
+	 * yB)) x'B = xA + vXAC * (tb - ta) y'B = yA + vYAC * (tb - ta) vXAC = (xc -
+	 * xa) / (tc - ta) vYAC = (yc - ya) / (tc - ta)
+	 * 
+	 * @param ponto
+	 *            (B)
+	 * @param pontoInicial
+	 *            (A)
+	 * @param pontoFinal
+	 *            (C)
+	 * @return
+	 */
+	public static double getDistanciaEuclidianaCartesiadaSincronizada(Ponto ponto, Ponto pontoInicial,
+			Ponto pontoFinal) {
+
+		double timeRatioA = pontoFinal.getTempo().getTime() - pontoInicial.getTempo().getTime();
+
+		if (timeRatioA == 0)
+			return 0;
+
+		Ponto datum = pontoInicial;
+
+		double velocityVectorX = (Fisica.getProjectedX(pontoFinal, datum) - Fisica.getProjectedX(pontoInicial, datum))
+				/ (timeRatioA);
+
+		double velocityVectorY = (Fisica.getProjectedY(pontoFinal, datum) - Fisica.getProjectedY(pontoInicial, datum))
+				/ (timeRatioA);
+
+		double predictedX = getProjectedX(pontoInicial, datum)
+				+ velocityVectorX * (ponto.getTempo().getTime() - pontoInicial.getTempo().getTime());
+
+		double predictedY = getProjectedY(pontoInicial, datum)
+				+ velocityVectorY * (ponto.getTempo().getTime() - pontoInicial.getTempo().getTime());
+
+		double sed = Fisica.getPointsDistance(getProjectedX(ponto, datum), getProjectedY(ponto, datum), predictedX,
+				predictedY);
+
+		return sed;
+	}
+
+	public static double getDistanciaCartesianaTimeRatio(Ponto ponto, Ponto pontoInicial, Ponto pontoFinal) {
+
+		double timeIntervalE = pontoFinal.getTempo().getTime() - pontoInicial.getTempo().getTime();
+
+		if (timeIntervalE == 0)
+			return 0;
+		else {
+
+			Ponto datum = pontoInicial;
+
+			double timeIntervalI = ponto.getTempo().getTime() - pontoInicial.getTempo().getTime();
+			double timeRatio = timeIntervalI / timeIntervalE;
+
+			double xI = getProjectedX(pontoInicial, datum)
+					+ (timeRatio * (getProjectedX(pontoFinal, datum) - getProjectedX(pontoInicial, datum)));
+			double yI = getProjectedY(pontoInicial, datum)
+					+ (timeRatio * (getProjectedY(pontoFinal, datum) - getProjectedY(pontoInicial, datum)));
+
+			return Fisica.getPointsDistance(getProjectedX(ponto, datum), getProjectedY(ponto, datum), xI, yI);
+		}
+	}
+
+	/**
+	 * Calcula a projeção de X com base na latitude/longitude em um plano
+	 * cartesiano baseado em um ponto datum (referência).
+	 * 
+	 * @see http://abe-research.illinois.edu/courses/tsm352/lectures/
+	 *      Lat_Long_Conversion.pptx
+	 * 
+	 * @param ponto
+	 *            (Lat/Lon)
+	 * @param datum
+	 *            (Lat/Long) - The minor long point in the observed trajectory,
+	 *            so all values will be positive in relation to it's value.
+	 * @return projected X (in meters)
+	 * 
+	 */
+	public static double getProjectedX(Ponto ponto, Ponto datum) {
+		return ((ponto.getLongitude() - datum.getLongitude())
+				* ((Math.PI / 180) * Azimute.RAIO_TERRA_KM * Math.cos(ponto.getLatitude() * (Math.PI / 180))));
+	}
+
+	/**
+	 * Calcula a projeção de Y com base na latitude/longitude em um plano
+	 * cartesiano baseado em um ponto datum (referência).
+	 * 
+	 * @see http://abe-research.illinois.edu/courses/tsm352/lectures/
+	 *      Lat_Long_Conversion.pptx
+	 * 
+	 * @param ponto
+	 *            (Lat/Lon)
+	 * @param datum
+	 *            (Lat/Long) - The minor long point in the observed trajectory,
+	 *            so all values will be positive in relation to it's value.
+	 * @return projeção em Y (em metros)
+	 * 
+	 */
+	public static double getProjectedY(Ponto ponto, Ponto datum) {
+		return (ponto.getLatitude() - datum.getLatitude()) * (Math.PI / 180) * Azimute.RAIO_TERRA_KM;
+	}
+
+	public static double getPointsDistance(double ax, double ay, double bx, double by) {
+		return Math.sqrt(Math.pow(ax - bx, 2) + Math.pow(ay - by, 2));
 	}
 
 }

@@ -229,7 +229,7 @@ public class SchulzImportador {
 				if (pontoAux == null) {
 					ponto.setVelocidade(0d);
 				} else {
-					ponto.setVelocidade(Fisica.velocidadeMediaSistemaInternacionalMPSPonto(pontoAux, ponto));
+					ponto.setVelocidade(Fisica.velocidadeMediaSistemaInternacionalMPSPonto(pontoAux, ponto, true));
 				}
 
 				ponto.setTrajetoria(trajetoria);
@@ -275,16 +275,17 @@ public class SchulzImportador {
 
 						pontoPrimeiro = listaPonto.get(0);
 						pontoUltimo = listaPonto.get(listaPonto.size() - 1);
-						comprimento = Azimute.calculaDistanciaKM(pontoPrimeiro.getLatitude(),
-								pontoPrimeiro.getLongitude(), pontoUltimo.getLatitude(), pontoUltimo.getLongitude());
+						comprimento = Azimute.calculaDistanciaMetros(pontoPrimeiro.getLatitude(),
+								pontoPrimeiro.getLongitude(), pontoUltimo.getLatitude(), pontoUltimo.getLongitude(),
+								true);
 
 						trajetoria.setComprimento(comprimento);
 
 						trajetoria.setDuracao(new Double(
-								((pontoUltimo.getTempo().getTime() - pontoPrimeiro.getTempo().getTime()) / 1000) % 60));
+								Fisica.duracaoSegundos(pontoUltimo.getTempo(), pontoPrimeiro.getTempo(), true)));
 
 						trajetoria.setVelocidadeMedia(
-								Fisica.velocidadeMediaSistemaInternacionalMPSPonto(pontoPrimeiro, pontoUltimo));
+								Fisica.velocidadeMediaSistemaInternacionalMPSPonto(pontoPrimeiro, pontoUltimo, true));
 
 						transporteDAOPostgreSQL.inserirTransporte(transporte);
 						usuarioDAOPostgreSQL.inserirUsuario(usuario);
@@ -404,7 +405,7 @@ public class SchulzImportador {
 						((pontoUltimo.getTempo().getTime() - pontoPrimeiro.getTempo().getTime()) / 1000) % 60));
 
 				trajetoria.setVelocidadeMedia(
-						Fisica.velocidadeMediaSistemaInternacionalMPSPonto(pontoPrimeiro, pontoUltimo));
+						Fisica.velocidadeMediaSistemaInternacionalMPSPonto(pontoPrimeiro, pontoUltimo, true));
 
 				transporteDAOPostgreSQL.inserirTransporte(transporte);
 				usuarioDAOPostgreSQL.inserirUsuario(usuario);

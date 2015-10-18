@@ -27,7 +27,7 @@ public class DiferencaAzimute {
 		double difAzimutePositivo = 0;
 		long contaTrajetoria = 0;
 		long contaSegmentoTotal = 0;
-
+		
 		List<Trajetoria> trajetorias = (List<Trajetoria>) trajetoriaDAOPostgreSQL.selecionarTrajetoriaCollection();
 
 		for (Trajetoria trajetoria : trajetorias) {

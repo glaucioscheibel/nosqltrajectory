@@ -63,6 +63,7 @@ public class JoinvilleImportador {
 		String usuarioDevice = prop.getProperty("prop.base.usuario.device").trim().toLowerCase();
 		String usuarioColetor = prop.getProperty("prop.base.usuario.coletor").trim().toLowerCase();
 		String usuarioVersaoColetor = prop.getProperty("prob.base.arquivo.coletor.versao").trim().toLowerCase();
+		String usuarioPadrao = prop.getProperty("prop.base.usuario.padrao").trim().toLowerCase();
 		String base = prop.getProperty("prop.base.nome");
 
 		Iterator<File> arquivos = null;
@@ -177,6 +178,10 @@ public class JoinvilleImportador {
 							usuario.setVersaoColetor(linha.trim().substring(17, linha.length()));
 							usuarioVersaoColetorLeitura = linha.trim().substring(17, linha.length());
 							usuarioVersaoColetorLeitura = usuarioVersaoColetorLeitura.substring(0, 2);
+						}
+
+						if (usuario.getDescricao() == null) {
+							usuario.setDescricao(usuarioPadrao);
 						}
 					}
 

@@ -23,8 +23,8 @@ public class SegmenterFinder {
                         List<TrajectorySegmentData> informacoes = trajectorySegment.getData();
 
                         for (TrajectorySegmentData trajectorySegmentData : informacoes) {
-                            if (trajectorySegmentData.getKey().trim().toLowerCase().equals("azimuthdiff")) {
-                                System.out.println("Diferen�a de azimute: " + trajectorySegmentData.getValue());
+                            if (trajectorySegmentData.getDataKey().trim().toLowerCase().equals("azimuthdiff")) {
+                                System.out.println("Diferen�a de azimute: " + trajectorySegmentData.getDataValue());
                             }
                         }
                     }

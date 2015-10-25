@@ -25,13 +25,13 @@ public class AzimuthExecuter {
                 float lgn2 = ts.getPoints().get(1).getLng();
                 double azi = Azimuth.azimuth(lat1, lgn1, lat2, lgn2);
                 TrajectorySegmentData tsd = new TrajectorySegmentData();
-                tsd.setKey("azimuth");
-                tsd.setValue(String.valueOf(azi));
+                tsd.setDataKey("azimuth");
+                tsd.setDataValue(String.valueOf(azi));
                 ts.addData(tsd);
                 if (!first) {
                     TrajectorySegmentData tsd2 = new TrajectorySegmentData();
-                    tsd2.setKey("azimuthDiff");
-                    tsd2.setValue(String.valueOf(Azimuth.azimuthDifference(azi, aziAnt)));
+                    tsd2.setDataKey("azimuthDiff");
+                    tsd2.setDataValue(String.valueOf(Azimuth.azimuthDifference(azi, aziAnt)));
                     tsAnt.addData(tsd2);
                     aziAnt = azi;
                 } else {

@@ -9,8 +9,11 @@ public class UserRelationalDAO extends UserDAO {
     @Override
     public void create(User user) {
         EntityManager em = EntityManagerHolder.getInstance().getEntityManager();
-        em.getTransaction().begin();
-        em.persist(user);
-        em.getTransaction().commit();
+        User aux = em.find(User.class, user.getId());
+        if (aux == null) {
+            em.getTransaction().begin();
+            em.persist(user);
+            em.getTransaction().commit();
+        }
     }
 }

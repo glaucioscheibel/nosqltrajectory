@@ -44,13 +44,15 @@ public class BusRJRelationalImport {
         int points = 0;
         int userid = 1;
 
-        if (ifs.hasNext()) {
+        while (ifs.hasNext()) {
             File f = ifs.next();
             String trajDesc = f.getName();
             trajDesc = trajDesc.substring(0, trajDesc.indexOf('.'));
             System.out.println(trajDesc);
             user = new User(userid++);
             user.setName(trajDesc);
+            post(user);
+
             Trajectory tr = null;
             TrajectoryVersion tv = null;
             TrajectorySegment seg = null;
@@ -92,14 +94,14 @@ public class BusRJRelationalImport {
                 TrajectoryPointData tpd = null;
                 if (vel != null && !vel.equals("0.0")) {
                     tpd = new TrajectoryPointData();
-                    tpd.setKey("velocidade");
-                    tpd.setValue(vel);
+                    tpd.setDataKey("velocidade");
+                    tpd.setDataValue(vel);
                     tp.addData(tpd);
                 }
                 if (dir != null) {
                     tpd = new TrajectoryPointData();
-                    tpd.setKey("direcao");
-                    tpd.setValue(dir);
+                    tpd.setDataKey("direcao");
+                    tpd.setDataValue(dir);
                     tp.addData(tpd);
                 }
                 seg.addPoint(tp);
@@ -119,6 +121,19 @@ public class BusRJRelationalImport {
         entity.setContentType("application/json");
         CloseableHttpClient hc = HttpClients.createDefault();
         HttpPost post = new HttpPost("http://127.0.0.1:8080/trajectoryrelational/");
+        post.addHeader("accept", "application/json");
+        post.setEntity(entity);
+        CloseableHttpResponse response = hc.execute(post);
+        System.out.println(response.getStatusLine());
+        response.getEntity();
+    }
+
+    private static void post(User user) throws Exception {
+        String json = om.writeValueAsString(user);
+        StringEntity entity = new StringEntity(json);
+        entity.setContentType("application/json");
+        CloseableHttpClient hc = HttpClients.createDefault();
+        HttpPost post = new HttpPost("http://127.0.0.1:8080/trajectoryrelational/user");
         post.addHeader("accept", "application/json");
         post.setEntity(entity);
         CloseableHttpResponse response = hc.execute(post);

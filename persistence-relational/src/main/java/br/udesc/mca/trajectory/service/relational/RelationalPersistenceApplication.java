@@ -1,14 +1,12 @@
 package br.udesc.mca.trajectory.service.relational;
 
-import org.eclipse.jetty.servlet.ServletHandler;
-
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import br.udesc.mca.discovery.EurekaServiceRegister;
 import io.dropwizard.Application;
 import io.dropwizard.jetty.HttpConnectorFactory;
 import io.dropwizard.server.DefaultServerFactory;
 import io.dropwizard.setup.Environment;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class RelationalPersistenceApplication extends Application<RelationalPersistenceConfiguration> {
 

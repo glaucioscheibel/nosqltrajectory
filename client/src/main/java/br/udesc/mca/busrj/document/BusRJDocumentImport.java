@@ -92,14 +92,14 @@ public class BusRJDocumentImport {
                 TrajectoryPointData tpd = null;
                 if (vel != null && !vel.equals("0.0")) {
                     tpd = new TrajectoryPointData();
-                    tpd.setKey("velocidade");
-                    tpd.setValue(vel);
+                    tpd.setDataKey("velocidade");
+                    tpd.setDataValue(vel);
                     tp.addData(tpd);
                 }
                 if (dir != null) {
                     tpd = new TrajectoryPointData();
-                    tpd.setKey("direcao");
-                    tpd.setValue(dir);
+                    tpd.setDataKey("direcao");
+                    tpd.setDataValue(dir);
                     tp.addData(tpd);
                 }
                 seg.addPoint(tp);

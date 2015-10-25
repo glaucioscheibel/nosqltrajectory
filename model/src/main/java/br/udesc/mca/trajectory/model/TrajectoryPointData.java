@@ -17,8 +17,8 @@ public class TrajectoryPointData implements Serializable {
     private Integer id;
     @ManyToOne
     private TrajectoryPoint trajectoryPoint;
-    private String key;
-    private String value;
+    private String dataKey;
+    private String dataValue;
 
     public Integer getId() {
         return this.id;
@@ -28,20 +28,28 @@ public class TrajectoryPointData implements Serializable {
         this.id = id;
     }
 
-    public String getKey() {
-        return this.key;
+    public String getDataKey() {
+        return this.dataKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setDataKey(String dataKey) {
+        this.dataKey = dataKey;
     }
 
-    public String getValue() {
-        return this.value;
+    public String getDataValue() {
+        return this.dataValue;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setDataValue(String dataValue) {
+        this.dataValue = dataValue;
+    }
+
+    public TrajectoryPoint getTrajectoryPoint() {
+        return this.trajectoryPoint;
+    }
+
+    public void setTrajectoryPoint(TrajectoryPoint trajectoryPoint) {
+        this.trajectoryPoint = trajectoryPoint;
     }
 
     @Override

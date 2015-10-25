@@ -13,7 +13,7 @@
         <class>br.udesc.mca.trajectory.model.TrajectoryVersion</class>
         <class>br.udesc.mca.trajectory.model.TrajectoryVersionData</class>
         <class>br.udesc.mca.trajectory.model.User</class>
-        <properties>
+        <!--properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://127.0.0.1/trajectories" />
             <property name="javax.persistence.jdbc.user" value="postgres" />
@@ -21,15 +21,15 @@
             <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL94Dialect"/>
-        </properties>
-        <!--properties>
+        </properties-->
+        <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/trajectories" />
             <property name="javax.persistence.jdbc.user" value="root" />
             <property name="javax.persistence.jdbc.password" value="root" />
             <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
             <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
-        </properties-->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL57InnoDBDialect"/>
+        </properties>
     </persistence-unit>
 </persistence>

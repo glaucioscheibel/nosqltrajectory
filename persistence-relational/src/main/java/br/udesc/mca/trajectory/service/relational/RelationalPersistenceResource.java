@@ -11,21 +11,33 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import br.udesc.mca.trajectory.dao.relational.PostgreSQLPersistence;
 import br.udesc.mca.trajectory.dao.relational.RelationalPersistence;
+import br.udesc.mca.trajectory.dao.relational.UserRelationalDAO;
 import br.udesc.mca.trajectory.model.Trajectory;
+import br.udesc.mca.trajectory.model.User;
 
 @Path("/trajectoryrelational")
 @Produces(MediaType.APPLICATION_JSON)
 public class RelationalPersistenceResource {
     private RelationalPersistence persistence;
+    private UserRelationalDAO userDAO;
 
     public RelationalPersistenceResource() {
         this.persistence = PostgreSQLPersistence.getInstance();
+        this.userDAO = new UserRelationalDAO();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Trajectory store(Trajectory t) {
         return this.persistence.store(t);
+    }
+    
+    @POST
+    @Path("/user")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean storeUser(User user) {
+        this.userDAO.create(user);
+        return true;
     }
 
     @GET

@@ -24,16 +24,16 @@ import de.micromata.opengis.kml.v_2_2_0.Style;
 
 public class TesteCompactacao {
 
-	private static final String BeforeOpeningWindow = "BeforeOpeningWindow";
+	private static final String Original = "original";
+	private static final String BeforeOpeningWindow = "beforeopeningwindow";
 	// private static final String DouglasPeucker = "DouglasPeucker";
-
 
 	public static void main(String[] args) {
 
 		Session sessao = HibernateUtil.getSessionFactory().openSession();
 		TrajetoriaDAOPostgreSQL trajetoriaDAOPostgreSQL = new TrajetoriaDAOPostgreSQL(sessao);
 
-		Trajetoria trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(31);
+		Trajetoria trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(91);
 		List<Ponto> pontosTrajetoria = trajetoria.getPontos();
 		int tamanho = pontosTrajetoria.size();
 		int conta = 0;
@@ -47,19 +47,23 @@ public class TesteCompactacao {
 			spontosOriginal += ponto.getId() + ", ";
 		}
 
-		/*Ponto[] pontosComprimidosDouglas = DouglasPeuckerNLogN.compress(pontos, 0.06);
-		for (int i = 0; i < pontosComprimidosDouglas.length; i++) {
-			if (i < pontosComprimidosDouglas.length - 1) {
-				spontosComprimidos += pontosComprimidosDouglas[i].getId() + ", ";
-			} else {
-				spontosComprimidos += pontosComprimidosDouglas[i].getId();
-			}
-		}*/
+		/*
+		 * Ponto[] pontosComprimidosDouglas =
+		 * DouglasPeuckerNLogN.compress(pontos, 0.06); for (int i = 0; i <
+		 * pontosComprimidosDouglas.length; i++) { if (i <
+		 * pontosComprimidosDouglas.length - 1) { spontosComprimidos +=
+		 * pontosComprimidosDouglas[i].getId() + ", "; } else {
+		 * spontosComprimidos += pontosComprimidosDouglas[i].getId(); } }
+		 */
 		System.out.println("Pontos.....................: " + spontosOriginal);
-		//System.out.println("Comprimidos DouglasPeucker.: " + spontosComprimidos);
-		TesteCompactacao.exportaKML(trajetoria, pontos, "original");
-		//TesteCompactacao.exportaKML(trajetoria, pontosComprimidosDouglas, TesteCompactacao.DouglasPeucker);
-		//TesteCompactacao.exportaCVS(trajetoria, pontosComprimidosDouglas, TesteCompactacao.DouglasPeucker);
+		// System.out.println("Comprimidos DouglasPeucker.: " +
+		// spontosComprimidos);
+		TesteCompactacao.exportaKML(trajetoria, pontos, TesteCompactacao.Original);
+		TesteCompactacao.exportaCVS(trajetoria, pontos, TesteCompactacao.Original, true);
+		// TesteCompactacao.exportaKML(trajetoria, pontosComprimidosDouglas,
+		// TesteCompactacao.DouglasPeucker);
+		// TesteCompactacao.exportaCVS(trajetoria, pontosComprimidosDouglas,
+		// TesteCompactacao.DouglasPeucker);
 
 		spontosComprimidos = "";
 		Ponto[] pontosComprimidosBefore = br.udesc.mca.compactacao.BeforeOpeningWindow.compress(pontos, 0.025);
@@ -72,7 +76,7 @@ public class TesteCompactacao {
 		}
 		System.out.println("Comprimidos BeforeOpeningWindow: " + spontosComprimidos);
 		TesteCompactacao.exportaKML(trajetoria, pontosComprimidosBefore, TesteCompactacao.BeforeOpeningWindow);
-		TesteCompactacao.exportaCVS(trajetoria, pontosComprimidosBefore, TesteCompactacao.BeforeOpeningWindow);
+		TesteCompactacao.exportaCVS(trajetoria, pontosComprimidosBefore, TesteCompactacao.BeforeOpeningWindow, true);
 
 		/*
 		 * spontosComprimidos = ""; Ponto[] pontosComprimidosDead =
@@ -146,9 +150,10 @@ public class TesteCompactacao {
 		}
 	}
 
-	public static void exportaCVS(Trajetoria trajetoria, Ponto[] pontos, String algoritmo) {
+	public static void exportaCVS(Trajetoria trajetoria, Ponto[] pontos, String algoritmo, boolean positivo) {
 		Ponto pontoA = null;
 		Ponto pontoB = null;
+		FileWriter arquivoCVS = null;
 		String azimuteTexto = new String();
 		double azimuteA = 0;
 		double azimuteB = 0;
@@ -156,7 +161,13 @@ public class TesteCompactacao {
 		double[] difAzimute = new double[azimute.length - 1];
 
 		try {
-			FileWriter writer = new FileWriter(trajetoria.getId() + "-" + algoritmo + ".csv");
+			if (positivo) {
+				arquivoCVS = new FileWriter(
+						trajetoria.getId() + "_" + trajetoria.getBase() + "_" + algoritmo + "_" + "positivo" + ".csv");
+			} else {
+				arquivoCVS = new FileWriter(
+						trajetoria.getId() + "_" + trajetoria.getBase() + "_" + algoritmo + "_" + "negativo" + ".csv");
+			}
 
 			for (int i = 0; i < pontos.length; i++) {
 				pontoA = pontos[i];
@@ -182,7 +193,11 @@ public class TesteCompactacao {
 				}
 
 				if (azimuteB != 0) {
-					difAzimute[i] = Azimute.diferencaAzimutePositivo(azimuteA, azimuteB);
+					if (positivo) {
+						difAzimute[i] = Azimute.diferencaAzimutePositivo(azimuteA, azimuteB);
+					} else {
+						difAzimute[i] = Azimute.diferencaAzimute(azimuteA, azimuteB);
+					}
 				}
 			}
 
@@ -194,10 +209,10 @@ public class TesteCompactacao {
 				}
 			}
 
-			writer.append(azimuteTexto);
-			writer.append('\n');
-			writer.flush();
-			writer.close();
+			arquivoCVS.append(azimuteTexto);
+			arquivoCVS.append('\n');
+			arquivoCVS.flush();
+			arquivoCVS.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

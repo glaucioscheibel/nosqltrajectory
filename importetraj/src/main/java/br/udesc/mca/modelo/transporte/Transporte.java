@@ -6,11 +6,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "transporte")
+@NamedQuery(name = "consultaTransporteDescricao", query = "from Transporte t where t.descricao = :descricao")
 public class Transporte implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -296,7 +296,7 @@ public class RioImportador {
 
 			trajetoria.setComprimento(comprimento);
 			trajetoria.setDuracao(
-					new Double(Fisica.duracaoSegundos(pontoUltimo.getTempo(), pontoPrimeiro.getTempo(), true)));
+					new Double(Fisica.duracaoSegundos(pontoPrimeiro.getTempo(), pontoUltimo.getTempo(), true)));
 			trajetoria.setVelocidadeMedia(
 					Fisica.velocidadeMediaSistemaInternacionalMPSPonto(pontoPrimeiro, pontoUltimo, true));
 

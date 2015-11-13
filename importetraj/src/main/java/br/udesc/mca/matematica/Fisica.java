@@ -122,7 +122,7 @@ public class Fisica {
 	public static double duracaoSegundos(Timestamp pontoA, Timestamp pontoB, boolean arredondamento) {
 		double duracao = 0;
 
-		duracao = ((pontoB.getTime() - pontoA.getTime()) / 1000) % 60;
+		duracao = ((pontoB.getTime() - pontoA.getTime()) / 1000) / 60;
 
 		if (arredondamento) {
 			duracao = Math.round(duracao);

@@ -282,7 +282,7 @@ public class SchulzImportador {
 						trajetoria.setComprimento(comprimento);
 
 						trajetoria.setDuracao(new Double(
-								Fisica.duracaoSegundos(pontoUltimo.getTempo(), pontoPrimeiro.getTempo(), true)));
+								Fisica.duracaoSegundos(pontoPrimeiro.getTempo(), pontoUltimo.getTempo(), true)));
 
 						trajetoria.setVelocidadeMedia(
 								Fisica.velocidadeMediaSistemaInternacionalMPSPonto(pontoPrimeiro, pontoUltimo, true));
@@ -402,7 +402,7 @@ public class SchulzImportador {
 				trajetoria.setComprimento(comprimento);
 
 				trajetoria.setDuracao(new Double(
-						((pontoUltimo.getTempo().getTime() - pontoPrimeiro.getTempo().getTime()) / 1000) % 60));
+						Fisica.duracaoSegundos(pontoPrimeiro.getTempo(), pontoUltimo.getTempo(), true)));
 
 				trajetoria.setVelocidadeMedia(
 						Fisica.velocidadeMediaSistemaInternacionalMPSPonto(pontoPrimeiro, pontoUltimo, true));

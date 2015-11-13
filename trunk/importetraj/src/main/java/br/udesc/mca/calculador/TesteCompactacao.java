@@ -25,6 +25,7 @@ import de.micromata.opengis.kml.v_2_2_0.Style;
 public class TesteCompactacao {
 
 	private static final String Original = "original";
+	private static final String OriginalAzimute = "original_azimute";
 	private static final String BeforeOpeningWindow = "beforeopeningwindow";
 	// private static final String DouglasPeucker = "DouglasPeucker";
 
@@ -33,7 +34,7 @@ public class TesteCompactacao {
 		Session sessao = HibernateUtil.getSessionFactory().openSession();
 		TrajetoriaDAOPostgreSQL trajetoriaDAOPostgreSQL = new TrajetoriaDAOPostgreSQL(sessao);
 
-		Trajetoria trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(91);
+		Trajetoria trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(9);
 		List<Ponto> pontosTrajetoria = trajetoria.getPontos();
 		int tamanho = pontosTrajetoria.size();
 		int conta = 0;
@@ -60,6 +61,7 @@ public class TesteCompactacao {
 		// spontosComprimidos);
 		TesteCompactacao.exportaKML(trajetoria, pontos, TesteCompactacao.Original);
 		TesteCompactacao.exportaCVS(trajetoria, pontos, TesteCompactacao.Original, true);
+		TesteCompactacao.exportaCVSAzimute(trajetoria, pontos, TesteCompactacao.OriginalAzimute, true);
 		// TesteCompactacao.exportaKML(trajetoria, pontosComprimidosDouglas,
 		// TesteCompactacao.DouglasPeucker);
 		// TesteCompactacao.exportaCVS(trajetoria, pontosComprimidosDouglas,
@@ -206,6 +208,54 @@ public class TesteCompactacao {
 					azimuteTexto += difAzimute[i];
 				} else {
 					azimuteTexto += difAzimute[i] + ",";
+				}
+			}
+
+			arquivoCVS.append(azimuteTexto);
+			arquivoCVS.append('\n');
+			arquivoCVS.flush();
+			arquivoCVS.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void exportaCVSAzimute(Trajetoria trajetoria, Ponto[] pontos, String algoritmo, boolean positivo) {
+		Ponto pontoA = null;
+		Ponto pontoB = null;
+		FileWriter arquivoCVS = null;
+		String azimuteTexto = new String();
+		double[] azimute = new double[pontos.length - 1];
+
+		try {
+			if (positivo) {
+				arquivoCVS = new FileWriter(
+						trajetoria.getId() + "_" + trajetoria.getBase() + "_" + algoritmo + "_" + "positivo" + ".csv");
+			} else {
+				arquivoCVS = new FileWriter(
+						trajetoria.getId() + "_" + trajetoria.getBase() + "_" + algoritmo + "_" + "negativo" + ".csv");
+			}
+
+			for (int i = 0; i < pontos.length; i++) {
+				pontoA = pontos[i];
+
+				if (i + 1 == pontos.length) {
+					pontoB = null;
+				} else {
+					pontoB = pontos[i + 1];
+				}
+
+				if (pontoB != null) {
+					azimute[i] = Azimute.azimute(pontoA.getLatitude(), pontoA.getLongitude(), pontoB.getLatitude(),
+							pontoB.getLongitude());
+				}
+			}
+
+			for (int i = 0; i < azimute.length; i++) {
+				if (i + 1 == azimute.length) {
+					azimuteTexto += azimute[i];
+				} else {
+					azimuteTexto += azimute[i] + ",";
 				}
 			}
 

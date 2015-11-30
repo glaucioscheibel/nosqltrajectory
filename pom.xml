@@ -26,9 +26,9 @@
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <dropwizard.version>0.9.0</dropwizard.version>
+        <dropwizard.version>0.9.1</dropwizard.version>
         <jackson.version>2.6.3</jackson.version>
-        <slf4j.version>1.7.12</slf4j.version>
+        <slf4j.version>1.7.13</slf4j.version>
         <shade.version>2.4.2</shade.version>
     </properties>
     <build>

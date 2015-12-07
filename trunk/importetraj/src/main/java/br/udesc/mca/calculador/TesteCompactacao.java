@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class TesteCompactacao {
 		Session sessao = HibernateUtil.getSessionFactory().openSession();
 		TrajetoriaDAOPostgreSQL trajetoriaDAOPostgreSQL = new TrajetoriaDAOPostgreSQL(sessao);
 
-		Trajetoria trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(9);
+		Trajetoria trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(39);
 		List<Ponto> pontosTrajetoria = trajetoria.getPontos();
 		int tamanho = pontosTrajetoria.size();
 		int conta = 0;
@@ -113,6 +114,7 @@ public class TesteCompactacao {
 		 */
 
 		sessao.close();
+		System.out.println("Terminou!");
 
 	}
 
@@ -181,8 +183,8 @@ public class TesteCompactacao {
 				}
 
 				if (pontoB != null) {
-					azimute[i] = Azimute.azimute(pontoA.getLatitude(), pontoA.getLongitude(), pontoB.getLatitude(),
-							pontoB.getLongitude());
+					azimute[i] = Azimute.azimute(pontoA.getLatitude(),
+							pontoA.getLongitude(), pontoB.getLatitude(), pontoB.getLongitude());
 				}
 			}
 

@@ -19,6 +19,7 @@ import de.micromata.opengis.kml.v_2_2_0.IconStyle;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
 import de.micromata.opengis.kml.v_2_2_0.KmlFactory;
 import de.micromata.opengis.kml.v_2_2_0.Style;
+import de.micromata.opengis.kml.v_2_2_0.atom.Author;
 
 //http://labs.micromata.de/projects/jak/quickstart.html
 //https://developers.google.com/kml/documentation/kml_tut?hl=pt-br
@@ -33,16 +34,22 @@ import de.micromata.opengis.kml.v_2_2_0.Style;
  */
 public class GeraKML {
 
+	public static final int LinestringFull = 1;
+	public static final int LinestringHalf = 2;
+	public static final int PointFull = 3;
+	public static final int PointHalf = 4;
+
 	public static void main(String[] args) {
-		boolean full = false;
-		boolean lineString = false;
-		String base = "schulz";
+		int full = GeraKML.LinestringFull;
+		// boolean lineString = false;
+		String base = "centro";
 		final Kml kml = KmlFactory.createKml();
 		final Document documento = kml.createAndSetDocument();
-		final Style estilo = documento.createAndAddStyle().withId("icone");
-		final IconStyle iconeEstilo = estilo.createAndSetIconStyle().withScale(1.0d);// .withColor("003366").withColorMode(ColorMode.NORMAL).withScale(0.7d);
+		final Style estilo; // documento.createAndAddStyle().withId("icone");
+		final IconStyle iconeEstilo; // estilo.createAndSetIconStyle().withScale(1.0d);//
+										// .withColor("003366").withColorMode(ColorMode.NORMAL).withScale(0.7d);
 
-		iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/blu-circle.png");
+		// iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/blu-circle.png");
 		// iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/blu-blank-lv.png");
 
 		Session sessao = HibernateUtil.getSessionFactory().openSession();
@@ -50,14 +57,70 @@ public class GeraKML {
 
 		Query consulta = null;
 		List<Trajetoria> resultado = null;
+		Trajetoria trajetoria = null;
 
-		if (full) {
+		switch (full) {
+		case GeraKML.LinestringFull:
 			consulta = sessao.getNamedQuery("consultaTrajetoriaBase");
 			consulta.setString("base", base);
 			resultado = consulta.list();
 
-			for (Trajetoria trajetoria : resultado) {
-				List<Ponto> listaPontoTrajetoria = trajetoria.getPontos();
+			for (Trajetoria trajetoriaResultado : resultado) {
+				List<Ponto> listaPontoTrajetoria = trajetoriaResultado.getPontos();
+				List<Coordinate> listaCoordenada = new ArrayList<Coordinate>();
+				Coordinate coordenada = null;
+
+				for (Ponto pontoTrajetoria : listaPontoTrajetoria) {
+					coordenada = new Coordinate(pontoTrajetoria.getLongitude(), pontoTrajetoria.getLatitude());
+					listaCoordenada.add(coordenada);
+				}
+				documento.createAndAddPlacemark().withName(trajetoriaResultado.getId().toString())
+						.createAndSetLineString().withExtrude(true).withTessellate(true)
+						.withCoordinates(listaCoordenada);
+			}
+
+			try {
+				kml.marshal(new File(resultado.get(resultado.size() - 1).getBase() + ".kml"));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			break;
+		case GeraKML.LinestringHalf:
+			trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(61);
+
+			if (trajetoria != null) {
+				List<Ponto> pontos = trajetoria.getPontos();
+				List<Coordinate> listaCoordenada = new ArrayList<Coordinate>();
+				Coordinate coordenada = null;
+
+				for (Ponto pontoTrajetoria : pontos) {
+					coordenada = new Coordinate(pontoTrajetoria.getLongitude(), pontoTrajetoria.getLatitude());
+					listaCoordenada.add(coordenada);
+				}
+
+				documento.createAndAddPlacemark().createAndSetLineString().withExtrude(true).withTessellate(true)
+						.withCoordinates(listaCoordenada);
+				try {
+					kml.marshal(new File(trajetoria.getId() + "-" + trajetoria.getArquivo() + ".kml"));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+			break;
+		case GeraKML.PointFull:
+			estilo = documento.createAndAddStyle().withId("icone");
+			iconeEstilo = estilo.createAndSetIconStyle().withScale(1.0d);// .withColor("003366").withColorMode(ColorMode.NORMAL).withScale(0.7d);
+
+			// iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/blu-circle.png");
+			iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png");
+
+			consulta = sessao.getNamedQuery("consultaTrajetoriaBase");
+			consulta.setString("base", base);
+			resultado = consulta.list();
+
+			for (Trajetoria trajetoriaResultado : resultado) {
+				List<Ponto> listaPontoTrajetoria = trajetoriaResultado.getPontos();
 
 				for (Ponto pontoTrajetoria : listaPontoTrajetoria) {
 					documento.createAndAddPlacemark().withStyleUrl("#icone").createAndSetPoint()
@@ -66,43 +129,42 @@ public class GeraKML {
 				}
 			}
 			try {
-				kml.marshal(new File("schulz.kml"));
+				kml.marshal(new File(resultado.get(resultado.size() - 1).getBase() + ".kml"));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-		} else {
-			Trajetoria trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(61);
+
+			break;
+		case GeraKML.PointHalf:
+			estilo = documento.createAndAddStyle().withId("icone");
+			iconeEstilo = estilo.createAndSetIconStyle().withScale(0.2d);// .withColor("003366").withColorMode(ColorMode.NORMAL).withScale(0.7d);
+
+			// iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/blu-circle.png");
+			iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png");
+
+			trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(61);
 
 			if (trajetoria != null) {
 				List<Ponto> pontos = trajetoria.getPontos();
-				String valores = new String();
-				List<Coordinate> listaCoordenada = new ArrayList<Coordinate>();
-				Coordinate coordenada = null;
-
 
 				for (Ponto pontoTrajetoria : pontos) {
-					if (lineString) {
-						coordenada = new Coordinate(pontoTrajetoria.getLongitude(), pontoTrajetoria.getLatitude());
-						listaCoordenada.add(coordenada);
-					} else {
-						documento.createAndAddPlacemark().withStyleUrl("#icone").createAndSetPoint()
-								.withAltitudeMode(AltitudeMode.CLAMP_TO_GROUND)
-								.addToCoordinates(pontoTrajetoria.getLongitude(), pontoTrajetoria.getLatitude());
-					}
+					documento.createAndAddPlacemark().withStyleUrl("#icone").createAndSetPoint()
+							.withAltitudeMode(AltitudeMode.CLAMP_TO_GROUND)
+							.addToCoordinates(pontoTrajetoria.getLongitude(), pontoTrajetoria.getLatitude());
 				}
 
-				if (lineString) {
-					documento.createAndAddPlacemark().createAndSetLineString().withExtrude(true).withTessellate(true)
-							.withCoordinates(listaCoordenada);
-				}
 				try {
 					kml.marshal(new File(trajetoria.getId() + "-" + trajetoria.getArquivo() + ".kml"));
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
 			}
-
+			break;
+		default:
+			break;
 		}
+
 		sessao.close();
+		System.out.println("Terminou!");
 	}
 }

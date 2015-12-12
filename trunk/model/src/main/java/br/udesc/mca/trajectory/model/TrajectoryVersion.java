@@ -15,7 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class TrajectoryVersion implements Serializable {
@@ -24,6 +26,7 @@ public class TrajectoryVersion implements Serializable {
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     private Trajectory trajectory;
     private int version;
@@ -33,8 +36,10 @@ public class TrajectoryVersion implements Serializable {
     private TrajectoryType type;
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModified;
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectorySegment> segments;
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectoryVersionData> data;
     @OneToOne
@@ -104,6 +109,7 @@ public class TrajectoryVersion implements Serializable {
         if (this.segments == null) {
             this.segments = new ArrayList<>();
         }
+        segment.setTrajectoryVersion(this);
         this.segments.add(segment);
     }
 
@@ -115,6 +121,7 @@ public class TrajectoryVersion implements Serializable {
         if (this.data == null) {
             this.data = new ArrayList<>();
         }
+        data.setTrajectoryVersion(this);
         this.data.add(data);
     }
 

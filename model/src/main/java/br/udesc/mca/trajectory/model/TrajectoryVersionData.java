@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -16,6 +17,7 @@ public class TrajectoryVersionData implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
     private Integer id;
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     private TrajectoryVersion trajectoryVersion;
     private String dataKey;

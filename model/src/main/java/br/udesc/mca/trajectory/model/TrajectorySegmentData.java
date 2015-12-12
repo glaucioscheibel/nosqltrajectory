@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -15,6 +16,7 @@ public class TrajectorySegmentData implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
     private Integer id;
+    @JsonBackReference
     @JoinColumn(name = "trajectorysegmentid")
     private TrajectorySegment trajectorySegment;
     private String dataKey;

@@ -11,7 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class TrajectoryPoint implements Serializable {
@@ -22,9 +24,10 @@ public class TrajectoryPoint implements Serializable {
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @JsonIgnore
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     private TrajectorySegment segment;
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectoryPointData> data;
     private float lat;
@@ -52,6 +55,7 @@ public class TrajectoryPoint implements Serializable {
         if (this.data == null) {
             this.data = new ArrayList<>();
         }
+        data.setTrajectoryPoint(this);
         this.data.add(data);
     }
 

@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -23,6 +24,7 @@ public class Trajectory implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModified;
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL)
     private List<TrajectoryVersion> versions;
 
@@ -69,6 +71,7 @@ public class Trajectory implements Serializable {
         if (this.versions == null) {
             this.versions = new ArrayList<>();
         }
+        version.setTrajectory(this);
         this.versions.add(version);
     }
 

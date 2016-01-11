@@ -148,6 +148,7 @@ public class CassandraPersistence extends ColumnPersistence {
 
     @Override
     public Trajectory store(Trajectory o) {
+        System.out.println(o);
         StringBuilder sb = new StringBuilder();
 
         Trajectory t = this.findById(o.getId());
@@ -172,6 +173,7 @@ public class CassandraPersistence extends ColumnPersistence {
     }
 
     private void fillBoundStatement(BoundStatement bs, Trajectory trajectory) {
+        int vid = 1;
         bs.setLong("id", trajectory.getId());
         bs.setTimestamp("lastModified", trajectory.getLastModified());
         bs.setString("description", trajectory.getDescription());
@@ -188,6 +190,9 @@ public class CassandraPersistence extends ColumnPersistence {
 
             for (TrajectoryVersion tv : trajectory.getVersions()) {
                 UDTValue version = versionUT.newValue();
+                if (tv.getId() == null) {
+                    tv.setId(vid++);
+                }
                 version.setInt("id", tv.getId());
                 version.setInt("version", tv.getVersion());
                 version.setString("type", tv.getType() == null ? null : tv.getType().name());

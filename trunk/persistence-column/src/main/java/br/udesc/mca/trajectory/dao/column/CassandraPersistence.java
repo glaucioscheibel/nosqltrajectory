@@ -29,7 +29,6 @@ import br.udesc.mca.trajectory.model.User;
 public class CassandraPersistence extends ColumnPersistence {
     private static final String space = "Trajectory";
     private static final String table = "Trajectory";
-
     private static CassandraPersistence instance;
     private Cluster cluster;
     private Session db;
@@ -38,7 +37,6 @@ public class CassandraPersistence extends ColumnPersistence {
         if (instance == null) {
             instance = new CassandraPersistence();
         }
-
         return instance;
     }
 
@@ -77,14 +75,20 @@ public class CassandraPersistence extends ColumnPersistence {
             this.db.execute("CREATE TYPE data (id int, key text, value text)");
             this.db.execute("CREATE TYPE user (id int, name text)");
             this.db.execute(
-                    "CREATE TYPE point (id int, h float, lat float, lng float, timestamp bigint, data list<frozen<data>>)");
+                    "CREATE TYPE point (id int, h float, lat float, lng float, timestamp bigint, "
+                    + "data list<frozen<data>>)");
             this.db.execute(
-                    "CREATE TYPE segment (transportationMode text, points list<frozen<point>>, data list<frozen<data>>)");
-            this.db.execute("CREATE TYPE process (componentId int, executionDuration bigint, executionTime timestamp)");
+                    "CREATE TYPE segment (transportationMode text, points list<frozen<point>>, "
+                    + "data list<frozen<data>>)");
+            this.db.execute("CREATE TYPE process (componentId int, executionDuration bigint, "
+                    + "executionTime timestamp)");
             this.db.execute(
-                    "CREATE TYPE version (id int, type text, lastModified timestamp, previousVersion int, version int, user frozen<user>, segments list<frozen<segment>>, process frozen<segment>, data list<frozen<data>>)");
+                    "CREATE TYPE version (id int, type text, lastModified timestamp, previousVersion int, "
+                    + "version int, user frozen<user>, segments list<frozen<segment>>, process frozen<segment>, "
+                    + "data list<frozen<data>>)");
             this.db.execute("create table " + table
-                    + " (id bigint primary key, lastModified timestamp, description text, originalTrajectory int, versions list<frozen<version>>)");
+                    + " (id bigint primary key, lastModified timestamp, description text, "
+                    + "originalTrajectory int, versions list<frozen<version>>)");
         }
     }
 

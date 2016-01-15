@@ -36,7 +36,7 @@ public class RedisPersistence extends KeyValuePersistence {
             oos.writeObject(c);
             Jedis db = this.ds.getResource();
             db.set(Long.toString(c.getId()).getBytes(), baos.toByteArray());
-            this.ds.returnResourceObject(db);
+            db.close();
         } catch (Exception e) {
             this.log.error(e.getMessage(), e);
         }
@@ -60,7 +60,7 @@ public class RedisPersistence extends KeyValuePersistence {
                 }
             }
         }
-        this.ds.returnResourceObject(db);
+        db.close();
         return lc;
     }
 
@@ -75,7 +75,7 @@ public class RedisPersistence extends KeyValuePersistence {
                 ObjectInputStream ois = new ObjectInputStream(bais);
                 ret = (Trajectory) ois.readObject();
             }
-            this.ds.returnResourceObject(db);
+            db.close();
         } catch (IOException | ClassNotFoundException e) {
             this.log.error(e.getMessage(), e);
         }
@@ -86,7 +86,7 @@ public class RedisPersistence extends KeyValuePersistence {
     public void deleteById(long id) {
         Jedis db = this.ds.getResource();
         db.del(Long.toString(id).getBytes());
-        this.ds.returnResourceObject(db);
+        db.close();
     }
 
     @Override

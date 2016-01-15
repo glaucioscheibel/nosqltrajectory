@@ -14,13 +14,22 @@ public class MySQLPersistence extends RelationalPersistence {
         }
         return instance;
     }
+    
+    private MySQLPersistence() {
+        EntityManagerHolder.getInstance().getEntityManager();
+    }
 
     @Override
     public Trajectory store(Trajectory c) {
         this.log.info("store(" + c + ")");
         EntityManager em = EntityManagerHolder.getInstance().getEntityManager();
         em.getTransaction().begin();
-        em.persist(c);
+        Trajectory aux = em.find(Trajectory.class, c.getId());
+        if (aux != null) {
+            em.merge(c);
+        } else {
+            em.persist(c);
+        }
         em.getTransaction().commit();
         return c;
     }

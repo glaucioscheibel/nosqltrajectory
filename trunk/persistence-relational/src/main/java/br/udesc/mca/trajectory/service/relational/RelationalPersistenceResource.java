@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import br.udesc.mca.trajectory.dao.relational.PostgreSQLPersistence;
+import br.udesc.mca.trajectory.dao.relational.MySQLPersistence;
 import br.udesc.mca.trajectory.dao.relational.RelationalPersistence;
 import br.udesc.mca.trajectory.dao.relational.UserRelationalDAO;
 import br.udesc.mca.trajectory.model.Trajectory;
@@ -22,7 +22,7 @@ public class RelationalPersistenceResource {
     private UserRelationalDAO userDAO;
 
     public RelationalPersistenceResource() {
-        this.persistence = PostgreSQLPersistence.getInstance();
+        this.persistence = MySQLPersistence.getInstance();
         this.userDAO = new UserRelationalDAO();
     }
 

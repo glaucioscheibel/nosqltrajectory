@@ -27,6 +27,8 @@ public class GeoLifeColumnImport {
 
     @SuppressWarnings("unused")
     public static void main(String[] args) throws Exception {
+        long ini = System.currentTimeMillis();
+        int cont = 0;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         File data = new File("C:/geolife/data");
         String[] ext = {"plt"};
@@ -39,6 +41,7 @@ public class GeoLifeColumnImport {
         om.setSerializationInclusion(Include.NON_EMPTY);
 
         while (ifs.hasNext()) {
+            cont++;
             File f = ifs.next();
             String trajDesc = f.getName();
             trajDesc = trajDesc.substring(0, trajDesc.indexOf('.'));
@@ -103,5 +106,7 @@ public class GeoLifeColumnImport {
             CloseableHttpResponse response = hc.execute(post);
             System.out.println(response.getStatusLine());
         }
+        System.out.println("Trajetórias: " + cont);
+        System.out.println("Tempo:       " + (System.currentTimeMillis() - ini));
     }
 }

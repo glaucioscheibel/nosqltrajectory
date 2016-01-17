@@ -1,4 +1,4 @@
-package br.udesc.mca.busrj.document;
+package br.udesc.mca.busrj.column;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,7 +24,7 @@ import br.udesc.mca.trajectory.model.TrajectoryType;
 import br.udesc.mca.trajectory.model.TrajectoryVersion;
 import br.udesc.mca.trajectory.model.User;
 
-public class BusRJDocumentImport {
+public class BusRJColumnImport {
     private static ObjectMapper om;
 
     @SuppressWarnings("unused")
@@ -51,7 +51,7 @@ public class BusRJDocumentImport {
             File f = ifs.next();
             String trajDesc = f.getName();
             trajDesc = trajDesc.substring(0, trajDesc.indexOf('.'));
-            System.out.println(trajDesc);
+            System.out.println(cont + " " + trajDesc);
             user = new User(userid++);
             user.setName(trajDesc);
             Trajectory tr = null;
@@ -126,7 +126,7 @@ public class BusRJDocumentImport {
         StringEntity entity = new StringEntity(json);
         entity.setContentType("application/json");
         CloseableHttpClient hc = HttpClients.createDefault();
-        HttpPost post = new HttpPost("http://127.0.0.1:8080/trajectorydocument/");
+        HttpPost post = new HttpPost("http://127.0.0.1:8080/trajectorycolumn/");
         post.addHeader("accept", "application/json");
         post.setEntity(entity);
         CloseableHttpResponse response = hc.execute(post);

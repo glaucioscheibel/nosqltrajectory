@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.StringTokenizer;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -26,6 +28,7 @@ import br.udesc.mca.trajectory.model.User;
 
 public class BusRJKeyValueJsonImport {
     private static ObjectMapper om;
+    private static Map<String, Integer> users;
 
     @SuppressWarnings("unused")
     public static void main(String[] args) throws Exception {
@@ -33,6 +36,7 @@ public class BusRJKeyValueJsonImport {
         File data = new File("C:/busrj");
         String[] ext = {"csv"};
         Iterator<File> ifs = FileUtils.iterateFiles(data, ext, true);
+        users = new HashMap<>();
         User user = null;
 
         om = new ObjectMapper();
@@ -43,13 +47,19 @@ public class BusRJKeyValueJsonImport {
         long trajId = 0;
         int points = 0;
         int userid = 1;
+        long ini = System.currentTimeMillis();
+        int cont = 0;
 
         while (ifs.hasNext()) {
+            cont++;
             File f = ifs.next();
             String trajDesc = f.getName();
             trajDesc = trajDesc.substring(0, trajDesc.indexOf('.'));
-            System.out.println(trajDesc);
-            user = new User(userid++);
+            System.out.println(cont + " " + trajDesc);
+            if (!users.containsKey(trajDesc)) {
+                users.put(trajDesc, userid++);
+            }
+            user = new User(users.get(trajDesc));
             user.setName(trajDesc);
             Trajectory tr = null;
             TrajectoryVersion tv = null;
@@ -68,41 +78,44 @@ public class BusRJKeyValueJsonImport {
             seg = new TrajectorySegment();
             tv.addSegment(seg);
             while ((linha = br.readLine()) != null) {
-                StringTokenizer st = new StringTokenizer(linha, ",");
-                String dateTime = st.nextToken();
-                String lin = st.nextToken();
-                String lat = st.nextToken();
-                String lng = st.nextToken();
-                String vel = null;
+                TrajectoryPoint tp = null;
                 try {
-                    vel = st.nextToken();
-                } catch (Exception e) {}
-                String dir = null;
-                try {
-                    dir = st.nextToken();
-                } catch (Exception e) {}
+                    StringTokenizer st = new StringTokenizer(linha, ",");
+                    String dateTime = st.nextToken();
+                    String lin = st.nextToken();
+                    String lat = st.nextToken();
+                    String lng = st.nextToken();
+                    String vel = null;
+                    try {
+                        vel = st.nextToken();
+                    } catch (Exception e) {}
+                    String dir = null;
+                    try {
+                        dir = st.nextToken();
+                    } catch (Exception e) {}
 
-                Date d = sdf.parse(dateTime);
+                    Date d = sdf.parse(dateTime);
 
-                TrajectoryPoint tp = new TrajectoryPoint();
-                tp.setLng(Float.parseFloat(lng)); // axis x longitude
-                tp.setLat(Float.parseFloat(lat)); // axis y latitude
-                tp.setTimestamp(d.getTime());
+                    tp = new TrajectoryPoint();
+                    tp.setLng(Float.parseFloat(lng)); // axis x longitude
+                    tp.setLat(Float.parseFloat(lat)); // axis y latitude
+                    tp.setTimestamp(d.getTime());
 
-                TrajectoryPointData tpd = null;
-                if (vel != null && !vel.equals("0.0")) {
-                    tpd = new TrajectoryPointData();
-                    tpd.setDataKey("velocidade");
-                    tpd.setDataValue(vel);
-                    tp.addData(tpd);
-                }
-                if (dir != null) {
-                    tpd = new TrajectoryPointData();
-                    tpd.setDataKey("direcao");
-                    tpd.setDataValue(dir);
-                    tp.addData(tpd);
-                }
-                seg.addPoint(tp);
+                    TrajectoryPointData tpd = null;
+                    if (vel != null && !vel.equals("0.0")) {
+                        tpd = new TrajectoryPointData();
+                        tpd.setDataKey("velocidade");
+                        tpd.setDataValue(vel);
+                        tp.addData(tpd);
+                    }
+                    if (dir != null) {
+                        tpd = new TrajectoryPointData();
+                        tpd.setDataKey("direcao");
+                        tpd.setDataValue(dir);
+                        tp.addData(tpd);
+                    }
+                    seg.addPoint(tp);
+                } catch (Exception ee) {}
                 points++;
             }
             if (tr != null) {
@@ -111,6 +124,8 @@ public class BusRJKeyValueJsonImport {
             br.close();
             fr.close();
         }
+        System.out.println("Trajetórias: " + cont);
+        System.out.println("Tempo:       " + (System.currentTimeMillis() - ini));
     }
 
     private static void post(Trajectory tr) throws Exception {

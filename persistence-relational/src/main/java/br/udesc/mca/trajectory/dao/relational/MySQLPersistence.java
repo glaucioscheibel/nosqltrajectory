@@ -4,6 +4,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import br.udesc.mca.trajectory.model.Trajectory;
+import br.udesc.mca.trajectory.model.TrajectoryVersion;
+import br.udesc.mca.trajectory.model.User;
 
 public class MySQLPersistence extends RelationalPersistence {
     private static MySQLPersistence instance;
@@ -24,6 +26,16 @@ public class MySQLPersistence extends RelationalPersistence {
         this.log.info("store(" + c + ")");
         EntityManager em = EntityManagerHolder.getInstance().getEntityManager();
         em.getTransaction().begin();
+        List<TrajectoryVersion> ltv = c.getVersions();
+        for (TrajectoryVersion tv : ltv) {
+            User u = tv.getUser();
+            User aux = em.find(User.class, u.getId());
+            if (aux != null) {
+                em.merge(u);
+            } else {
+                em.persist(u);;
+            }
+        }
         Trajectory aux = em.find(Trajectory.class, c.getId());
         if (aux != null) {
             em.merge(c);

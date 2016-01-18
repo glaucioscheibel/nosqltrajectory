@@ -43,16 +43,20 @@ public class BusRJRelationalImport {
         long trajId = 0;
         int points = 0;
         int userid = 1;
+        long ini = System.currentTimeMillis();
+        int cont = 0;
 
         while (ifs.hasNext()) {
+            if (System.currentTimeMillis() - ini > 7200000) {
+                break;
+            }
+            cont++;
             File f = ifs.next();
             String trajDesc = f.getName();
             trajDesc = trajDesc.substring(0, trajDesc.indexOf('.'));
-            System.out.println(trajDesc);
+            System.out.println(cont + " " + trajDesc);
             user = new User(userid++);
             user.setName(trajDesc);
-            post(user);
-
             Trajectory tr = null;
             TrajectoryVersion tv = null;
             TrajectorySegment seg = null;
@@ -70,41 +74,44 @@ public class BusRJRelationalImport {
             seg = new TrajectorySegment();
             tv.addSegment(seg);
             while ((linha = br.readLine()) != null) {
-                StringTokenizer st = new StringTokenizer(linha, ",");
-                String dateTime = st.nextToken();
-                String lin = st.nextToken();
-                String lat = st.nextToken();
-                String lng = st.nextToken();
-                String vel = null;
+                TrajectoryPoint tp = null;
                 try {
-                    vel = st.nextToken();
-                } catch (Exception e) {}
-                String dir = null;
-                try {
-                    dir = st.nextToken();
-                } catch (Exception e) {}
+                    StringTokenizer st = new StringTokenizer(linha, ",");
+                    String dateTime = st.nextToken();
+                    String lin = st.nextToken();
+                    String lat = st.nextToken();
+                    String lng = st.nextToken();
+                    String vel = null;
+                    try {
+                        vel = st.nextToken();
+                    } catch (Exception e) {}
+                    String dir = null;
+                    try {
+                        dir = st.nextToken();
+                    } catch (Exception e) {}
 
-                Date d = sdf.parse(dateTime);
+                    Date d = sdf.parse(dateTime);
 
-                TrajectoryPoint tp = new TrajectoryPoint();
-                tp.setLng(Float.parseFloat(lng)); // axis x longitude
-                tp.setLat(Float.parseFloat(lat)); // axis y latitude
-                tp.setTimestamp(d.getTime());
+                    tp = new TrajectoryPoint();
+                    tp.setLng(Float.parseFloat(lng)); // axis x longitude
+                    tp.setLat(Float.parseFloat(lat)); // axis y latitude
+                    tp.setTimestamp(d.getTime());
 
-                TrajectoryPointData tpd = null;
-                if (vel != null && !vel.equals("0.0")) {
-                    tpd = new TrajectoryPointData();
-                    tpd.setDataKey("velocidade");
-                    tpd.setDataValue(vel);
-                    tp.addData(tpd);
-                }
-                if (dir != null) {
-                    tpd = new TrajectoryPointData();
-                    tpd.setDataKey("direcao");
-                    tpd.setDataValue(dir);
-                    tp.addData(tpd);
-                }
-                seg.addPoint(tp);
+                    TrajectoryPointData tpd = null;
+                    if (vel != null && !vel.equals("0.0")) {
+                        tpd = new TrajectoryPointData();
+                        tpd.setDataKey("velocidade");
+                        tpd.setDataValue(vel);
+                        tp.addData(tpd);
+                    }
+                    if (dir != null) {
+                        tpd = new TrajectoryPointData();
+                        tpd.setDataKey("direcao");
+                        tpd.setDataValue(dir);
+                        tp.addData(tpd);
+                    }
+                    seg.addPoint(tp);
+                } catch (Exception ee) {}
                 points++;
             }
             if (tr != null) {
@@ -113,6 +120,8 @@ public class BusRJRelationalImport {
             br.close();
             fr.close();
         }
+        System.out.println("Trajetórias: " + cont + " / 71040");
+        System.out.println("Tempo:       " + (System.currentTimeMillis() - ini));
     }
 
     private static void post(Trajectory tr) throws Exception {
@@ -121,19 +130,6 @@ public class BusRJRelationalImport {
         entity.setContentType("application/json");
         CloseableHttpClient hc = HttpClients.createDefault();
         HttpPost post = new HttpPost("http://127.0.0.1:8080/trajectoryrelational/");
-        post.addHeader("accept", "application/json");
-        post.setEntity(entity);
-        CloseableHttpResponse response = hc.execute(post);
-        System.out.println(response.getStatusLine());
-        response.getEntity();
-    }
-
-    private static void post(User user) throws Exception {
-        String json = om.writeValueAsString(user);
-        StringEntity entity = new StringEntity(json);
-        entity.setContentType("application/json");
-        CloseableHttpClient hc = HttpClients.createDefault();
-        HttpPost post = new HttpPost("http://127.0.0.1:8080/trajectoryrelational/user");
         post.addHeader("accept", "application/json");
         post.setEntity(entity);
         CloseableHttpResponse response = hc.execute(post);

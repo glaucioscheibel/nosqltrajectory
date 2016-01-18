@@ -41,6 +41,7 @@ public class TDriveKeyValueJsonImport {
 
         long trajId = 0;
         int points = 0;
+        long ini = System.currentTimeMillis();
 
         while (ifs.hasNext()) {
             File f = ifs.next();
@@ -96,18 +97,24 @@ public class TDriveKeyValueJsonImport {
             br.close();
             fr.close();
         }
+        System.out.println("Trajetórias: " + trajId);
+        System.out.println("Tempo:       " + (System.currentTimeMillis() - ini));
     }
 
-    private static void post(Trajectory tr) throws Exception {
-        String json = om.writeValueAsString(tr);
-        StringEntity entity = new StringEntity(json);
-        entity.setContentType("application/json");
-        CloseableHttpClient hc = HttpClients.createDefault();
-        HttpPost post = new HttpPost("http://127.0.0.1:8080/trajectorykeyvalue/");
-        post.addHeader("accept", "application/json");
-        post.setEntity(entity);
-        CloseableHttpResponse response = hc.execute(post);
-        System.out.println(response.getStatusLine());
-        response.getEntity();
+    private static void post(Trajectory tr) {
+        try {
+            String json = om.writeValueAsString(tr);
+            StringEntity entity = new StringEntity(json);
+            entity.setContentType("application/json");
+            CloseableHttpClient hc = HttpClients.createDefault();
+            HttpPost post = new HttpPost("http://127.0.0.1:8080/trajectorykeyvalue/");
+            post.addHeader("accept", "application/json");
+            post.setEntity(entity);
+            CloseableHttpResponse response = hc.execute(post);
+            System.out.println(response.getStatusLine());
+            response.getEntity();
+        } catch (Exception e) {
+            post(tr);
+        }
     }
 }

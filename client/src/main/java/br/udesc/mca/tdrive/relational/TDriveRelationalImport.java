@@ -1,4 +1,4 @@
-package br.udesc.mca.tdrive.document;
+package br.udesc.mca.tdrive.relational;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,7 +23,7 @@ import br.udesc.mca.trajectory.model.TrajectoryType;
 import br.udesc.mca.trajectory.model.TrajectoryVersion;
 import br.udesc.mca.trajectory.model.User;
 
-public final class TDriveDocumentImport {
+public class TDriveRelationalImport {
     private static ObjectMapper om;
 
     @SuppressWarnings({"unused", "deprecation"})
@@ -44,6 +44,9 @@ public final class TDriveDocumentImport {
         long ini = System.currentTimeMillis();
 
         while (ifs.hasNext()) {
+            if (System.currentTimeMillis() - ini > 7200000) {
+                break;
+            }
             File f = ifs.next();
             String trajDesc = f.getName();
             trajDesc = trajDesc.substring(0, trajDesc.indexOf('.'));
@@ -107,7 +110,7 @@ public final class TDriveDocumentImport {
             StringEntity entity = new StringEntity(json);
             entity.setContentType("application/json");
             CloseableHttpClient hc = HttpClients.createDefault();
-            HttpPost post = new HttpPost("http://127.0.0.1:8080/trajectorydocument/");
+            HttpPost post = new HttpPost("http://127.0.0.1:8080/trajectoryrelational/");
             post.addHeader("accept", "application/json");
             post.setEntity(entity);
             CloseableHttpResponse response = hc.execute(post);

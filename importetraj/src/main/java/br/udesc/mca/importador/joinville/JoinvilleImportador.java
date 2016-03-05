@@ -28,6 +28,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 import br.udesc.mca.conexao.HibernateUtil;
+import br.udesc.mca.importador.importador.Importador;
 import br.udesc.mca.matematica.Azimute;
 import br.udesc.mca.matematica.Fisica;
 import br.udesc.mca.modelo.ponto.Ponto;
@@ -39,7 +40,7 @@ import br.udesc.mca.modelo.trajetoria.TrajetoriaDAOPostgreSQL;
 import br.udesc.mca.modelo.usuario.Usuario;
 import br.udesc.mca.modelo.usuario.UsuarioDAOPostgreSQL;
 
-public class JoinvilleImportador {
+public class JoinvilleImportador extends Importador {
 
 	public static Properties getProp() throws IOException {
 		Properties props = new Properties();

@@ -26,6 +26,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 import br.udesc.mca.conexao.HibernateUtil;
+import br.udesc.mca.importador.importador.Importador;
 import br.udesc.mca.matematica.Azimute;
 import br.udesc.mca.matematica.Fisica;
 import br.udesc.mca.modelo.ponto.Ponto;
@@ -39,7 +40,7 @@ import br.udesc.mca.modelo.transporte.TransporteDAOPostgreSQL;
 import br.udesc.mca.modelo.usuario.Usuario;
 import br.udesc.mca.modelo.usuario.UsuarioDAOPostgreSQL;
 
-public class RioImportador {
+public class RioImportador extends Importador {
 
 	public static Properties getProp() throws IOException {
 		Properties props = new Properties();
@@ -58,8 +59,8 @@ public class RioImportador {
 		SimpleDateFormat formataDataHora = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		SimpleDateFormat formataData = new SimpleDateFormat("yyyy-MM-dd");
 
-		Usuario usuario = new Usuario();
-		usuario.setDescricao(prop.getProperty("prop.base.usuario.padrao").trim().toLowerCase());
+		Usuario usuario = null;
+		// usuario.setDescricao(prop.getProperty("prop.base.usuario.padrao").trim().toLowerCase());
 		Trajetoria trajetoria = null;
 		Ponto ponto = null;
 		Ponto pontoAux = null;
@@ -116,6 +117,8 @@ public class RioImportador {
 
 		while (arquivos.hasNext()) {
 			trajetoria = new Trajetoria();
+			usuario = new Usuario();
+			
 			listaPonto = new ArrayList<Ponto>();
 			File arquivo = arquivos.next();
 			FileReader conteudoArquivo = new FileReader(arquivo);

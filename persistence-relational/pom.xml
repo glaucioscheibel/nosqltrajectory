@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.0.7.Final</version>
+            <version>5.1.0.Final</version>
         </dependency>
         <dependency>
             <groupId>javax.transaction</groupId>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.4.1207</version>
+            <version>9.4.1208</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

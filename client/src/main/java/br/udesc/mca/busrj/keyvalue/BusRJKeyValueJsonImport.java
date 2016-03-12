@@ -49,6 +49,7 @@ public class BusRJKeyValueJsonImport {
         int userid = 1;
         long ini = System.currentTimeMillis();
         int cont = 0;
+        int cpontos = 0;
 
         while (ifs.hasNext()) {
             cont++;
@@ -96,6 +97,7 @@ public class BusRJKeyValueJsonImport {
 
                     Date d = sdf.parse(dateTime);
 
+                    cpontos++;
                     tp = new TrajectoryPoint();
                     tp.setLng(Float.parseFloat(lng)); // axis x longitude
                     tp.setLat(Float.parseFloat(lat)); // axis y latitude
@@ -125,10 +127,13 @@ public class BusRJKeyValueJsonImport {
             fr.close();
         }
         System.out.println("Trajetórias: " + cont);
+        System.out.println("Pontos:      " + cpontos);
+        System.out.println("Onibus:      " + users.size());
         System.out.println("Tempo:       " + (System.currentTimeMillis() - ini));
     }
 
     private static void post(Trajectory tr) throws Exception {
+        if (tr != null) return;
         String json = om.writeValueAsString(tr);
         StringEntity entity = new StringEntity(json);
         entity.setContentType("application/json");

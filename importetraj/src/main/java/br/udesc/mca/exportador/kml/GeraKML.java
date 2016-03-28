@@ -34,15 +34,15 @@ import de.micromata.opengis.kml.v_2_2_0.atom.Author;
  */
 public class GeraKML {
 
-	public static final int LinestringFull = 1;
-	public static final int LinestringHalf = 2;
+	public static final int LineStringFull = 1;
+	public static final int LineStringHalf = 2;
 	public static final int PointFull = 3;
 	public static final int PointHalf = 4;
 
 	public static void main(String[] args) {
-		int full = GeraKML.LinestringFull;
+		int full = GeraKML.LineStringHalf;
 		// boolean lineString = false;
-		String base = "centro";
+		String base = "tdrive";
 		final Kml kml = KmlFactory.createKml();
 		final Document documento = kml.createAndSetDocument();
 		final Style estilo; // documento.createAndAddStyle().withId("icone");
@@ -60,7 +60,7 @@ public class GeraKML {
 		Trajetoria trajetoria = null;
 
 		switch (full) {
-		case GeraKML.LinestringFull:
+		case GeraKML.LineStringFull:
 			consulta = sessao.getNamedQuery("consultaTrajetoriaBase");
 			consulta.setString("base", base);
 			resultado = consulta.list();
@@ -80,14 +80,14 @@ public class GeraKML {
 			}
 
 			try {
-				kml.marshal(new File(resultado.get(resultado.size() - 1).getBase() + ".kml"));
+				kml.marshal(new File(base + ".kml"));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
 
 			break;
-		case GeraKML.LinestringHalf:
-			trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(61);
+		case GeraKML.LineStringHalf:
+			trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(9233);
 
 			if (trajetoria != null) {
 				List<Ponto> pontos = trajetoria.getPontos();
@@ -102,7 +102,7 @@ public class GeraKML {
 				documento.createAndAddPlacemark().createAndSetLineString().withExtrude(true).withTessellate(true)
 						.withCoordinates(listaCoordenada);
 				try {
-					kml.marshal(new File(trajetoria.getId() + "-" + trajetoria.getArquivo() + ".kml"));
+					kml.marshal(new File(trajetoria.getId() + "_" + base + "_" + trajetoria.getArquivo() + ".kml"));
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -129,7 +129,7 @@ public class GeraKML {
 				}
 			}
 			try {
-				kml.marshal(new File(resultado.get(resultado.size() - 1).getBase() + ".kml"));
+				kml.marshal(new File(base + ".kml"));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -137,12 +137,12 @@ public class GeraKML {
 			break;
 		case GeraKML.PointHalf:
 			estilo = documento.createAndAddStyle().withId("icone");
-			iconeEstilo = estilo.createAndSetIconStyle().withScale(0.2d);// .withColor("003366").withColorMode(ColorMode.NORMAL).withScale(0.7d);
+			iconeEstilo = estilo.createAndSetIconStyle().withScale(1.0d);// .withColor("003366").withColorMode(ColorMode.NORMAL).withScale(0.7d);
 
-			// iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/blu-circle.png");
-			iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png");
+			iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/blu-circle.png");
+			// iconeEstilo.createAndSetIcon().withHref("http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png");
 
-			trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(61);
+			trajetoria = trajetoriaDAOPostgreSQL.selecionarTrajetoria(88);
 
 			if (trajetoria != null) {
 				List<Ponto> pontos = trajetoria.getPontos();
@@ -154,7 +154,7 @@ public class GeraKML {
 				}
 
 				try {
-					kml.marshal(new File(trajetoria.getId() + "-" + trajetoria.getArquivo() + ".kml"));
+					kml.marshal(new File(trajetoria.getId() + "_" + base + "_" + trajetoria.getArquivo() + ".kml"));
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}

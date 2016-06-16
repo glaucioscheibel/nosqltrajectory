@@ -1,8 +1,8 @@
 package br.udesc.mca.trajectory.dao.graph;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -11,7 +11,6 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
-
 import br.udesc.mca.trajectory.model.Trajectory;
 
 public class Neo4jPersistence extends GraphPersistence {
@@ -28,7 +27,7 @@ public class Neo4jPersistence extends GraphPersistence {
 
     public Neo4jPersistence() {
         GraphDatabaseFactory factory = new GraphDatabaseFactory();
-        this.db = factory.newEmbeddedDatabase("/bancografo");
+        this.db = factory.newEmbeddedDatabase(new File("/bancografo"));
         this.dbindex = this.db.index().forNodes("nodes");
     }
 

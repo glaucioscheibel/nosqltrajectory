@@ -20,7 +20,6 @@
         <module>persistence-polyglot</module>
         <module>persistence-discovery</module>
         <module>segmenter-service</module>
-        <module>r-statistics-service</module>
         <module>client</module>
         <module>old</module>
         <module>importabusrj</module>

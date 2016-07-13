@@ -42,7 +42,7 @@ public class MongoPersistence extends DocumentPersistence {
         }
 
         try {
-            String json = om.writeValueAsString(c);
+            String json = this.om.writeValueAsString(c);
             MongoCollection<Document> dbc = this.db.getCollection(colName);
             Document aux = dbc.find(Filters.eq("_id", c.getId())).first();
             if (aux == null) {
@@ -64,7 +64,7 @@ public class MongoPersistence extends DocumentPersistence {
         try {
             MongoCollection<Document> dbc = this.db.getCollection(colName);
             for (Document d : dbc.find()) {
-                ret.add(om.readValue(JSON.serialize(d), Trajectory.class));
+                ret.add(this.om.readValue(JSON.serialize(d), Trajectory.class));
             }
         } catch (Exception e) {
             this.log.error(e.getMessage(), e);
@@ -72,6 +72,7 @@ public class MongoPersistence extends DocumentPersistence {
         return ret;
     }
 
+    @Override
     public Trajectory findById(long id) {
         if (this.log.isInfoEnabled()) {
             this.log.info("findById(" + id + ")");
@@ -83,7 +84,7 @@ public class MongoPersistence extends DocumentPersistence {
         Document first = result.first();
         if (first != null) {
             try {
-                return om.readValue(JSON.serialize(first), Trajectory.class);
+                return this.om.readValue(JSON.serialize(first), Trajectory.class);
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;

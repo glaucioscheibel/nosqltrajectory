@@ -4,19 +4,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Trajectory implements Serializable {
     private static final long serialVersionUID = 1L;
-    @JsonProperty("_id")
     @Id
     private Long id;
     private String description;
@@ -39,8 +42,25 @@ public class Trajectory implements Serializable {
         this.description = description;
     }
 
+    @JsonGetter("_id")
     public Long getId() {
         return this.id;
+    }
+
+    @JsonSetter("_id")
+    public void setId(Object o) {
+        if (o instanceof String) {
+            String s = (String) o;
+            if (s.contains("/")) {
+                StringTokenizer st = new StringTokenizer(s, "/");
+                st.nextToken();
+                this.id = Long.valueOf(st.nextToken());
+            } else {
+                this.id = Long.valueOf(s);
+            }
+        } else {
+            System.out.println(o.getClass().getName());
+        }
     }
 
     public void setId(Long id) {

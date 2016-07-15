@@ -1,5 +1,6 @@
 package br.udesc.mca.trajectory.dao.multimodel;
 
+import java.io.IOException;
 import java.util.List;
 import com.arangodb.ArangoConfigure;
 import com.arangodb.ArangoDriver;
@@ -7,6 +8,7 @@ import com.arangodb.ArangoException;
 import com.arangodb.entity.DocumentEntity;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import br.udesc.mca.trajectory.model.Trajectory;
@@ -58,13 +60,28 @@ public class ArangoDBPersistence extends MultiModelPersistence {
     @Override
     public List<Trajectory> findAll() {
         this.log.info("findAll");
-        return null;
+        List<Trajectory> ret = null;
+        String query = "for t in Trajectories return t";
+        try {
+            String json = this.db.executeAqlQueryJSON(query, null, null);
+            ret = this.om.readValue(json, new TypeReference<List<Trajectory>>() {});
+        } catch (ArangoException | IOException e) {
+            this.log.error(e.getMessage(), e);
+        }
+        return ret;
     }
 
     @Override
     public Trajectory findById(long id) {
         if (this.log.isInfoEnabled()) {
             this.log.info("findById(" + id + ")");
+        }
+        try {
+            String handle = COLLECTION + '/' + String.valueOf(id);
+            String json = this.db.getDocumentRaw(handle, null, null);
+            return this.om.readValue(json, Trajectory.class);
+        } catch (Exception e) {
+            this.log.error(e.getMessage(), e);
         }
         return null;
     }
@@ -73,6 +90,11 @@ public class ArangoDBPersistence extends MultiModelPersistence {
     public void deleteById(long id) {
         if (this.log.isInfoEnabled()) {
             this.log.info("deleteById(" + id + ")");
+        }
+        try {
+            this.db.deleteDocument(COLLECTION, String.valueOf(id));
+        } catch (ArangoException e) {
+            this.log.error(e.getMessage(), e);
         }
     }
 

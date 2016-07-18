@@ -23,7 +23,7 @@ public abstract class PersistenceDAO {
 
     public abstract void deleteById(long id);
 
-    public void close() {};
+    public void close() {}
 
     public void createDB() {}
 

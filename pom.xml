@@ -26,7 +26,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dropwizard.version>0.9.3</dropwizard.version>
-        <jackson.version>2.6.3</jackson.version>
+        <jackson.version>2.6.7</jackson.version>
         <slf4j.version>1.7.21</slf4j.version>
         <shade.version>2.4.3</shade.version>
     </properties>

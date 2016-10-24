@@ -58,6 +58,9 @@ public class Trajectory implements Serializable {
             } else {
                 this.id = Long.valueOf(s);
             }
+        } else if (o instanceof Number) {
+            Number n = (Number) o;
+            this.id = n.longValue();
         } else {
             System.out.println(o.getClass().getName());
         }

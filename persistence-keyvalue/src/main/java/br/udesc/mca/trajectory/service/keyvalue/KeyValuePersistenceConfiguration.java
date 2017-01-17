@@ -6,7 +6,7 @@ public class KeyValuePersistenceConfiguration extends Configuration {
     String discoveryURL;
 
     public String getDiscoveryURL() {
-        return discoveryURL;
+        return this.discoveryURL;
     }
 
     public void setDiscoveryURL(String discoveryURL) {
